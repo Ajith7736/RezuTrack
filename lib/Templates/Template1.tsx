@@ -1,4 +1,4 @@
-export const Template1 = /*html*/`
+export const Template1 =  /*html*/`
      <!DOCTYPE html>
     <html>
     <head>
@@ -170,3 +170,4 @@ export const Template1 = /*html*/`
 </html>
     `
 
+ 

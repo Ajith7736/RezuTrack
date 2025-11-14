@@ -1,6 +1,7 @@
 import { Template1 } from '@/lib/Templates/Template1'
 import { Ionicons } from '@expo/vector-icons'
 import * as Print from "expo-print"
+import * as Sharing from "expo-sharing"
 import React, { useEffect, useState } from 'react'
 import { Pressable, Text } from 'react-native'
 import Pdf from "react-native-pdf"
@@ -8,7 +9,6 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 
 const ResumePreview = ({ setshowresume }: { setshowresume: React.Dispatch<React.SetStateAction<boolean>> }) => {
     const [Pdfuri, setPdfuri] = useState("")
-    const [PdfSource, setPdfSource] = useState<string>("")
 
     useEffect(() => {
         generatePDF();
@@ -16,21 +16,39 @@ const ResumePreview = ({ setshowresume }: { setshowresume: React.Dispatch<React.
 
     const generatePDF = async () => {
         try {
-            const { base64 } = await Print.printToFileAsync({
+            const { uri, base64 } = await Print.printToFileAsync({
                 html: Template1,
                 width: 595,
                 height: 842,
                 base64: true,
             });
 
-            const htmlContent = `data:application/pdf;base64,${base64}`;
+            setPdfuri(uri)
 
-            setPdfSource(htmlContent);
 
         } catch (err) {
             console.error(err);
         }
     };
+
+    const handleShare = async () => {
+        try {
+            if (!Pdfuri) {
+                return console.error("uri not found");
+            }
+
+            const isAvailable = await Sharing.isAvailableAsync();
+            if (!isAvailable) {
+                console.warn("Sharing is not Available on this device")
+                return;
+            }
+
+            await Sharing.shareAsync(Pdfuri);
+
+        } catch (err) {
+            console.error(err);
+        }
+    }
 
 
 
@@ -43,7 +61,7 @@ const ResumePreview = ({ setshowresume }: { setshowresume: React.Dispatch<React.
                 left: 0,
                 right: 0
             }}
-            className='flex-1 bg-light-white/20 items-center justify-between pt-16 pb-10'
+            className='flex-1 bg-light-hoverblack dark:bg-dark-white/20  items-center justify-center pt-16 pb-10'
         >
             <Pressable
                 onPress={() => setshowresume(false)}
@@ -51,24 +69,21 @@ const ResumePreview = ({ setshowresume }: { setshowresume: React.Dispatch<React.
             >
                 <Ionicons name='close' size={24} color="black" />
             </Pressable>
-            {PdfSource ? <>
+            {Pdfuri ? <>
                 <Pdf
                     trustAllCerts={false}
                     source={{
-                        uri: PdfSource,
+                        uri: Pdfuri,
                         cache: false
                     }}
                     style={{
-                        width: 330,
-                        height: 495,
-                        marginTop : 30
-                    }}
-                    onLoadComplete={(numberofpages, filepath) => {
-
+                        width: 310,
+                        height: 430,
                     }}
                 />
                 <Pressable
                     className='p-4 border border-light-activeborder/20 rounded-md bg-dark-gray mt-6 w-40'
+                    onPress={handleShare}
                 >
                     <Text className='text-white text-center font-semibold'>Share PDF</Text>
                 </Pressable>
