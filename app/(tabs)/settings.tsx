@@ -1,6 +1,6 @@
 import { Themeprops } from "@/types/types";
 import { useColorScheme } from "nativewind";
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const Settings = () => {
@@ -39,10 +39,5 @@ const Settings = () => {
   )
 }
 
-const styles = StyleSheet.create({
-  mode: {
-    padding: 20
-  }
-})
 
 export default Settings
