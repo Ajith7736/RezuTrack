@@ -2,7 +2,7 @@ import { Template1 } from '@/lib/Templates/Template1'
 import { Ionicons } from '@expo/vector-icons'
 import * as Print from "expo-print"
 import React, { useEffect, useState } from 'react'
-import { Dimensions, Pressable, Text, View } from 'react-native'
+import { Pressable, Text } from 'react-native'
 import Pdf from "react-native-pdf"
 import { SafeAreaView } from 'react-native-safe-area-context'
 
@@ -37,19 +37,21 @@ const ResumePreview = ({ setshowresume }: { setshowresume: React.Dispatch<React.
     return (
         <SafeAreaView
             style={{
-                
+                position: 'absolute',
+                top: 0,
+                bottom: 0,
+                left: 0,
+                right: 0
             }}
-            className='flex-1'
+            className='flex-1 bg-light-white/20 items-center justify-between pt-16 pb-10'
         >
-            <View className='absolute inset-0 bg-light-gray/10 flex justify-center items-center p-5'>
-
-
-                <Pressable
-                    onPress={() => setshowresume(false)}
-                    className='absolute right-6 top-0 bg-white p-2 rounded-md'
-                >
-                    <Ionicons name='close' size={24} color="black" />
-                </Pressable>
+            <Pressable
+                onPress={() => setshowresume(false)}
+                className='absolute right-6 top-10 bg-white p-2 rounded-md'
+            >
+                <Ionicons name='close' size={24} color="black" />
+            </Pressable>
+            {PdfSource ? <>
                 <Pdf
                     trustAllCerts={false}
                     source={{
@@ -57,24 +59,20 @@ const ResumePreview = ({ setshowresume }: { setshowresume: React.Dispatch<React.
                         cache: false
                     }}
                     style={{
-                        flex: 1,
-                        width: Dimensions.get("window").width,
-                        height: 180,
-                        margin: 20
+                        width: 330,
+                        height: 495,
+                        marginTop : 30
                     }}
                     onLoadComplete={(numberofpages, filepath) => {
-                        console.log(numberofpages)
+
                     }}
                 />
-
-
-
                 <Pressable
                     className='p-4 border border-light-activeborder/20 rounded-md bg-dark-gray mt-6 w-40'
                 >
                     <Text className='text-white text-center font-semibold'>Share PDF</Text>
                 </Pressable>
-            </View>
+            </> : <Text className='absolute text-light-black top-1/2 dark:text-dark-white'>Loading...</Text>}
         </SafeAreaView>
     )
 }

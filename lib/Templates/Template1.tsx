@@ -45,12 +45,9 @@ export const Template1 = /*html*/`
             margin-top: 5px;
         }
 
-
         .Profession {
             font-size : 15pt;
         }
-
-
 
         </style>
 </head>
@@ -145,6 +142,16 @@ export const Template1 = /*html*/`
                <div>
                    <p>09/2022 – 04/2025 | Palakkad, Kerala</p>
                </div>
+            </div>
+        </section>
+        <section>
+          <h3>STRENGTH</h3>
+           <hr />
+            <div>
+                <p><span>Tech Adaptability</span> - Rapid learner adept at mastering emerging technologies like AI/LLM integration, Next.js, and serverless architecture in minimal time.</p>
+            </div>
+            <div>
+                <p><span>Communication</span> - Strong communicator skilled in translating technical challenges into actionable team goals.</p>
             </div>
         </section>
         <section>
