@@ -1,5 +1,5 @@
+import { colors } from '@/components/ui/colors'
 import TemplateProvider from '@/context/TemplateContext'
-import { colors } from '@/ui/colors'
 import { Ionicons } from '@expo/vector-icons'
 import { Tabs } from 'expo-router'
 import { useColorScheme } from 'nativewind'

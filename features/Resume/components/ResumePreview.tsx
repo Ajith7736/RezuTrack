@@ -3,7 +3,7 @@ import { Ionicons } from '@expo/vector-icons'
 import * as Print from "expo-print"
 import * as Sharing from "expo-sharing"
 import React, { useEffect, useState } from 'react'
-import { Pressable, Text } from 'react-native'
+import { ActivityIndicator, Pressable, Text } from 'react-native'
 import Pdf from "react-native-pdf"
 import { SafeAreaView } from 'react-native-safe-area-context'
 
@@ -65,7 +65,7 @@ const ResumePreview = ({ setshowresume }: { setshowresume: React.Dispatch<React.
                 left: 0,
                 right: 0
             }}
-            className='flex-1 bg-light-hoverblack/10 dark:bg-dark-white/10  items-center justify-center pt-16 pb-10'
+            className='flex-1 bg-light-hoverblack/5 dark:bg-dark-white/5  items-center justify-center pt-16 pb-10'
         >
             <Pressable
                 onPress={() => setshowresume(false)}
@@ -91,7 +91,7 @@ const ResumePreview = ({ setshowresume }: { setshowresume: React.Dispatch<React.
                 >
                     <Text className='text-white text-center font-semibold'>Share PDF</Text>
                 </Pressable>
-            </> : <Text className='absolute text-light-black top-1/2 dark:text-dark-white'>Loading...</Text>}
+            </> : <Text className='absolute text-light-black top-1/2 dark:text-dark-white'><ActivityIndicator color={"white"}/></Text>}
         </SafeAreaView>
     )
 }

@@ -1,4 +1,4 @@
-import CustomText from '@/ui/CustomText'
+import CustomText from '@/components/ui/CustomText'
 import { Link } from 'expo-router'
 import React from 'react'
 import { View } from 'react-native'
