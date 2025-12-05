@@ -2,12 +2,13 @@ import { colors } from '@/components/ui/colors'
 import CustomText from '@/components/ui/CustomText'
 import { Entypo, FontAwesome5, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons'
 import { useColorScheme } from 'nativewind'
-import React from 'react'
-import { ScrollView, View } from 'react-native'
+import React, { useState } from 'react'
+import { Pressable, PressableProps, ScrollView, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
 const content = () => {
   const { colorScheme } = useColorScheme()
+  const [selectedcontent, setselectedcontent] = useState(new Set())
   const iconColor = colorScheme === "light" ? colors.light.black : colors.dark.white
   const contentcard = [
     {
@@ -87,20 +88,34 @@ const content = () => {
     }
   ];
 
+  const handlepress = (title: string) => {
+    if (!selectedcontent.has(title)) {
+      setselectedcontent((prev) => {
+        const newset = new Set(prev);
+        newset.add(title);
+        return newset;
+      })
+    }else{
+      setselectedcontent((prev) => {
+        const newset = new Set(prev);
+        newset.delete(title);
+        return newset;
+      })
+    }
+  }
 
-
+  console.log([...selectedcontent])
   return (
     <SafeAreaView className='flex-1 bg-light-white dark:bg-dark-black'>
       <CustomText className='text-2xl m-5 font-extrabold'>Add Content</CustomText>
       <ScrollView className='flex gap-2'>
         {contentcard.map((content) => {
-          return <View key={content.title} className='m-5 p-5 flex gap-4 border border-light-activeborder/10 bg-dark-inputfield rounded-md'>
+          return <Pressable onPress={() => handlepress(content.title)} key={content.title} className={`m-5 p-5 flex gap-4 border border-light-activeborder/10 bg-dark-inputfield rounded-md ${selectedcontent.has(content.title) && 'border-dark-hoverwhite'}`}>
             <CustomText className='text-lg font-extrabold'>{content.icon} {content.title}</CustomText>
             <CustomText className='text-sm dark:text-dark-activeborder'>{content.desc}</CustomText>
-          </View>
+          </Pressable>
         })}
       </ScrollView>
-
     </SafeAreaView>
   )
 }
