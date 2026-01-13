@@ -10,6 +10,7 @@ const TabLayout = () => {
     return (
         <TemplateProvider>
             <Tabs screenOptions={{
+                tabBarActiveTintColor : "#6366f1",
                 headerStyle: {
                     backgroundColor: colorScheme === "light" ? colors.light.gray : colors.dark.gray,
                 },

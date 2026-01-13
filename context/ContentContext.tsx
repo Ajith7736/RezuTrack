@@ -1,8 +1,9 @@
 import { createContext, ReactNode, useContext, useState } from "react";
 
+
 interface Contentprops {
-    contents: string[] | null,
-    setcontents: React.Dispatch<React.SetStateAction<string[] | null>>
+    selectedcontents: Set<string>,
+    setselectedcontents: React.Dispatch<React.SetStateAction<Set<string>>>
 }
 
 
@@ -10,8 +11,8 @@ const ContentContext = createContext<Contentprops | undefined>(undefined)
 
 
 export default function ContentProvider({ children }: { children: ReactNode }) {
-    const [contents, setcontents] = useState<string[] | null>(null)
-    return <ContentContext.Provider value={{ contents, setcontents }}>
+    const [selectedcontents, setselectedcontents] = useState<Set<string>>(new Set())
+    return <ContentContext.Provider value={{ selectedcontents, setselectedcontents }}>
         {children}
     </ContentContext.Provider>
 }

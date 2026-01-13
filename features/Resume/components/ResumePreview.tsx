@@ -1,3 +1,4 @@
+import { useUserData } from '@/context/UserDataContext'
 import { Template1 } from '@/lib/Templates/Template1'
 import { Ionicons } from '@expo/vector-icons'
 import * as Print from "expo-print"
@@ -9,6 +10,8 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 
 const ResumePreview = ({ setshowresume }: { setshowresume: React.Dispatch<React.SetStateAction<boolean>> }) => {
     const [Pdfuri, setPdfuri] = useState("")
+    const { userdata } = useUserData()
+
 
     useEffect(() => {
         const timeout = setTimeout(() => {
@@ -21,7 +24,7 @@ const ResumePreview = ({ setshowresume }: { setshowresume: React.Dispatch<React.
     const generatePDF = async () => {
         try {
             const { uri, base64 } = await Print.printToFileAsync({
-                html: Template1,
+                html: Template1(userdata),
                 width: 595,
                 height: 842,
                 base64: true,
@@ -65,7 +68,7 @@ const ResumePreview = ({ setshowresume }: { setshowresume: React.Dispatch<React.
                 left: 0,
                 right: 0
             }}
-            className='flex-1 bg-light-hoverblack/5 dark:bg-dark-white/5  items-center justify-center pt-16 pb-10'
+            className='flex-1 bg-light-hoverblack/5 dark:bg-dark-white/5 z-10  items-center justify-center pt-16 pb-10'
         >
             <Pressable
                 onPress={() => setshowresume(false)}
@@ -91,7 +94,7 @@ const ResumePreview = ({ setshowresume }: { setshowresume: React.Dispatch<React.
                 >
                     <Text className='text-white text-center font-semibold'>Share PDF</Text>
                 </Pressable>
-            </> : <Text className='absolute text-light-black top-1/2 dark:text-dark-white'><ActivityIndicator color={"white"}/></Text>}
+            </> : <Text className='absolute text-light-black top-1/2 dark:text-dark-white'><ActivityIndicator color={"white"} /></Text>}
         </SafeAreaView>
     )
 }

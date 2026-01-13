@@ -1,8 +1,13 @@
-export const Template1 =  /*html*/`
-     <!DOCTYPE html>
+
+export function Template1(userdata: Record<string, string>): string {
+
+    return /*html*/`
+    <!DOCTYPE html>
     <html>
     <head>
         <meta  name="viewport" content="width=device-width" />
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
          <style>
          * {
             margin: 0;
@@ -17,7 +22,7 @@ export const Template1 =  /*html*/`
         body {
             width: 594.96pt;
             height: 840.96pt;
-            font-family: Arial, sans-serif;
+            font-family: 'inter', sans-serif;
             font-size: 11pt;
             color: #000;
         }
@@ -52,21 +57,34 @@ export const Template1 =  /*html*/`
             font-size : 15pt;
         }
 
+        .project-heading {
+            display : flex;
+            justify-content : space-between;
+        }
+
+        .project-desc {
+            font-size : 10pt;
+        }
+
+         .project-content {
+            font-size : 11pt;
+        }
+
         </style>
 </head>
     <body>
     <div class='body'>
         <div>
-            <h1>Ajith P</h1>
-            <p><i>Full Stack Developer</i></p>
+            ${userdata.fullname ? <h1>${userdata.fullname}</h1> : <h1></h1>}
+            <p><em>${userdata.professionaltitle}</em></p>
         </div>
 
    
         <section>
-            <p>ajith.aju39502@gmail.com | +91 7736696075 | Palakkad, Kerala, India | <a href="http://github.com/Ajith7736" target="_blank">Github</a> | LinkedIn </p>
+            <p>${userdata.email} | +91 ${userdata.phonenumber} | ${userdata.address} | <a href="http://github.com/Ajith7736" target="_blank">Github</a> | LinkedIn </p>
         </section>
         <section>
-            <h3>PROFILE</h3>
+            <h3>SUMMARY</h3>
             <hr />
             <p>Full Stack Developer specializing in LLM-integrated web applications and scalable backend systems. Architected and deployed production applications using Next.js, Node.js, and Express.js on Vercel with PostgreSQL, MongoDB, and SQLite databases. Built AI-powered platforms leveraging Groq API, OpenAI API, and Vercel AI SDK that achieved 60% reduction in design time and 40% improvement in load performance. Deliver end-to-end solutions from database design through serverless deployment, with proven expertise in translating complex technical requirements into production-ready code.</p>
         </section>
@@ -81,7 +99,7 @@ export const Template1 =  /*html*/`
         <h3>PROJECTS</h3>
           <hr />
            <div>
-               <div>
+               <div class="project-heading">
                    <div>
                       <p><strong>GenUI builder </strong> - Powered UI Generation</p>
                    </div>
@@ -90,7 +108,7 @@ export const Template1 =  /*html*/`
                 </div>
                 </div>
                 <div>
-                    <p>Next.js | Node.js | MongoDB | Groq API | Vercel AI SDK | Vercel Deployment</p>
+                    <p class="project-desc">Next.js | Node.js | MongoDB | Groq API | Vercel AI SDK | Vercel Deployment</p>
                   
                 </div>
                 <div>
@@ -101,20 +119,20 @@ export const Template1 =  /*html*/`
                 </div>
            </div>
            <div>
-               <div>
+               <div class="project-heading">
                    <div>
-                       <p>BugLab -</p>
-                    <p>For CyberSecurity Beginners</p>
+                       <p><strong>BugLab</strong> - For CyberSecurity Beginners</p>
+
                    </div>
                     <div>
                          <p>08/2025 - 09/2025</p>
                     </div>
                 </div>
                 <div>
-                    <p>Next.js | Node.js | MongoDB | Vercel Deployment</p>
+                    <p class="project-desc">Next.js | Node.js | MongoDB | Vercel Deployment</p>
                 </div>
                 <div >
-                    <ul>
+                    <ul class="project-content">
                         <li>Built a hands-on cybersecurity learning platform simulating real-world vulnerabilities (SQL Injection, XSS, CSRF, NoSQL Injection) with SQLite and MongoDB for dataset management</li>
                         <li>Designed automated scoring logic with Express.js backend validation and parameterized queries, enabling real-time evaluation of user actions across security labs</li>
                     </ul>
@@ -157,4 +175,5 @@ export const Template1 =  /*html*/`
 </html>
     `
 
+}
 

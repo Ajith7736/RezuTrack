@@ -21,6 +21,10 @@ module.exports = {
         'dark-inputborder': '#252525',
         'dark-black': '#0A0A0A',
 
+        'Indigo': '#3544CF',
+        'Light-Pink': '#F6E4FF',
+        'Light-Yellow': '#FFF4EA',
+
         // Light theme colors
         'light-white': '#FFFFFF',
         'light-black': '#171717',
