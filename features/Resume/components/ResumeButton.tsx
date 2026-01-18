@@ -20,8 +20,7 @@ const ResumeButton = ({ onPress }: { onPress: () => void }) => {
 
 const styles = StyleSheet.create({
     shadow: {
-        boxShadow: "0 3px 10px rgb(0,0,0,0.09)",
-        elevation : 1
+        boxShadow: "0 3px 2px rgb(0,0,0,0.05)"
     }
 })
 

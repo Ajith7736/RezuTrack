@@ -3,6 +3,8 @@ import { router } from "expo-router";
 import { useColorScheme } from "nativewind";
 import { Pressable, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { Image } from "expo-image"
+import { colors } from "@/components/ui/colors";
 
 export default function Index() {
 
@@ -20,8 +22,19 @@ export default function Index() {
               Welcome to your personal resume builder
             </Text>
           </View>
-          <View className="bg-stone-100 shadow-md shadow-stone-400 h-14 w-14 rounded-full">
-
+          <View style={{
+            boxShadow : "0 3px 3px rgb(0,0,0,0.12)",
+            backgroundColor : colors.tailwind.gray[200]
+          }} className="bg-stone-100 shadow-stone-400 h-14 w-14 rounded-full">
+            <Image
+              source={require('@/assets/images/person.png')}
+              style={{
+                height: '100%',
+                width: '100%'
+              }}
+              contentFit="cover"
+              contentPosition={'center'}
+            />
           </View>
         </View>
 

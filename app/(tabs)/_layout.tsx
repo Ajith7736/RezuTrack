@@ -17,7 +17,8 @@ const TabLayout = () => {
                     borderTopColor: colors.tailwind.stone[300],
                     borderTopWidth: 0.2,
                     height: 70,
-                    paddingTop: 5
+                    paddingTop: 5,
+                    boxShadow : "0 3px 9px rgb(0,0,0,0.12)",
                 },
             }} >
                 <Tabs.Screen name='home'
