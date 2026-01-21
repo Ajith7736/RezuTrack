@@ -15,26 +15,18 @@ import SubmitButton from '../../components/ui/SubmitButton'
 import TitleBackButton from '../../components/ui/TitleBackButton'
 import ImageOption from './ImageOption'
 import { Image } from 'expo-image'
+import { ProfileSchema , ProfileInput } from '@/lib/schema/ProfileSchema'
 
 const Profile = () => {
     const [ModalVisible, setModalVisible] = useState(false)
     const [image, setimage] = useState<string>('')
-    type ProfileInput = z.infer<typeof ProfileSchema>
+
     const { userdata, setuserdata } = useUserData();
 
 
-    const ProfileSchema = z.object({
-        fullname: z.string().min(1, "This field is required"),
-        professionaltitle: z.string().min(1, "This field is required"),
-        email: z.email("Invalid email address").min(1, "This field is required"),
-        phonenumber: z.string().min(1, "This field is required"),
-        address: z.string().min(1, "This field is required"),
-        date: z.date('This field is required')
-    })
-
 
     const { control, handleSubmit, formState: { isSubmitting }, watch } = useForm<ProfileInput>({
-        defaultValues: userdata,
+        defaultValues: userdata ?? {},
         resolver: zodResolver(ProfileSchema)
     })
 
@@ -136,18 +128,6 @@ const Profile = () => {
                         />
                     </View>
                 })}
-
-                <View className='flex gap-2'>
-                    <CustomText className='uppercase text-sm font-bold tracking-widest text-stone-500'>Start Date</CustomText>
-                    <Controller
-                        control={control}
-                        name={'date'}
-                        render={({ formState: { errors }, field: { onChange, value } }) => {
-                            return <RHFDatePicker onChange={onChange} value={value} errors={errors.date?.message} />
-                        }}
-                    />
-                </View>
-
 
 
             </ScrollView>

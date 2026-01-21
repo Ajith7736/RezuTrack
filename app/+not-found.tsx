@@ -9,7 +9,7 @@ const NotFound = () => {
       <View className='flex items-center gap-2'>
         <CustomText className='text-9xl font-bold'>404</CustomText>
         <CustomText>Page not found</CustomText>
-        <Link href={"/(tabs)/home"} className='text-white bg-light-black font-extrabold px-3 py-3 rounded-md border-light-activeborder/20'>Go to HomePage</Link>
+        <Link href={"/(tabs)/home"} className='text-white bg-indigo-500 font-extrabold px-3 py-3 rounded-md border-light-activeborder/20'>Go to HomePage</Link>
       </View>
     </View>
   )

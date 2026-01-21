@@ -22,7 +22,7 @@ export default function RootLayout() {
       <Stack
         screenOptions={{
           headerShown: false,
-          animation: "fade"
+          animation: "fade_from_bottom"
         }}
       />
     </Providers>
