@@ -1,7 +1,10 @@
 import { colors } from "@/components/ui/colors";
 import CustomText from "@/components/ui/CustomText";
 import TitleBackButton from "@/components/ui/TitleBackButton";
+import ToastComponent from "@/components/ui/toast";
+import Toast from "@/components/ui/toast";
 import { useContent } from "@/context/ContentContext";
+import { useUserData } from "@/context/UserDataContext";
 import ResumeButton from "@/features/Resume/components/ResumeButton";
 import ResumePreview from "@/features/Resume/components/ResumePreview";
 import { contentcard } from "@/lib/Contents/ContentCard";
@@ -16,6 +19,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 const Resume = () => {
     const { selectedcontents } = useContent();
     const BottomSheetRef = useRef<BottomSheetModal>(null)
+    const { userdata } = useUserData();
 
     const handleexpand = () => {
         BottomSheetRef.current?.present()
@@ -33,13 +37,13 @@ const Resume = () => {
     const profileitems = [
         {
             icon: <MaterialCommunityIcons name="email-outline" size={18} color={colors.tailwind.stone[500]} />,
-            value: "ajith.aju39502@gmail.com"
+            value: userdata ? userdata.email : 'Email'
         }, {
             icon: <MaterialCommunityIcons name="phone-outline" size={18} color={colors.tailwind.stone[500]} />,
-            value: "+91 7736696075"
+            value: userdata ? userdata.phonenumber : 'Phone Number'
         }, {
             icon: <Feather name="map-pin" size={18} color={colors.tailwind.stone[500]} />,
-            value: "Palakkad,Kerala,India"
+            value: userdata ? userdata.address : 'Address'
         }
 
     ]
@@ -54,8 +58,8 @@ const Resume = () => {
                 <View style={styles.PersonalItem} className="flex flex-row justify-between items-start gap-4 m-5  py-6 px-5 rounded-lg">
                     <View className="flex gap-3">
                         <View>
-                            <CustomText className="text-xl font-extrabold tracking-widest">Ajith P</CustomText>
-                            <CustomText className="text-stone-700 italic">Full Stack Developer</CustomText>
+                            <CustomText className="text-xl font-extrabold tracking-widest">{userdata ? <>{userdata.fullname}</> : <>Name</>}</CustomText>
+                            <CustomText className="text-stone-700 italic">{userdata ? <>{userdata.professionaltitle}</> : <>Professional Title</>}</CustomText>
                         </View>
                         {profileitems.map((item) => <View key={item.value} className="text-sm flex flex-row gap-3">
                             <CustomText className="text-stone-800">{item.icon}</CustomText>
@@ -67,8 +71,8 @@ const Resume = () => {
                         pathname: "/resume/[content]",
                         params: { content: "profile" }
                     }}><View style={[{
-                        elevation : 4,
-                        padding : 7
+                        elevation: 4,
+                        padding: 7
                     }]} className="rounded-lg  bg-indigo-500"><Feather name="edit" size={17} color={"white"} /></View> </Link>
                 </View>
 

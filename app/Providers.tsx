@@ -1,5 +1,7 @@
+import ToastComponent from '@/components/ui/toast'
 import ContentProvider from '@/context/ContentContext'
 import TemplateProvider from '@/context/TemplateContext'
+import ToastProvider from '@/context/ToastContext'
 import { UserDataProvider } from '@/context/UserDataContext'
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet'
 import React from 'react'
@@ -13,14 +15,17 @@ const Providers = ({ children }: { children: React.ReactNode }) => {
                 <TemplateProvider>
                     <ContentProvider>
                         <UserDataProvider>
-                            <BottomSheetModalProvider>
-                                {children}
-                            </BottomSheetModalProvider>
+                            <ToastProvider>
+                                <BottomSheetModalProvider>
+                                    {children}
+                                    <ToastComponent />
+                                </BottomSheetModalProvider>
+                            </ToastProvider>
                         </UserDataProvider>
                     </ContentProvider>
                 </TemplateProvider>
             </SafeAreaProvider>
-        </GestureHandlerRootView>
+        </GestureHandlerRootView >
     )
 }
 

@@ -1,8 +1,8 @@
 import { colors } from '@/components/ui/colors'
 import { useUserData } from '@/context/UserDataContext'
 import { Template1 } from '@/lib/Templates/Template1'
+import { toast } from '@/lib/Toast/ToastUtility'
 import { BottomSheetBackdrop, BottomSheetModal, BottomSheetScrollView } from '@gorhom/bottom-sheet'
-import { Directory, File, Paths } from 'expo-file-system'
 import * as FileSystem from 'expo-file-system/legacy'
 import * as Print from "expo-print"
 import * as Sharing from "expo-sharing"
@@ -21,7 +21,8 @@ const ResumePreview = ({ Sheetref }: { Sheetref: RefObject<BottomSheetModal | nu
     })
     const { userdata } = useUserData()
     const [numberofPages, setnumberofPages] = useState<number | null>(null)
-    const [currentPage, setcurrentPage] = useState<number | null>(null)
+    const [pdfHeight, setpdfHeight] = useState<number>(0)
+
 
 
 
@@ -30,17 +31,20 @@ const ResumePreview = ({ Sheetref }: { Sheetref: RefObject<BottomSheetModal | nu
             generatePDF();
         }, 500);
 
-        return () => clearTimeout(timeout);
-    }, [Template1,userdata]);
+        return () => {
+            clearTimeout(timeout)
+        };
+    }, [userdata]);
 
     const generatePDF = async () => {
         try {
             const { uri, base64 } = await Print.printToFileAsync({
-                html: Template1(userdata),
+                html: Template1(userdata ?? {}),
                 width: 595,
                 height: 842,
                 base64: true,
             });
+
 
             setPdfdata({
                 uri,
@@ -67,6 +71,7 @@ const ResumePreview = ({ Sheetref }: { Sheetref: RefObject<BottomSheetModal | nu
 
             await Sharing.shareAsync(Pdfdata.uri);
 
+
         } catch (err) {
             console.error(err);
         }
@@ -87,12 +92,13 @@ const ResumePreview = ({ Sheetref }: { Sheetref: RefObject<BottomSheetModal | nu
 
             await FileSystem.writeAsStringAsync(fileUri, Pdfdata.base64 as string, { encoding: FileSystem.EncodingType.Base64 })
 
-            Sheetref.current?.close();
+            toast.success('Pdf Downloaded Successfully');
 
         } catch (err) {
             console.error(err);
         }
     }
+
 
 
     const BackDropComponent = (props: any) => {
@@ -123,34 +129,45 @@ const ResumePreview = ({ Sheetref }: { Sheetref: RefObject<BottomSheetModal | nu
                 display: "flex",
                 alignItems: "center",
                 gap: "15",
-                height: "100%"
+                paddingBottom: 30
             }}>
                 <Text className='text-center stroke-stone-200 mt-5 text-lg uppercase tracking-widest font-extrabold'>Preview</Text>
 
-                <Text className='text-xs'>{currentPage ?? ""} / {numberofPages ?? ''}</Text>
+                <Text className='text-xs'>{numberofPages ?? ''}</Text>
 
-                {Pdfdata &&
+
+
+                {Pdfdata.uri &&
                     <Pdf
-                        source={{ uri: Pdfdata.uri ?? '', cache: true }}
+                        key={Pdfdata.uri}
+                        source={{ uri: Pdfdata.uri, cache: false }}
+                        horizontal={false}
                         style={{
                             width: 340,
-                            height: 476,
+                            height: pdfHeight,
                             borderWidth: 1,
+                            backgroundColor: colors.tailwind.stone[100],
                             borderColor: colors.tailwind.neutral[200],
-                            borderRadius: 8,
+                            borderRadius: 4,
                         }}
                         enableDoubleTapZoom
-                        enablePaging
-                        scrollEnabled
+
                         fitPolicy={0}
-                        onLoadComplete={(Pages: any) => {
-                            setnumberofPages(Pages)
-                        }}
-                        onPageChanged={(current: any) => {
-                            setcurrentPage(current)
+                        onLoadComplete={(numberofPages: any, filePath, { width, height }) => {
+                            setnumberofPages(numberofPages)
+
+                            const ratio = height / width;
+                            const scaledPageHeight = 340 * ratio;
+                            const totalHeight = scaledPageHeight * numberofPages;
+
+                            setpdfHeight(totalHeight)
                         }}
                     />
                 }
+
+
+
+
                 <View style={{
                     display: "flex",
                     flexDirection: "row",
