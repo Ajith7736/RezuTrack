@@ -1,4 +1,4 @@
-import Profile from '@/features/Contents/Profile';
+import Profile from '@/features/Contents/Profile/Profile';
 import { useLocalSearchParams } from 'expo-router';
 import React from 'react';
 import { View } from 'react-native';

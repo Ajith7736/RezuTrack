@@ -1,17 +1,19 @@
 import { colors } from '@/components/ui/colors'
 import Loading from '@/components/ui/Loading'
 import { useResumeContent } from '@/context/ResumeContentContext'
+import { StringTemp } from '@/lib/Templates/StringTemplate'
 import { Template1 } from '@/lib/Templates/Template1'
 import { toast } from '@/lib/Toast/ToastUtility'
 import { BottomSheetBackdrop, BottomSheetModal, BottomSheetScrollView } from '@gorhom/bottom-sheet'
 import * as FileSystem from 'expo-file-system/legacy'
 import * as Print from "expo-print"
 import * as Sharing from "expo-sharing"
-import React, { RefObject, useEffect, useState } from 'react'
+import React, { RefObject, useEffect, useRef, useState } from 'react'
 import { Linking, Pressable, Text, View } from 'react-native'
 import Pdf from 'react-native-pdf'
 
 const ResumePreview = ({ Sheetref, setisSheetOpen }: { Sheetref: RefObject<BottomSheetModal | null>, setisSheetOpen: React.Dispatch<React.SetStateAction<boolean>> }) => {
+
     const [Pdfdata, setPdfdata] = useState<{
         uri: string | null,
         base64: string | null | undefined
@@ -22,11 +24,26 @@ const ResumePreview = ({ Sheetref, setisSheetOpen }: { Sheetref: RefObject<Botto
     const { ResumeContent } = useResumeContent()
     const [numberofPages, setnumberofPages] = useState<number | null>(null)
     const [pdfHeight, setpdfHeight] = useState<number>(480)
-
-
-
+    const [isGenerating, setisGenerating] = useState(false)
+    const pdfRef = useRef(null);
 
     useEffect(() => {
+        return () => {
+            if (pdfRef.current) {
+                pdfRef.current = null;
+            }
+        };
+    }, []);
+
+
+    console.log(isGenerating)
+
+    useEffect(() => {
+        if (isGenerating) return
+
+        setPdfdata({ uri: null, base64: null });
+
+
         const timeout = setTimeout(() => {
             generatePDF();
         }, 500);
@@ -34,12 +51,17 @@ const ResumePreview = ({ Sheetref, setisSheetOpen }: { Sheetref: RefObject<Botto
         return () => {
             clearTimeout(timeout)
         };
-    }, [ResumeContent]);
+    }, [ResumeContent, StringTemp]);
 
     const generatePDF = async () => {
+
+        if (isGenerating) return
+
         try {
+            setisGenerating(true)
             const { uri, base64 } = await Print.printToFileAsync({
                 html: Template1(ResumeContent),
+                // html: StringTemp,
                 width: 595,
                 height: 842,
                 base64: true,
@@ -52,8 +74,11 @@ const ResumePreview = ({ Sheetref, setisSheetOpen }: { Sheetref: RefObject<Botto
             })
 
 
+
         } catch (err) {
             console.error(err);
+        } finally {
+            setisGenerating(false)
         }
     };
 
@@ -139,28 +164,24 @@ const ResumePreview = ({ Sheetref, setisSheetOpen }: { Sheetref: RefObject<Botto
 
 
 
-                {Pdfdata.uri ?
+                {Pdfdata.uri && !isGenerating ?
                     <Pdf
                         key={Pdfdata.uri}
+                        ref={pdfRef}
                         source={{ uri: Pdfdata.uri, cache: false }}
-                        horizontal={true}
-                        enablePaging={true}
                         style={{
                             width: 340,
                             height: pdfHeight,
                             borderWidth: 1,
                             backgroundColor: colors.tailwind.stone[100],
                             borderColor: colors.tailwind.neutral[200],
-                            borderRadius: 4,
                         }}
-                        enableAnnotationRendering={true}
                         trustAllCerts={false}
                         onPressLink={(url) => {
-                            console.log('Link pressed:', url);
                             Linking.openURL(url);
                         }}
-                        onPageSingleTap={(page, x, y) => {
-                            console.log('Single tap on page', page, 'at', x, y);
+                        onError={(error) => {
+                            console.log(error)
                         }}
                         enableDoubleTapZoom={true}
                         fitPolicy={0}
@@ -175,9 +196,11 @@ const ResumePreview = ({ Sheetref, setisSheetOpen }: { Sheetref: RefObject<Botto
                             setpdfHeight(totalHeight)
                         }}
                     /> : <View style={{
-                        height: 430
+                        height: 480,
+                        width: 340,
+                        backgroundColor: colors.tailwind.stone[100]
                     }}>
-                        <Loading />
+
                     </View>
                 }
 

@@ -4,7 +4,7 @@ import { Text } from 'react-native'
 
 const CustomText = ({ className, children }: { className?: string, children: ReactNode }) => {
   return (
-    <Text className={clsx(`text-stone-600`,className)}>
+    <Text className={clsx(`text-slate-700`,className)}>
       {children}
     </Text>
   )

@@ -1,23 +1,24 @@
-import { delay } from '@/lib/customdelay'
-import { FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons'
-import { Image } from 'expo-image'
-import { router } from 'expo-router'
-import React, { useEffect, useState } from 'react'
-import { Controller, Path, SubmitHandler, useFieldArray, useForm, useWatch } from "react-hook-form"
-import { ActivityIndicator, KeyboardAvoidingView, Pressable, ScrollView, Text, TouchableOpacity, View } from 'react-native'
-import { SafeAreaView } from 'react-native-safe-area-context'
-import CustomText from '../../components/ui/CustomText'
-import RHFInput from '../../components/ui/InputText'
-import SubmitButton from '../../components/ui/SubmitButton'
-import TitleBackButton from '../../components/ui/TitleBackButton'
-import ImageOption from './ImageOption'
-import { ProfileProps, ResumeContentProps } from '@/types/types'
+import { colors } from '@/components/ui/colors'
 import { useResumeContent } from '@/context/ResumeContentContext'
+import { delay } from '@/lib/customdelay'
 import { supabase } from '@/lib/supabase'
 import { toast } from '@/lib/Toast/ToastUtility'
+import { ProfileProps } from '@/types/types'
+import { FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons'
 import { useQueryClient } from '@tanstack/react-query'
-import { colors } from '@/components/ui/colors'
+import { Image } from 'expo-image'
+import { router } from 'expo-router'
+import React, { useState } from 'react'
+import { Controller, Path, SubmitHandler, useFieldArray, useForm } from "react-hook-form"
+import { ActivityIndicator, KeyboardAvoidingView, Pressable, ScrollView, Text, TouchableOpacity, View } from 'react-native'
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated'
+import { SafeAreaView } from 'react-native-safe-area-context'
+import CustomText from '../../../components/ui/CustomText'
+import RHFInput from '../../../components/ui/InputText'
+import SubmitButton from '../../../components/ui/SubmitButton'
+import TitleBackButton from '../../../components/ui/TitleBackButton'
+import ImageOption from './ImageOption'
+import PersonalDetails from './PersonalDetails'
 
 const Profile = () => {
     const [ModalVisible, setModalVisible] = useState(false)
@@ -40,8 +41,14 @@ const Profile = () => {
             phonenumber: ResumeContent.phonenumber,
             professionaltitle: ResumeContent.professionaltitle,
             profilepic: ResumeContent.profilepic,
-            address: ResumeContent.address
+            address: ResumeContent.address,
+            personaldetails: ResumeContent.personaldetails
         } : undefined
+    })
+
+    const { append: append_personal, fields: details, remove: remove_personal } = useFieldArray({
+        control,
+        name: 'personaldetails'
     })
 
     const { append, remove, fields } = useFieldArray({
@@ -50,16 +57,17 @@ const Profile = () => {
     })
 
 
-
+    const personaldetails = [
+        'date of birth', 'nationality', 'passport or id', 'marital status',
+        'military service', 'driving license', 'gender/pronoun', 'disability',
+        'visa', 'height'
+    ]
 
     const links = [
-        'github', 'google', 'linkedin', 'website', 'date of birth', 'nationality',
-        'passport or id', 'marital status', 'military service', 'driving license',
-        'gender/pronoun', 'disability', 'visa', 'height', 'links / social profiles',
-        'search', 'gitbook', 'medium', 'orcid', 'skype', 'bluesky', 'threads', 'x',
-        'discord', 'dribbble', 'behance', 'stack overflow', 'gitlab', 'quora',
-        'facebook', 'instagram', 'wechat', 'hugging face', 'kaggle', 'youtube',
-        'tiktok', 'signal', 'telegram', 'whatsapp'
+        'github', 'linkedin', 'website', 'search', 'gitbook', 'medium', 'orcid',
+        'skype', 'bluesky', 'threads', 'x', 'discord', 'dribbble', 'behance',
+        'stack overflow', 'gitlab', 'quora', 'facebook', 'instagram', 'wechat',
+        'hugging face', 'kaggle', 'youtube', 'tiktok', 'signal', 'telegram'
     ]
 
 
@@ -125,7 +133,7 @@ const Profile = () => {
 
 
     return (
-        <SafeAreaView className='h-screen relative'>
+        <SafeAreaView className='h-screen relative bg-white'>
 
             {ModalVisible && <Controller
                 control={control}
@@ -163,7 +171,7 @@ const Profile = () => {
 
                                 <Pressable onPress={() => setModalVisible(true)} className='h-32 relative w-32 bg-stone-200 rounded-full flex items-center justify-center'>
 
-                                    <View className='h-32 relative w-32 overflow-hidden bg-stone-200 rounded-full flex items-center justify-center'>
+                                    <View className='h-32 relative w-32 overflow-hidden bg-slate-100 rounded-full flex items-center justify-center'>
                                         {image ? <>
                                             <Image
                                                 source={image}
@@ -201,13 +209,17 @@ const Profile = () => {
                                 </View>
                             })}
 
+                            {details.map((detail, indx) => {
+                                return <PersonalDetails detail={detail} key={detail.name} indx={indx} control={control} remove_personal={remove_personal} />
+                            })}
+
                             {fields.map((link, indx) => {
                                 return <View key={indx} className='flex relative gap-2'>
                                     <View className='flex flex-row justify-between'>
-                                        <CustomText className='uppercase text-sm w-[60%] font-bold tracking-widest text-stone-500'>{link.name}</CustomText>
-                                        <Pressable onPress={() => {
+                                        <CustomText className='uppercase text-sm w-[50%] font-bold tracking-widest text-stone-500'>{link.name}</CustomText>
+                                        <Pressable className='w-[50%] flex items-end' onPress={() => {
                                             remove(indx)
-                                        }}><Text className='text-sm text-red-500' >Remove</Text></Pressable>
+                                        }}><Text className='text-sm text-end text-red-500 tracking-wider' >Remove</Text></Pressable>
                                     </View>
 
                                     <Controller
@@ -223,12 +235,12 @@ const Profile = () => {
                                             name: link.name,
                                             show: !ShowUrl.show
                                         })
-                                    }} className='absolute right-2 top-8 h-10 w-10 flex items-center justify-center'>
+                                    }} className='absolute right-2 top-9 h-10 w-10 flex items-center justify-center'>
                                         <MaterialCommunityIcons name='link' size={20} color={colors.tailwind.indigo[500]} />
                                     </Pressable>
 
 
-                                    {ShowUrl.name === link.name && ShowUrl.show && <Animated.View entering={FadeIn} exiting={FadeOut} className='  absolute w-[70%] left-28 -top-3'>
+                                    {ShowUrl.name === link.name && ShowUrl.show && <Animated.View entering={FadeIn} exiting={FadeOut} className=' flex flex-row items-center absolute w-[85%] left-16 -top-3'>
                                         <Controller
                                             control={control}
                                             name={`links.${indx}.link`}
@@ -238,15 +250,18 @@ const Profile = () => {
                                                         name: null,
                                                         show: false
                                                     })
-                                                }} placeholder='Enter Url' shadow value={value} onChange={onChange} />
+                                                }} placeholder='Enter Url' className='w-[82%] h-full rounded-none' focusstyle={false} shadow value={value} onChange={onChange} />
                                             }}
                                         />
-                                        <Pressable onPress={() => {
-                                            setShowUrl({
-                                                name: null,
-                                                show: false
-                                            })
-                                        }} className='absolute bg-indigo-500 right-1 rounded-md top-1 w-10 h-10 flex items-center justify-center'><MaterialCommunityIcons name='check' color={'white'} size={20} /></Pressable>
+                                        <View className='bg-slate-100 p-2 w-[18%] border-y border-r border-slate-200 h-full'>
+                                            <Pressable onPress={() => {
+                                                setShowUrl({
+                                                    name: null,
+                                                    show: false
+                                                })
+                                            }} className=' bg-indigo-500  rounded-md w-full h-10 flex items-center justify-center'><MaterialCommunityIcons name='check' color={'white'} size={20} /></Pressable>
+                                        </View>
+
                                     </Animated.View>}
 
 
@@ -254,16 +269,44 @@ const Profile = () => {
                             })}
 
 
-                            <Text className=' text-sm font-bold tracking-widest '>Add Details</Text>
+                            <Text className=' text-sm uppercase font-bold tracking-widest text-slate-700'>Add Details</Text>
+                            <Text className=' text-xs uppercase font-bold tracking-widest text-slate-700'>Personal Details</Text>
+
+                            <View className='flex flex-row flex-wrap gap-3'>
+                                {personaldetails.map((detail) => {
+                                    return <Pressable key={detail} style={{
+                                        backgroundColor: colors.tailwind.slate[50],
+                                        width: 'auto',
+                                        padding: 4,
+                                        borderWidth: 1,
+                                        borderColor: colors.tailwind.slate[200],
+                                        borderRadius: 5
+                                    }} onPress={() => {
+
+                                        const exists = details.some((item) => item.name === detail)
+
+                                        if(exists) return
+
+                                        append_personal({
+                                            name: detail,
+                                            value: ''
+                                        })
+                                    }} >
+                                        <View className='text-sm font-semibold flex flex-row items-center gap-1'><MaterialCommunityIcons name='plus' size={17} /><Text className='text-xs'>{detail}</Text></View>
+                                    </Pressable>
+                                })}
+
+                            </View>
+                            <Text className=' text-xs uppercase font-bold tracking-widest text-slate-700'>Links / Socials</Text>
 
                             <View className='flex flex-row gap-4 flex-wrap'>
                                 {links.map((link) => {
                                     return <Pressable key={link} style={{
-                                        backgroundColor: colors.tailwind.stone[50],
+                                        backgroundColor: colors.tailwind.slate[50],
                                         width: 'auto',
                                         padding: 4,
                                         borderWidth: 1,
-                                        borderColor: colors.tailwind.indigo[200],
+                                        borderColor: colors.tailwind.slate[200],
                                         borderRadius: 5
                                     }} onPress={() => {
                                         const exist = fields.some((field) => field.name === link)

@@ -22,7 +22,7 @@ export type ResumeData = {
 
 export type Setter<T> = React.Dispatch<React.SetStateAction<T>>
 
-export type ProfileProps = Partial<Pick<ResumeContentProps, 'fullname' | 'email' | 'phonenumber' | 'links' | 'address' | 'professionaltitle' | 'profilepic'>>
+export type ProfileProps = Partial<Pick<ResumeContentProps, 'fullname' | 'email' | 'phonenumber' | 'links' | 'address' | 'professionaltitle' | 'profilepic' | 'personaldetails'>>
 
 
 export type ResumeContentProps = {
@@ -32,8 +32,12 @@ export type ResumeContentProps = {
     email: string,
     address: string,
     phonenumber: string,
+    personaldetails: {
+        name: string,
+        value: string
+    }[],
     links: {
-        name : string
+        name: string
         label: string,
         link: string
     }[],

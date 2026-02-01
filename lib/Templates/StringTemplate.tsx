@@ -1,10 +1,4 @@
-import { ResumeContentProps } from "@/types/types";
-import { ProfileSection } from "./ProfileSection";
-
-export function Template1(userdata: Partial<ResumeContentProps> | null): string {
-
-    return /*html*/`
-    <!DOCTYPE html>
+export const StringTemp = ` <!DOCTYPE html>
     <html>
     <head>
         <meta  name="viewport" content="width=device-width" />
@@ -74,29 +68,31 @@ export function Template1(userdata: Partial<ResumeContentProps> | null): string 
             font-size : 11pt;
         }
 
-         .icon {
-            margin-right: 5px;
-        }
-
         .links {
             display: flex;
-            align-items: center;
             flex-wrap: wrap;
             gap : 10px
         }
+
+
 
         </style>
 </head>
     <body>
     <div class='body'>
         <div>
-            <h1>${userdata?.fullname || ''}</h1>
-            <p><em>${userdata?.professionaltitle || ''}</em></p>
+            <h1>Ajith P</h1>
+            <p><em>Ajith P</em></p>
         </div>
 
    
         <section>
-            <p class='links'>${ProfileSection(userdata)}</p>
+            <p>
+            <a class='links' href="">
+            <i class="fab fa-github"></i>
+            <h4>github</h4>
+            </a>
+            </p>
         </section>
         <section>
             <h3>SUMMARY</h3>
@@ -187,8 +183,4 @@ export function Template1(userdata: Partial<ResumeContentProps> | null): string 
     </div>
    
     </body>
-</html>
-    `
-
-}
-
+</html>`
