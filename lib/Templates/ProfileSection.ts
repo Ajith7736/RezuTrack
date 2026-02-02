@@ -49,7 +49,7 @@ export function ProfileSection(content: Partial<Pick<ResumeContentProps, 'email'
   }) ?? []
 
   const links = content?.links?.map((link) => {
-    return `<a  href="${link.link}"><i class="${linkFaClasses[link.name]} icon"></i>${link.label}</a>`
+    return `<a href="${link.link}"><i class="${linkFaClasses[link.name]} icon"></i>${link.label}</a>`
   }) ?? []
 
 

@@ -8,10 +8,9 @@ import { FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons'
 import { useQueryClient } from '@tanstack/react-query'
 import { Image } from 'expo-image'
 import { router } from 'expo-router'
-import React, { useState } from 'react'
-import { Controller, Path, SubmitHandler, useFieldArray, useForm } from "react-hook-form"
-import { ActivityIndicator, KeyboardAvoidingView, Pressable, ScrollView, Text, TouchableOpacity, View } from 'react-native'
-import Animated, { FadeIn, FadeOut } from 'react-native-reanimated'
+import React, { useEffect, useRef, useState } from 'react'
+import { Controller, Path, SubmitHandler, useFieldArray, useForm, useWatch } from "react-hook-form"
+import { ActivityIndicator, BackHandler, KeyboardAvoidingView, Pressable, ScrollView, Text, TouchableOpacity, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import CustomText from '../../../components/ui/CustomText'
 import RHFInput from '../../../components/ui/InputText'
@@ -19,10 +18,14 @@ import SubmitButton from '../../../components/ui/SubmitButton'
 import TitleBackButton from '../../../components/ui/TitleBackButton'
 import ImageOption from './ImageOption'
 import PersonalDetails from './PersonalDetails'
+import Links from './Links'
+import { BottomSheetModal } from '@gorhom/bottom-sheet'
 
 const Profile = () => {
     const [ModalVisible, setModalVisible] = useState(false)
+    const [isSheetOpen, setisSheetOpen] = useState(false)
     const queryclient = useQueryClient();
+    const BottomSheetRef = useRef<BottomSheetModal>(null)
     const [ShowUrl, setShowUrl] = useState<{
         name: string | null,
         show: boolean
@@ -31,9 +34,8 @@ const Profile = () => {
         show: false
     })
     const { ResumeContent, setResumeContent, currentResumeId } = useResumeContent();
-    const [image, setimage] = useState<string>(ResumeContent?.profilepic as string ?? '')
 
-    const { control, handleSubmit, formState: { isSubmitting }, watch } = useForm<ProfileProps>({
+    const { control, handleSubmit, formState: { isSubmitting }, watch , setValue } = useForm<ProfileProps>({
         defaultValues: ResumeContent ? {
             email: ResumeContent.email,
             fullname: ResumeContent.fullname,
@@ -45,6 +47,12 @@ const Profile = () => {
             personaldetails: ResumeContent.personaldetails
         } : undefined
     })
+
+    const image = useWatch({
+        control,
+        name : 'profilepic'
+    })
+    
 
     const { append: append_personal, fields: details, remove: remove_personal } = useFieldArray({
         control,
@@ -130,22 +138,40 @@ const Profile = () => {
         ]
 
 
+    const handleexpand = () => {
+        BottomSheetRef.current?.present()
+    }
+
+
+    useEffect(() => {
+        const event = BackHandler.addEventListener('hardwareBackPress', () => {
+            if (isSheetOpen) {
+                BottomSheetRef.current?.dismiss();
+                return true;
+            }
+
+            return false;
+        })
+
+        return () => {
+            event.remove();
+        }
+    }, [isSheetOpen])
 
 
     return (
         <SafeAreaView className='h-screen relative bg-white'>
 
-            {ModalVisible && <Controller
+            <Controller
                 control={control}
-                name='profilepic'
+                name='profilepic.url'
                 render={({ field: { onChange } }) => {
-                    return <ImageOption onChange={onChange} setModalVisible={setModalVisible} image={image} setimage={setimage} />
-                }
-                }
-            />}
+                    return <ImageOption path={image?.path} setValue={setValue} isSheetOpen={isSheetOpen} setisSheetOpen={setisSheetOpen} BottomSheetRef={BottomSheetRef} onChange={onChange} />
+                }}
+            />
 
             <View style={{
-                height: '92%'
+                height: '94%'
             }}>
 
                 <KeyboardAvoidingView
@@ -164,17 +190,17 @@ const Profile = () => {
                         >
 
                             <TitleBackButton title="Profile" />
-                            <CustomText className='uppercase w-full text-center font-bold tracking-widest text-stone-500'>Photo</CustomText>
+                            <CustomText className='uppercase w-full text-center font-bold tracking-widest text-slate-500'>Photo</CustomText>
 
                             <View className='flex gap-3 w-full items-center justify-center'>
 
 
-                                <Pressable onPress={() => setModalVisible(true)} className='h-32 relative w-32 bg-stone-200 rounded-full flex items-center justify-center'>
+                                <Pressable onPress={() => handleexpand()} className='h-32 relative w-32 bg-stone-200 rounded-full flex items-center justify-center'>
 
                                     <View className='h-32 relative w-32 overflow-hidden bg-slate-100 rounded-full flex items-center justify-center'>
-                                        {image ? <>
+                                        {image?.url ? <>
                                             <Image
-                                                source={image}
+                                                source={image?.url}
                                                 style={{
                                                     height: '100%',
                                                     width: '100%'
@@ -189,7 +215,7 @@ const Profile = () => {
                                         }
 
                                     </View>
-                                    <TouchableOpacity onPress={() => setModalVisible(true)} className='absolute bg-white h-8 w-8 rounded-full bottom-0 right-0  z-50 flex items-center justify-center'>
+                                    <TouchableOpacity onPress={() => handleexpand()} className='absolute bg-white h-8 w-8 rounded-full bottom-0 right-0  z-50 flex items-center justify-center'>
                                         <FontAwesome name="camera" size={15} color="black" className='' />
                                     </TouchableOpacity>
                                 </Pressable>
@@ -198,7 +224,7 @@ const Profile = () => {
                             {PersonalContents.map((content, indx) => {
                                 return <View key={indx} className='flex gap-2'>
 
-                                    <CustomText className='uppercase text-sm font-bold tracking-widest text-stone-500'>{content.label}</CustomText>
+                                    <CustomText className='uppercase text-sm font-bold tracking-widest text-slate-500'>{content.label}</CustomText>
                                     <Controller
                                         control={control}
                                         name={content.name}
@@ -214,58 +240,7 @@ const Profile = () => {
                             })}
 
                             {fields.map((link, indx) => {
-                                return <View key={indx} className='flex relative gap-2'>
-                                    <View className='flex flex-row justify-between'>
-                                        <CustomText className='uppercase text-sm w-[50%] font-bold tracking-widest text-stone-500'>{link.name}</CustomText>
-                                        <Pressable className='w-[50%] flex items-end' onPress={() => {
-                                            remove(indx)
-                                        }}><Text className='text-sm text-end text-red-500 tracking-wider' >Remove</Text></Pressable>
-                                    </View>
-
-                                    <Controller
-                                        control={control}
-                                        name={`links.${indx}.label`}
-                                        render={({ field: { onChange, value } }) => {
-                                            return <RHFInput value={value} onChange={onChange} />
-                                        }}
-                                    />
-
-                                    <Pressable onPress={() => {
-                                        setShowUrl({
-                                            name: link.name,
-                                            show: !ShowUrl.show
-                                        })
-                                    }} className='absolute right-2 top-9 h-10 w-10 flex items-center justify-center'>
-                                        <MaterialCommunityIcons name='link' size={20} color={colors.tailwind.indigo[500]} />
-                                    </Pressable>
-
-
-                                    {ShowUrl.name === link.name && ShowUrl.show && <Animated.View entering={FadeIn} exiting={FadeOut} className=' flex flex-row items-center absolute w-[85%] left-16 -top-3'>
-                                        <Controller
-                                            control={control}
-                                            name={`links.${indx}.link`}
-                                            render={({ field: { onChange, value } }) => {
-                                                return <RHFInput onSubmitEditing={() => {
-                                                    setShowUrl({
-                                                        name: null,
-                                                        show: false
-                                                    })
-                                                }} placeholder='Enter Url' className='w-[82%] h-full rounded-none' focusstyle={false} shadow value={value} onChange={onChange} />
-                                            }}
-                                        />
-                                        <View className='bg-slate-100 p-2 w-[18%] border-y border-r border-slate-200 h-full'>
-                                            <Pressable onPress={() => {
-                                                setShowUrl({
-                                                    name: null,
-                                                    show: false
-                                                })
-                                            }} className=' bg-indigo-500  rounded-md w-full h-10 flex items-center justify-center'><MaterialCommunityIcons name='check' color={'white'} size={20} /></Pressable>
-                                        </View>
-
-                                    </Animated.View>}
-
-
-                                </View>
+                                return <Links key={link.name} ShowUrl={ShowUrl} control={control} indx={indx} link={link} remove={remove} setShowUrl={setShowUrl} />
                             })}
 
 
@@ -285,7 +260,7 @@ const Profile = () => {
 
                                         const exists = details.some((item) => item.name === detail)
 
-                                        if(exists) return
+                                        if (exists) return
 
                                         append_personal({
                                             name: detail,

@@ -26,7 +26,10 @@ export type ProfileProps = Partial<Pick<ResumeContentProps, 'fullname' | 'email'
 
 
 export type ResumeContentProps = {
-    profilepic: string,
+    profilepic: {
+        url: string,
+        path: string
+    },
     fullname: string,
     professionaltitle: string,
     email: string,
@@ -41,7 +44,7 @@ export type ResumeContentProps = {
         label: string,
         link: string
     }[],
-    profile: string[],
+    summary: string[],
     education: {
         college: string,
         field: string,
@@ -75,7 +78,7 @@ export type ResumeContentProps = {
         endDate: string,
         description: string
     }[],
-    strength: {
+    strengths: {
         skill: string,
         information: string,
         level: string
@@ -90,7 +93,7 @@ export type ResumeContentProps = {
         date: string,
         description: string
     }[],
-    interest: {
+    interests: {
         interest: string,
         additionalInformation: string
     }[],

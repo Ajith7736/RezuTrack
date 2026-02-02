@@ -85,7 +85,7 @@ export default function Index() {
           }}>
             <Pressable style={{
               backgroundColor: colors.tailwind.stone[50]
-            }} className=" h-[15rem] m-5 w-[10rem] rounded-md flex justify-center items-center border border-stone-300 border-dashed"
+            }} className=" h-[15rem] m-5 w-[11rem] rounded-md flex justify-center items-center border border-stone-300 border-dashed"
               onPress={() => router.push('/(tabs)/home/templates')}
             >
               <Ionicons name="add" size={17} color={"#a8a29e"} />

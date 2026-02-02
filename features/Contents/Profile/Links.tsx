@@ -28,7 +28,7 @@ const Links = ({ indx, remove, control, link, ShowUrl, setShowUrl }: {
   return (
     <View key={indx} className='flex relative gap-2'>
       <View className='flex flex-row justify-between'>
-        <CustomText className='uppercase text-sm w-[50%] font-bold tracking-widest text-stone-500'>{link.name}</CustomText>
+        <CustomText className='uppercase text-sm w-[50%] font-bold tracking-widest text-slate-500'>{link.name}</CustomText>
         <Pressable className='w-[50%] flex items-end' onPress={() => {
           remove(indx)
         }}><Text className='text-sm text-end text-red-500 tracking-wider' >Remove</Text></Pressable>
@@ -38,7 +38,7 @@ const Links = ({ indx, remove, control, link, ShowUrl, setShowUrl }: {
         control={control}
         name={`links.${indx}.label`}
         render={({ field: { onChange, value } }) => {
-          return <RHFInput value={value} onChange={onChange} />
+          return <RHFInput placeholder={`Enter name to be shown`} value={value} onChange={onChange} />
         }}
       />
 

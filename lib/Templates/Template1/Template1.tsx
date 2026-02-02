@@ -1,5 +1,6 @@
 import { ResumeContentProps } from "@/types/types";
-import { ProfileSection } from "./ProfileSection";
+import { Image } from "../Image";
+import { ProfileSection } from "../ProfileSection";
 
 export function Template1(userdata: Partial<ResumeContentProps> | null): string {
 
@@ -8,11 +9,12 @@ export function Template1(userdata: Partial<ResumeContentProps> | null): string 
     <html>
     <head>
         <meta  name="viewport" content="width=device-width" />
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-
+       <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Karla:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-        
-        <style>
+
+         <style>
          * {
             margin: 0;
             padding: 0;
@@ -26,7 +28,8 @@ export function Template1(userdata: Partial<ResumeContentProps> | null): string 
         body {
             width: 594.96pt;
             height: 840.96pt;
-            font-family: 'inter', sans-serif;
+            font-family: "Karla", sans-serif;
+            font-style: normal;
             font-size: 11pt;
             color: #000;
         }
@@ -42,10 +45,6 @@ export function Template1(userdata: Partial<ResumeContentProps> | null): string 
         a {
             text-decoration : none;
             color : black;
-        }
-
-        .bold {
-          font-weight: bold;  
         }
 
         hr{
@@ -66,6 +65,11 @@ export function Template1(userdata: Partial<ResumeContentProps> | null): string 
             justify-content : space-between;
         }
 
+        .flex-space {
+            display : flex;
+            justify-content : space-between;
+        }
+
         .project-desc {
             font-size : 10pt;
         }
@@ -74,30 +78,39 @@ export function Template1(userdata: Partial<ResumeContentProps> | null): string 
             font-size : 11pt;
         }
 
-         .icon {
-            margin-right: 5px;
-        }
-
-        .links {
+         .links {
             display: flex;
-            align-items: center;
             flex-wrap: wrap;
             gap : 10px
         }
+        
+        .icon {
+            margin-right : 5px;
+        }
+
+        .img-style {
+    height:  120px;
+    width: 120px;
+    border-radius: 50%;
+}
 
         </style>
 </head>
     <body>
     <div class='body'>
-        <div>
-            <h1>${userdata?.fullname || ''}</h1>
-            <p><em>${userdata?.professionaltitle || ''}</em></p>
-        </div>
-
-   
-        <section>
+        <div class='flex-space'>
+            <div>
+                <h1>${userdata?.fullname || ''}</h1>
+                <p><em>${userdata?.professionaltitle || ''}</em></p>
+                 <section>
             <p class='links'>${ProfileSection(userdata)}</p>
         </section>
+            </div>
+
+            <div>
+               ${Image(userdata?.profilepic)}
+            </div>
+        </div>
         <section>
             <h3>SUMMARY</h3>
             <hr />
@@ -116,10 +129,10 @@ export function Template1(userdata: Partial<ResumeContentProps> | null): string 
            <div>
                <div class="project-heading">
                    <div>
-                      <p><strong>GenUI builder </strong> - Powered UI Generation</p>
+                      <p><b>GenUI builder </b> - Powered UI Generation</p>
                    </div>
                 <div>
-                      <p >08/2025 - 09/2025</p>
+                      <p>08/2025 - 09/2025</p>
                 </div>
                 </div>
                 <div>
@@ -133,41 +146,20 @@ export function Template1(userdata: Partial<ResumeContentProps> | null): string 
                     </ul>
                 </div>
            </div>
-           <div>
-               <div class="project-heading">
-                   <div>
-                       <p><strong>BugLab</strong> - For CyberSecurity Beginners</p>
-
-                   </div>
-                    <div>
-                         <p>08/2025 - 09/2025</p>
-                    </div>
-                </div>
-                <div>
-                    <p class="project-desc">Next.js | Node.js | MongoDB | Vercel Deployment</p>
-                </div>
-                <div >
-                    <ul class="project-content">
-                        <li>Built a hands-on cybersecurity learning platform simulating real-world vulnerabilities (SQL Injection, XSS, CSRF, NoSQL Injection) with SQLite and MongoDB for dataset management</li>
-                        <li>Designed automated scoring logic with Express.js backend validation and parameterized queries, enabling real-time evaluation of user actions across security labs</li>
-                    </ul>
-                </div>
-           </div>
         </section>
         <section>
             <h3>LANGUAGES</h3>
            <hr />
             <div>
-                <p>English - Proficient</p>
+                <p><b>English -</b> Proficient</p>
             </div>
         </section>
          <section>
             <h3 >EDUCATION</h3>
            <hr />
-            <div>
+            <div class='flex-space'>
                 <div>
-                    <p>IHRD Malampuzha,</p>
-                    <p>BSC Computer Science</p>
+                    <p><b>IHRD Malampuzha </b>, BSC Computer Science</p>
                 </div>
                <div>
                    <p>09/2022 – 04/2025 | Palakkad, Kerala</p>
@@ -178,10 +170,10 @@ export function Template1(userdata: Partial<ResumeContentProps> | null): string 
           <h3>STRENGTH</h3>
            <hr />
             <div>
-                <p><span>Tech Adaptability</span> - Rapid learner adept at mastering emerging technologies like AI/LLM integration, Next.js, and serverless architecture in minimal time.</p>
+                <p><b>Tech Adaptability</b> - Rapid learner adept at mastering emerging technologies like AI/LLM integration, Next.js, and serverless architecture in minimal time.</p>
             </div>
             <div>
-                <p><span>Communication</span> - Strong communicator skilled in translating technical challenges into actionable team goals.</p>
+                <p><b>Communication</b> - Strong communicator skilled in translating technical challenges into actionable team goals.</p>
             </div>
         </section>
     </div>

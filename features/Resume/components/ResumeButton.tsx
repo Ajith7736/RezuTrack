@@ -1,18 +1,18 @@
 import { colors } from '@/components/ui/colors'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
-import { useColorScheme } from 'nativewind'
 import React from 'react'
-import { Pressable, StyleSheet } from 'react-native'
+import { ActivityIndicator, Pressable, StyleSheet } from 'react-native'
 
-const ResumeButton = ({ onPress }: { onPress: () => void }) => {
+
+const ResumeButton = ({ onPress, loading = false }: { onPress?: () => void, loading?: boolean }) => {
 
     return (
-        <Pressable className=' p-5 border border-stone-200 w-[60px] flex justify-center items-center absolute bottom-10 right-5 rounded-md' style={[{
+        <Pressable className=' h-16 border border-stone-200 w-[60px] flex justify-center items-center absolute bottom-10 right-5 rounded-md' style={[{
             zIndex: 15,
             backgroundColor: colors.tailwind.stone[50],
 
         }, styles.shadow]} onPress={onPress}>
-            <MaterialCommunityIcons name="file-search-outline" size={24} color={"#44403c"} />
+            {loading ? <ActivityIndicator size={'small'} color={colors.tailwind.indigo[500]} /> : <MaterialCommunityIcons name="file-search-outline" size={24} color={"#44403c"} />}
         </Pressable>
     )
 }

@@ -1,9 +1,9 @@
-import { AntDesign, Feather, MaterialCommunityIcons } from '@expo/vector-icons';
+import { useToast } from '@/context/ToastContext';
+import { AntDesign, Feather } from '@expo/vector-icons';
 import React, { ReactElement, useEffect } from 'react';
 import { Text, View } from 'react-native';
-import Animated, { FadeOut, FadeInUp } from "react-native-reanimated";
-import { colors } from './colors';
-import { useToast } from '@/context/ToastContext';
+import Animated, { FadeInUp, FadeOut } from "react-native-reanimated";
+import { colors } from '../../components/ui/colors';
 
 const ToastComponent = () => {
 
@@ -35,7 +35,13 @@ const ToastComponent = () => {
             backgroundColor: '#ffffff',
             borderColor: colors.tailwind.red[600],
             textColor: colors.tailwind.red[600]
-        }
+        },
+        warning: {
+            icon: <Feather name="alert-triangle" size={18} color={colors.tailwind.amber[600]} />,
+            backgroundColor: '#ffffff',
+            borderColor: colors.tailwind.amber[600],
+            textColor: colors.tailwind.amber[600]
+        },
     }
 
 

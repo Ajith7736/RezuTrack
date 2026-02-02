@@ -80,7 +80,7 @@ const ResumeCard = ({ resume, refetch, showoptions, setshowoptions }: { resume: 
 
 
     return (
-        <View key={resume.id} className="flex relative gap-2  m-5  w-[10rem]">
+        <View key={resume.id} className="flex relative gap-2  m-4  w-[11rem]">
             <Pressable style={{
                 borderWidth: 1,
                 borderColor: colors.tailwind.stone[200],

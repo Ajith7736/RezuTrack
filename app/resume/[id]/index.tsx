@@ -4,6 +4,7 @@ import Loading from "@/components/ui/Loading";
 import TitleBackButton from "@/components/ui/TitleBackButton";
 import { useContent } from "@/context/ContentContext";
 import { useResumeContent } from "@/context/ResumeContentContext";
+import PersonalDetails from "@/features/Resume/components/PersonalDetails";
 import ResumeButton from "@/features/Resume/components/ResumeButton";
 import ResumePreview from "@/features/Resume/components/ResumePreview";
 import { contentcard } from "@/lib/Contents/ContentCard";
@@ -25,7 +26,7 @@ const Resume = () => {
     const BottomSheetRef = useRef<BottomSheetModal>(null)
     const { ResumeContent, setResumeContent, setcurrentResumeId } = useResumeContent()
     const { id } = useLocalSearchParams();
-
+    const [isGenerating, setisGenerating] = useState(false)
 
 
 
@@ -89,22 +90,6 @@ const Resume = () => {
     }, [])
 
 
-
-    const profileitems = [
-        {
-            icon: <MaterialCommunityIcons name="email-outline" size={18} color={colors.tailwind.stone[500]} />,
-            value: ResumeContent?.email && ResumeContent.email !== '' ? ResumeContent?.email : 'Email'
-        }, {
-            icon: <MaterialCommunityIcons name="phone-outline" size={18} color={colors.tailwind.stone[500]} />,
-            value: ResumeContent?.phonenumber && ResumeContent.phonenumber !== '' ? ResumeContent?.phonenumber : 'Phone Number'
-        }, {
-            icon: <Feather name="map-pin" size={18} color={colors.tailwind.stone[500]} />,
-            value: ResumeContent?.address && ResumeContent.address !== '' ? ResumeContent?.address : 'Address'
-        }
-
-    ]
-
-
     if (isLoading || isFetching) {
         return <Loading />
     }
@@ -113,50 +98,15 @@ const Resume = () => {
 
     return (
         <SafeAreaView className='h-screen relative bg-slate-50'>
-            {(!isLoading && !isFetching) && <ResumeButton onPress={handleexpand} />}
-            <ResumePreview Sheetref={BottomSheetRef} setisSheetOpen={setisSheetOpen} />
+            {!isGenerating ? (!isLoading && !isFetching) && <ResumeButton onPress={handleexpand} /> : <ResumeButton loading={true} />}
+            <ResumePreview isGenerating={isGenerating} setisGenerating={setisGenerating} Sheetref={BottomSheetRef} setisSheetOpen={setisSheetOpen} />
 
             <ScrollView >
                 <TitleBackButton title={data?.name} className="pb-5 pt-3 px-2" />
                 <View style={{
                     margin: 10
                 }}>
-                    <View style={styles.PersonalItem} className="flex flex-row justify-between w-[98%] mx-auto items-start   py-6 px-5 rounded-lg">
-                        <View className="flex gap-3 w-[90%]">
-                            {ResumeContent?.profilepic && <View className='h-28 relative w-28 overflow-hidden  rounded-full flex items-center justify-center'>
-                                <Image
-                                    source={ResumeContent.profilepic}
-                                    style={{
-                                        height: '100%',
-                                        width: '100%'
-                                    }}
-                                    contentFit="cover"
-                                    contentPosition={'center'}
-                                />
-                            </View>
-                            }
-                            <View>
-                                <CustomText className="text-xl font-extrabold tracking-widest">{ResumeContent?.fullname && ResumeContent?.fullname !== '' ? ResumeContent?.fullname : <>Name</>}</CustomText>
-                                <CustomText className="text-stone-700 italic">{ResumeContent?.professionaltitle && ResumeContent?.professionaltitle !== '' ? ResumeContent?.professionaltitle : <>Title</>}</CustomText>
-                            </View>
-                            {profileitems.map((item) => <View key={item.value} className="text-sm flex flex-row gap-3">
-                                <CustomText className="text-stone-800">{item.icon}</CustomText>
-                                <CustomText className="flex-1 flex-wrap w-full">{item.value}</CustomText>
-                            </View>)}
-                        </View>
-
-                        <Link href={{
-                            pathname: "/resume/[id]/[content]",
-                            params: {
-                                id: id as string,
-                                content: "profile"
-                            }
-                        }}><View style={[{
-                            elevation: 4,
-                            padding: 9,
-                            borderRadius: 8
-                        }]} className="  bg-indigo-500"><Octicons name="pencil" size={20} color="white" /></View> </Link>
-                    </View>
+                    <PersonalDetails id={id} />
 
                     {/* Resume Content */}
 

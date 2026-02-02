@@ -14,5 +14,10 @@ export const toast = {
         toastRef.setToastmessage(message);
         toastRef.settype('error');
         toastRef.setisvisible(true)
+    },
+    warn: (message : string) => {
+        toastRef.setToastmessage(message);
+        toastRef.settype('warning');
+        toastRef.setisvisible(true);
     }
 }

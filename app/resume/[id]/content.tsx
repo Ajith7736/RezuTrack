@@ -8,9 +8,12 @@ import Animated, { FadeIn, FadeOut } from 'react-native-reanimated'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { clsx } from 'clsx'
 import { colors } from '@/components/ui/colors'
+import { useResumeContent } from '@/context/ResumeContentContext'
 
 const content = () => {
+
   const { selectedcontents, setselectedcontents } = useContent();
+  const { ResumeContent } = useResumeContent();
 
   const [contents, setcontents] = useState<Set<string>>(new Set())
 
@@ -27,14 +30,22 @@ const content = () => {
     }
   }
 
-  const handlecontent = () => {
+  const handlecontent = async () => {
     setselectedcontents(prev => new Set([...prev, ...contents]))
+    
+    // const { } = await supabase.from('Resume').update({
+    //   ResumeContent : {
+    //     ...ResumeContent,
+    //     ...contents 
+    //   }
+    // })
+
     router.back();
   }
 
 
   return (
-    <SafeAreaView className='flex-1  relative'>
+    <SafeAreaView className='flex-1 bg-white relative'>
       <CustomText className='text-xl m-5 font-extrabold tracking-widest'>Add Content</CustomText>
       <ScrollView className='flex gap-2'>
         {contentcard.map((content) => {
@@ -42,15 +53,15 @@ const content = () => {
             <Pressable
               style={{
                 borderWidth: 1,
-                borderColor: contents.has(content.title) ? colors.tailwind.stone[400] : colors.tailwind.stone[200],
-                boxShadow: "0 3px 10px rgb(0,0,0,0.06)"
+                borderColor: contents.has(content.title) ? colors.tailwind.slate[400] : colors.tailwind.slate[200],
+                boxShadow: "0 3px 10px rgb(0,0,0,0.04)"
               }}
               onPress={() => handlepress(content.title)}
               key={content.title}
-              className={clsx(`m-5 p-5 flex gap-4 border bg-stone-100 rounded-lg `)}>
+              className={clsx(`m-5 p-5 flex gap-4  bg-slate-100 rounded-lg `)}>
               <View className='flex flex-row items-center '>
                 <Text>{content.icon}</Text>
-                <Text className='font-extrabold text-stone-800 tracking-widest uppercase w-full'> {content.title}</Text>
+                <Text className='font-extrabold text-slate-500 tracking-widest uppercase w-full'> {content.title}</Text>
               </View>
 
               <CustomText className='text-sm text-stone-600 font-semibold '>{content.desc}</CustomText>
