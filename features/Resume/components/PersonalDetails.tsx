@@ -28,7 +28,7 @@ const PersonalDetails = ({ id }: { id: string | string[]}) => {
     return (
         <View style={styles.PersonalItem} className="flex flex-row justify-between w-[98%] mx-auto items-start   py-6 px-5 rounded-lg">
             <View className="flex gap-3 w-[90%]">
-                {ResumeContent?.profilepic && <View className='h-28 relative w-28 overflow-hidden  rounded-full flex items-center justify-center'>
+                {ResumeContent?.profilepic?.url && <View className='h-28 relative w-28 overflow-hidden  rounded-full flex items-center justify-center'>
                     <Image
                         source={ResumeContent.profilepic.url}
                         style={{

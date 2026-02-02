@@ -5,14 +5,20 @@ import { ProfileProps, Setter } from '@/types/types';
 import { FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons';
 import { BottomSheetBackdrop, BottomSheetModal, BottomSheetView } from '@gorhom/bottom-sheet';
 import * as ImagePicker from 'expo-image-picker';
-import React, { RefObject } from 'react';
-import { Pressable, Text, View } from 'react-native';
+import React, { RefObject, useState } from 'react';
+import { ActivityIndicator, Pressable, Text, View } from 'react-native';
 import { ImageUpload } from './ImageUpload';
 import { UseFormSetValue } from 'react-hook-form';
 import DeleteImage from './DeleteImage';
 
 const ImageOption = ({ setValue, onChange, path, BottomSheetRef, setisSheetOpen }: { setValue: UseFormSetValue<ProfileProps>, onChange: Function, path: string | undefined, BottomSheetRef: RefObject<BottomSheetModal | null>, isSheetOpen: boolean, setisSheetOpen: Setter<boolean> }) => {
-
+    const [isLoading, setisLoading] = useState<{
+        current: 'gallery' | 'capture' | 'delete' | null,
+        loading: boolean
+    }>({
+        current: null,
+        loading: false
+    })
     const { session } = useSession();
 
     const handlecamera = async () => {
@@ -30,6 +36,11 @@ const ImageOption = ({ setValue, onChange, path, BottomSheetRef, setisSheetOpen 
 
                 if (!result.canceled) {
 
+                    setisLoading({
+                        current: 'capture',
+                        loading: true
+                    })
+
                     const { success, error, url, path } = await ImageUpload(result.assets[0], session?.user.id)
 
                     if (success) {
@@ -39,7 +50,10 @@ const ImageOption = ({ setValue, onChange, path, BottomSheetRef, setisSheetOpen 
                         toast.error('Couldnt Upload Image')
                     }
 
-
+                    setisLoading({
+                        current: null,
+                        loading: false
+                    });
                     BottomSheetRef.current?.close();
                 }
             } else {
@@ -66,6 +80,12 @@ const ImageOption = ({ setValue, onChange, path, BottomSheetRef, setisSheetOpen 
                 })
 
                 if (!result.canceled) {
+
+                    setisLoading({
+                        current: 'gallery',
+                        loading: true
+                    });
+
                     const { success, error, url, path } = await ImageUpload(result.assets[0], session?.user.id)
 
                     if (success) {
@@ -75,8 +95,11 @@ const ImageOption = ({ setValue, onChange, path, BottomSheetRef, setisSheetOpen 
                         toast.error('Couldnt Upload Image')
                     }
 
+                    setisLoading({
+                        current: null,
+                        loading: false
+                    });
                     BottomSheetRef.current?.close();
-
                 }
 
             } else {
@@ -91,8 +114,16 @@ const ImageOption = ({ setValue, onChange, path, BottomSheetRef, setisSheetOpen 
 
     const handledelete = () => {
         if (path) {
+            setisLoading({
+                current: 'delete',
+                loading: true
+            });
             DeleteImage(path as string);
-            setValue('profilepic',undefined)
+            setValue('profilepic', undefined)
+            setisLoading({
+                current: null,
+                loading: false
+            });
             BottomSheetRef.current?.close();
         }
     }
@@ -129,19 +160,19 @@ const ImageOption = ({ setValue, onChange, path, BottomSheetRef, setisSheetOpen 
             <BottomSheetView className={` p-10 rounded-lg flex flex-row gap-8`}>
                 <View className='flex gap-3'>
                     <Pressable onPress={handlecamera} className='bg-slate-100 border border-slate-200 h-16 w-16 flex items-center justify-center'>
-                        <FontAwesome name='camera' size={20} />
+                        {isLoading.current === 'capture' && isLoading.loading ? <ActivityIndicator size={'small'} color={colors.tailwind.indigo[500]} /> : <FontAwesome name='camera' size={20} />}
                     </Pressable>
                     <Text className='text-xs tracking-widest text-center font-bold uppercase w-full'>Capture</Text>
                 </View>
                 <View className='flex gap-3'>
                     <Pressable onPress={handlegallery} className='bg-slate-100  h-16 w-16 border border-slate-200 flex items-center justify-center'>
-                        <MaterialCommunityIcons name='view-gallery' size={20} />
+                        {isLoading.current === 'gallery' && isLoading.loading ? <ActivityIndicator size={'small'} color={colors.tailwind.indigo[500]} /> : <MaterialCommunityIcons name='view-gallery' size={20} />}
                     </Pressable>
                     <Text className='text-xs tracking-widest text-center font-bold uppercase w-full'>Gallery</Text>
                 </View>
                 <View className='flex gap-3'>
                     <Pressable onPress={handledelete} className='bg-slate-100  h-16 w-16 border border-slate-200 flex items-center justify-center'>
-                        <MaterialCommunityIcons name='delete' size={20} />
+                        {isLoading.current === 'delete' && isLoading.loading ? <ActivityIndicator size={'small'} color={colors.tailwind.indigo[500]} /> : <MaterialCommunityIcons name='delete' size={20} />}
                     </Pressable>
                     <Text className='text-xs tracking-widest text-center font-bold uppercase w-full'>Delete</Text>
                 </View>

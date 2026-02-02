@@ -20,6 +20,8 @@ import ImageOption from './ImageOption'
 import PersonalDetails from './PersonalDetails'
 import Links from './Links'
 import { BottomSheetModal } from '@gorhom/bottom-sheet'
+import PersonaldatasCard from './PersonaldatasCard'
+import SocialCard from './SocialCard'
 
 const Profile = () => {
     const [ModalVisible, setModalVisible] = useState(false)
@@ -65,18 +67,6 @@ const Profile = () => {
     })
 
 
-    const personaldetails = [
-        'date of birth', 'nationality', 'passport or id', 'marital status',
-        'military service', 'driving license', 'gender/pronoun', 'disability',
-        'visa', 'height'
-    ]
-
-    const links = [
-        'github', 'linkedin', 'website', 'search', 'gitbook', 'medium', 'orcid',
-        'skype', 'bluesky', 'threads', 'x', 'discord', 'dribbble', 'behance',
-        'stack overflow', 'gitlab', 'quora', 'facebook', 'instagram', 'wechat',
-        'hugging face', 'kaggle', 'youtube', 'tiktok', 'signal', 'telegram'
-    ]
 
 
     const onSubmit: SubmitHandler<ProfileProps> = async (data) => {
@@ -197,13 +187,13 @@ const Profile = () => {
 
                                 <Pressable onPress={() => handleexpand()} className='h-32 relative w-32 bg-stone-200 rounded-full flex items-center justify-center'>
 
-                                    <View className='h-32 relative w-32 overflow-hidden bg-slate-100 rounded-full flex items-center justify-center'>
+                                    <View className='h-32 relative w-32 border border-slate-200 overflow-hidden bg-slate-100 rounded-full flex items-center justify-center'>
                                         {image?.url ? <>
                                             <Image
                                                 source={image?.url}
                                                 style={{
                                                     height: '100%',
-                                                    width: '100%'
+                                                    width: '100%',
                                                 }}
                                                 contentFit="cover"
                                                 contentPosition={'center'}
@@ -215,7 +205,7 @@ const Profile = () => {
                                         }
 
                                     </View>
-                                    <TouchableOpacity onPress={() => handleexpand()} className='absolute bg-white h-8 w-8 rounded-full bottom-0 right-0  z-50 flex items-center justify-center'>
+                                    <TouchableOpacity onPress={() => handleexpand()} className='absolute border border-slate-300 bg-white h-8 w-8 rounded-full bottom-0 right-0  z-50 flex items-center justify-center'>
                                         <FontAwesome name="camera" size={15} color="black" className='' />
                                     </TouchableOpacity>
                                 </Pressable>
@@ -245,59 +235,11 @@ const Profile = () => {
 
 
                             <Text className=' text-sm uppercase font-bold tracking-widest text-slate-700'>Add Details</Text>
-                            <Text className=' text-xs uppercase font-bold tracking-widest text-slate-700'>Personal Details</Text>
+                           
 
-                            <View className='flex flex-row flex-wrap gap-3'>
-                                {personaldetails.map((detail) => {
-                                    return <Pressable key={detail} style={{
-                                        backgroundColor: colors.tailwind.slate[50],
-                                        width: 'auto',
-                                        padding: 4,
-                                        borderWidth: 1,
-                                        borderColor: colors.tailwind.slate[200],
-                                        borderRadius: 5
-                                    }} onPress={() => {
+                            <PersonaldatasCard append_personal={append_personal} details={details} />
 
-                                        const exists = details.some((item) => item.name === detail)
-
-                                        if (exists) return
-
-                                        append_personal({
-                                            name: detail,
-                                            value: ''
-                                        })
-                                    }} >
-                                        <View className='text-sm font-semibold flex flex-row items-center gap-1'><MaterialCommunityIcons name='plus' size={17} /><Text className='text-xs'>{detail}</Text></View>
-                                    </Pressable>
-                                })}
-
-                            </View>
-                            <Text className=' text-xs uppercase font-bold tracking-widest text-slate-700'>Links / Socials</Text>
-
-                            <View className='flex flex-row gap-4 flex-wrap'>
-                                {links.map((link) => {
-                                    return <Pressable key={link} style={{
-                                        backgroundColor: colors.tailwind.slate[50],
-                                        width: 'auto',
-                                        padding: 4,
-                                        borderWidth: 1,
-                                        borderColor: colors.tailwind.slate[200],
-                                        borderRadius: 5
-                                    }} onPress={() => {
-                                        const exist = fields.some((field) => field.name === link)
-
-                                        if (exist) return
-
-                                        append({
-                                            label: '',
-                                            name: link,
-                                            link: ''
-                                        })
-                                    }} >
-                                        <View className='text-sm font-semibold flex flex-row items-center gap-1'><MaterialCommunityIcons name='plus' size={17} /><Text className='text-xs'>{link}</Text></View>
-                                    </Pressable>
-                                })}
-                            </View>
+                           <SocialCard append={append} fields={fields} />
                         </View>
                     </ScrollView>
 
