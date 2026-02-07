@@ -1,22 +1,16 @@
+import { useSession } from "@/context/AuthContext";
 import { SplashScreen, Stack } from "expo-router";
 import { StatusBar } from 'expo-status-bar';
 import { LogBox, } from 'react-native';
 import 'react-native-gesture-handler';
 import "../lib/reanimatedConfig"; // Must be first - configures Reanimated
 import "./globals.css";
+
 import Providers from "./Providers";
-import { useSession } from "@/context/AuthContext";
 
 
 SplashScreen.preventAutoHideAsync();
 
-
-// Disable Reanimated strict mode warnings
-if (__DEV__) {
-  LogBox.ignoreLogs([
-    '[Reanimated] Reading from `value`',
-  ]);
-}
 
 function InitialLayout() {
 
@@ -31,6 +25,21 @@ function InitialLayout() {
     >
       <Stack.Protected guard={!!session?.user}>
         <Stack.Screen name="(tabs)" />
+        <Stack.Screen name='(forms)/applicationform' options={{
+          presentation: 'formSheet',
+          animation: 'slide_from_bottom',
+          sheetAllowedDetents: [0.8],
+          sheetCornerRadius: 35,
+          sheetElevation: 50
+        }} />
+
+        <Stack.Screen name='(forms)/resumeform' options={{
+          presentation: 'formSheet',
+          animation: 'slide_from_bottom',
+          sheetAllowedDetents: [0.8],
+          sheetCornerRadius: 35,
+          sheetElevation: 50,
+        }} />
       </Stack.Protected>
 
       <Stack.Protected guard={!session?.user}>

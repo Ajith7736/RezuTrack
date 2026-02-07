@@ -7,7 +7,7 @@ import { toast } from '@/lib/Toast/ToastUtility'
 import { useQuery } from '@tanstack/react-query'
 import { Link } from 'expo-router'
 import { ClipboardList, Plus, Search } from 'lucide-react-native'
-import React, { useEffect, useEffectEvent, useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { Pressable, ScrollView, Text, TextInput, TextInputChangeEvent, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
@@ -78,7 +78,7 @@ const applications = () => {
           borderRadius: 10,
           boxShadow: '0px 3px 12px rgba(63, 81, 181,0.12)'
         }}>
-          <Link href={'/(tabs)/applications/applicationform'}>
+          <Link href={'/applicationform'}>
             <Plus color={'white'} size={38} />
           </Link>
 

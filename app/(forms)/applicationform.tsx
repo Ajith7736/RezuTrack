@@ -12,12 +12,16 @@ import { router } from 'expo-router'
 import { ArrowRight } from 'lucide-react-native'
 import React, { useEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
-import { ActivityIndicator, KeyboardAvoidingView, ScrollView, Text, View } from 'react-native'
+import { KeyboardAvoidingView, ScrollView, Text, View } from 'react-native'
 
 const ApplicationForm = () => {
 
   const { session } = useSession();
   const [dots, setdots] = useState("")
+  const [resumedata, setresumedata] = useState<{
+    name: string,
+    id: string
+  }[] | null>(null)
 
   const { control, handleSubmit, formState: { errors, isSubmitting }, watch, setValue } = useForm<ApplicationInputs>({
     resolver: zodResolver(ApplicationSchema),
@@ -33,14 +37,21 @@ const ApplicationForm = () => {
     }
   })
 
+  useEffect(() => {
+    fetchresumenames()
+  }, [])
 
 
+  const fetchresumenames = async () => {
+    const { data, error } = await supabase.from('Resume').select('id,name').eq('userId', session?.user.id as string)
 
-  const resumedata = [
-    { name: 'Software Engineer Resume', id: '1' },
-    { name: 'Frontend Developer Resume', id: '2' },
-    { name: 'Fullstack Developer Resume', id: '3' },
-  ]
+    if (error) {
+      console.error(error);
+      return
+    }
+
+    setresumedata(data)
+  }
 
   const Status = [
     { name: 'Applied' },
@@ -93,8 +104,8 @@ const ApplicationForm = () => {
 
 
   return (
-    <View style={{ padding: 30 }} className='h-screen bg-slate-50'>
-      <KeyboardAvoidingView behavior='height' keyboardVerticalOffset={40}>
+    <View style={{ padding: 30 }} className='flex-1 bg-slate-50'>
+      <KeyboardAvoidingView behavior='height' keyboardVerticalOffset={190}>
         <ScrollView>
           <View>
             <Text className="text-2xl font-extrabold tracking-widest text-slate-700">New Log</Text>
@@ -103,7 +114,7 @@ const ApplicationForm = () => {
             </Text>
           </View>
 
-          <View className='mt-10 flex flex-col gap-3'>
+          <View className='mt-10 flex gap-3'>
             <Text className="text-[12px] text-slate-500 font-bold tracking-wider">
               JOB DETAILS *
             </Text>

@@ -5,7 +5,7 @@ import { ChevronDown } from 'lucide-react-native'
 import { UseFormSetValue } from 'react-hook-form'
 import { ApplicationInputs } from '@/lib/Schema/ApplicationForm'
 
-const RHFDropDown = ({ onChange, value, setValue, dropdata, placeholder, error }: { onChange: Function, value: string, setValue?: UseFormSetValue<ApplicationInputs>, dropdata: Record<string, string>[], placeholder: string, error?: boolean }) => {
+const RHFDropDown = ({ onChange, value, setValue, dropdata, placeholder, error }: { onChange: Function, value: string, setValue?: UseFormSetValue<ApplicationInputs>, dropdata: { id?: string, name: string }[] | null, placeholder: string, error?: boolean }) => {
     const [expanded, setexpanded] = useState(false);
 
 
@@ -25,8 +25,8 @@ const RHFDropDown = ({ onChange, value, setValue, dropdata, placeholder, error }
     return (
         <View className='relative'>
             <Pressable onPress={() => setexpanded(!expanded)} style={{
-                paddingHorizontal: 10,
-                paddingVertical: 14,
+                paddingHorizontal: 8,
+                paddingVertical: 10,
                 backgroundColor: colors.tailwind.slate[100],
                 borderWidth: 1,
                 borderRadius: 8,
@@ -60,7 +60,7 @@ const RHFDropDown = ({ onChange, value, setValue, dropdata, placeholder, error }
                 }} onPress={handleselect}>
                     <Text className='text-slate-600 tracking-widest'>Select</Text>
                 </TouchableOpacity>
-                {dropdata.map((data, indx) => {
+                {dropdata?.map((data, indx) => {
                     return <TouchableOpacity onPress={() => handleoptionclick(data.name, data.id)} key={data.id ?? indx} className='p-3 ' style={{
                         borderBottomWidth: indx === dropdata.length - 1 ? 0 : 1,
                         borderColor: colors.tailwind.slate[200]

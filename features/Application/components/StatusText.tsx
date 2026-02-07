@@ -1,4 +1,5 @@
 import { colors } from '@/components/ui/colors'
+import { delay } from '@/lib/customdelay'
 import { supabase } from '@/lib/supabase'
 import { toast } from '@/lib/Toast/ToastUtility'
 import { Status } from '@/types/types'
@@ -70,7 +71,7 @@ const StatusText = ({ text, id, refetch }: { text: Status, id: string, refetch: 
             })
 
             refetch()
-
+            await delay(2);
             setexpanded(false);
         } catch (err) {
 
@@ -90,7 +91,7 @@ const StatusText = ({ text, id, refetch }: { text: Status, id: string, refetch: 
             <Text style={{
                 color: currentStyle.color,
             }} className=' font-extrabold text-[9px] tracking-widest uppercase'>{text.replace("_", " ")} </Text>
-            {expanded ? <ChevronUp color={currentStyle.color} size={15} /> : <ChevronDown color={currentStyle.color} size={15} />}
+            {expanded ? <ChevronUp color={currentStyle.color} size={12} /> : <ChevronDown color={currentStyle.color} size={12} />}
             {expanded && <View style={{
                 width: 130,
                 height: 'auto',

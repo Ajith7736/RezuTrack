@@ -20,8 +20,8 @@ const RHFDatePicker = ({ onChange, value, error }: { error: boolean, onChange: (
     return (
         <View className='flex gap-3'>
             <Pressable style={{
-                paddingHorizontal: 10,
-                paddingVertical: 14,
+                paddingHorizontal: 8,
+                paddingVertical: 10,
                 backgroundColor: colors.tailwind.slate[100],
                 borderWidth: 1,
                 borderRadius: 8,

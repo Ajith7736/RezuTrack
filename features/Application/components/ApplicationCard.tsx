@@ -73,9 +73,9 @@ const ApplicationCard = ({ data, refetch }: { data: Application, refetch: Functi
                         <Text className='text-slate-600 text-xs font-bold'>{date.toDateString()}</Text>
                     </View>
 
-                    <Pressable onPress={handleLinkClick} className='bg-slate-100 w-fit rounded-full p-3'>
+                    {data.Link && <Pressable onPress={handleLinkClick} className='bg-slate-100 w-fit rounded-full p-3'>
                         <ExternalLink size={15} color={colors.tailwind.slate[600]} />
-                    </Pressable>
+                    </Pressable>}
                 </View>
             </View>
         </View>

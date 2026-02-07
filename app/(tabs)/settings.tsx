@@ -35,11 +35,11 @@ const Settings = () => {
       </View>
       <View className="mt-5 flex gap-5">
         <View style={{
-          backgroundColor: colors.tailwind.slate[50],
+          backgroundColor: 'white',
           padding: 15,
           borderWidth: 1,
           borderColor: colors.tailwind.slate[200],
-          borderRadius: 10,
+          borderRadius: 15,
           display: 'flex',
           gap: 3,
           alignItems: "flex-start",
@@ -68,10 +68,10 @@ const Settings = () => {
         </View>
 
         <View style={{
-          backgroundColor: colors.tailwind.slate[50],
+          backgroundColor: 'white',
           borderWidth: 1,
           borderColor: colors.tailwind.slate[200],
-          borderRadius: 10
+          borderRadius: 15
         }}>
           <Pressable style={{
             display: 'flex',

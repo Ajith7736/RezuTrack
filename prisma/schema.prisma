@@ -25,7 +25,7 @@ model User {
 
 model Resume {
   id               String          @id @default(dbgenerated("gen_random_uuid()"))
-  userId           String
+  userId           String         
   resumeContent    String
   name             String
   OldResumeChanges ResumeChanges[] @relation("OldResume")
@@ -37,7 +37,7 @@ model Resume {
 
 model Application {
   id             String   @id @default(dbgenerated("gen_random_uuid()"))
-  userId         String
+  userId         String   
   companyName    String
   roleTitle      String
   resumeId       String
@@ -51,7 +51,7 @@ model Application {
 
 model ResumeChanges {
   id            String   @id @default(dbgenerated("gen_random_uuid()"))
-  old_resume_id String
+  old_resume_id String  
   new_resume_id String
   changed       String
   removed       String
