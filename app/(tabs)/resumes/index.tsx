@@ -9,15 +9,16 @@ import { supabase } from '@/lib/supabase'
 import { useSession } from '@/context/AuthContext'
 import Loading from '@/components/ui/Loading'
 import ResumeCard from '@/features/Resume/components/ResumeCard'
+import { FlatList } from 'react-native'
 
 const resumes = () => {
 
   const { session } = useSession();
 
-  const { data, isLoading , refetch } = useQuery({
+  const { data, isLoading, refetch } = useQuery({
     queryKey: ['Resumes'],
     queryFn: async () => {
-      const { data, error } = await supabase.from('Resume').select("*").eq("userId", session?.user.id as string);
+      const { data, error } = await supabase.from('Resume').select("id,name,updatedAt").eq("userId", session?.user.id as string);
 
       if (error) {
         console.error(error.message);
@@ -67,9 +68,11 @@ const resumes = () => {
         </Text>
       </View>
 
-      {data && data.length > 0  ? data.map((Resume) => {
-        return <ResumeCard refetch={refetch} key={Resume.id} data={Resume} />
-      }): <View className='h-[47rem] flex items-center justify-center gap-2'>
+      {data && data.length > 0 ? <FlatList
+        data={data}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => <ResumeCard data={item} refetch={refetch} />}
+      /> : <View className='h-[47rem] flex items-center justify-center gap-2'>
         <View className="w-20 h-20 bg-slate-100 rounded-3xl flex items-center justify-center  mx-auto border border-slate-200 shadow-sm">
           <FileText size={40} color={colors.tailwind.slate[300]} />
         </View>

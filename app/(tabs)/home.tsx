@@ -1,7 +1,7 @@
 import { colors } from "@/components/ui/colors";
 import { useSession } from "@/context/AuthContext";
 import { Image } from "expo-image";
-import { Text, View } from "react-native";
+import { Text, ToastAndroid, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { BarChart } from "react-native-gifted-charts"
 import { FileText, Target, TimerIcon, TrendingUp } from "lucide-react-native";
@@ -11,15 +11,15 @@ import { supabase } from "@/lib/supabase";
 import { useState } from "react";
 import ActivityChart from "@/features/Home/components/ActivityChart";
 import { api } from "@/lib/Utils/FetchUtils";
+import ResumeChart from "@/features/Home/components/ResumeChart";
+import Loading from "@/components/ui/Loading";
 
 
 export default function Index() {
   const { session } = useSession();
-  const [showactivity, setshowactivity] = useState(false);
 
-  const Today = new Date().getDay();
 
-  const { data } = useQuery({
+  const { data, isLoading: ApplicationLoading } = useQuery({
     queryKey: ['RecentApplications'],
     queryFn: async () => {
 
@@ -43,20 +43,20 @@ export default function Index() {
 
       return counts;
     },
-    enabled: !!session?.user.id,
-    refetchOnMount: true
+    enabled: !!session?.user.id
   })
 
-  const { data: successdata, error: successerror } = useQuery({
-    queryKey: ['ResumeSuccess'],
+  const { data: resumedata, isLoading } = useQuery({
+    queryKey: ['resumesuccess'],
     queryFn: async () => {
-      const data = await api.post({ userId: session?.user.id },'/api/getresumedata')
+      const data = await api.post({ userId: session?.user.id }, '/api/getresumedata')
 
-      console.log(data.success)
+      if (!data) return []
 
-      return data;
+      return data.resumedata as { value: number, label: string }[];
     }
   })
+
 
 
 
@@ -75,15 +75,9 @@ export default function Index() {
     }
   ]
 
-
-  const resumeData = [
-    { value: 5, label: 'full stack' },
-    { value: 4, label: 'Backend' },
-    { value: 1, label: 'Software' },
-    { value: 4, label: 'Frontend' },
-    { value: 1, label: 'Devops' },
-  ];
-
+  if (ApplicationLoading) {
+    return <Loading />
+  }
 
 
 
@@ -135,39 +129,8 @@ export default function Index() {
 
             <ActivityChart data={data} />
 
-            <View className="bg-white p-5 border-slate-200 rounded-[25px] border flex gap-5">
-              <View className="flex flex-row justify-between items-center">
-                <View className="flex flex-row gap-2 items-center">
-                  <FileText color={colors.tailwind.emerald[500]} />
-                  <Text className="text-xl font-extrabold tracking-widest">Resume Success</Text>
-                </View>
-              </View>
-              <View>
-                <BarChart
-                  barWidth={20}
-                  noOfSections={5}
-                  barBorderRadius={2}
-                  initialSpacing={20}
-                  spacing={40}
-                  endSpacing={10}
-                  frontColor={colors.tailwind.indigo[500]}
-                  xAxisLabelTextStyle={{
-                    fontSize: 10,
-                    letterSpacing: 1,
-                    fontWeight: '600'
-                  }}
-                  yAxisTextStyle={{
-                    fontSize: 11,
-                    letterSpacing: 1,
-                    fontWeight: '600'
-                  }}
-                  data={resumeData}
-                  yAxisThickness={0}
-                  xAxisThickness={0}
-                  width={280}
-                />
-              </View>
-            </View>
+            <ResumeChart resumedata={resumedata} isLoading={isLoading} />
+
           </View>
         </ScrollView>
 

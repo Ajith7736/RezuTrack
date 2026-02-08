@@ -33,7 +33,6 @@ const ActivityChart = ({ data }: { data: Map<number, number> | undefined }) => {
             <View>
                 <BarChart
                     barWidth={20}
-                    maxValue={10}
                     noOfSections={5}
                     initialSpacing={10}
                     endSpacing={0}
@@ -43,9 +42,6 @@ const ActivityChart = ({ data }: { data: Map<number, number> | undefined }) => {
                     xAxisThickness={0}
                     width={280}
                     showFractionalValues={false}
-                    onPress={(item: Barchartprops, indx: number) => {
-                        console.log(item, indx)
-                    }}
                     topLabelTextStyle={{
                         fontSize: 9,
                         fontWeight: '600'

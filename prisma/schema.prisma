@@ -58,6 +58,7 @@ model Application {
   @@index([userId])
   @@index([createdAt])
   @@index([Status])
+  @@index([companyName])
 }
 
 model ResumeChanges {
@@ -71,8 +72,6 @@ model ResumeChanges {
   newResume     Resume   @relation("NewResume", fields: [new_resume_id], references: [id])
   dateChanged   DateTime @default(now())
   resumeId      String?
-
-
 }
 
 enum Status {
@@ -83,4 +82,3 @@ enum Status {
   No_Response
   Rejected
 }
-

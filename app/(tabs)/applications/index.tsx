@@ -8,7 +8,7 @@ import { useInfiniteQuery } from '@tanstack/react-query'
 import { Link } from 'expo-router'
 import { ClipboardList, Plus, Search } from 'lucide-react-native'
 import React, { useEffect, useState } from 'react'
-import { FlatList, Pressable, Text, TextInput, View } from 'react-native'
+import { ActivityIndicator, FlatList, Pressable, Text, TextInput, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
 const applications = () => {
@@ -19,31 +19,25 @@ const applications = () => {
 
 
 
-  const { data: applications, hasNextPage, fetchNextPage, isLoading, refetch } = useInfiniteQuery({
-    queryKey: ['applications'],
+  const { data: applications, hasNextPage, isFetchingNextPage, fetchNextPage, isLoading, isFetching, refetch } = useInfiniteQuery({
+    queryKey: ['applications', DebounceText],
     queryFn: async ({ pageParam }) => {
-      const data = await api.post({ lastId: pageParam, userId: session?.user.id }, '/api/getapplication')
+      const data = await api.post({ lastId: pageParam, userId: session?.user.id, Search: DebounceText }, '/api/getapplication')
 
       if (!data) {
         throw new Error("Couldnt get data")
       }
+
       return data.applications as Application[];
     },
     initialPageParam: null as string | null,
     getNextPageParam: (lastpage) => {
       if (!lastpage || lastpage.length === 0) return undefined
-      console.log(lastpage[lastpage.length - 1].id)
+
       return lastpage[lastpage.length - 1].id;
-    }
+    },
+    select: (data) => data.pages.flat()
   })
-
-  useEffect(() => {
-    console.log(JSON.stringify(applications, null, 2));
-  }, [applications])
-
-
-
-
 
 
 
@@ -58,14 +52,6 @@ const applications = () => {
   }, [SearchText])
 
 
-  const [Status, setStatus] = useState("All")
-
-  const FilterStatus = ["All", "Applied", "Interviewing", "Rejected", "Offer"]
-
-
-  if (isLoading) {
-    return <Loading />
-  }
 
   return (
     <>
@@ -103,21 +89,42 @@ const applications = () => {
               <Search size={18} color={colors.tailwind.slate[300]} />
             </View>
             <View className='w-[95%]'>
-              <TextInput value={SearchText} onChange={(e) => setSearchText(e.nativeEvent.text)} placeholder='Search Jobs...' placeholderTextColor={colors.tailwind.slate[300]} className=' text-slate-700 w-[20rem] tracking-widest' />
+              <TextInput value={SearchText} onChange={(e) => setSearchText(e.nativeEvent.text)} placeholder='Search Company...' placeholderTextColor={colors.tailwind.slate[300]} className=' text-slate-700 w-[20rem] tracking-widest' />
             </View>
           </View>
 
-          {(applications?.pages && applications?.pages.length > 0) ?
+          {isLoading ? <View style={{
+            display: 'flex',
+            paddingTop : 50,
+            gap: 8
+          }}>
+            <ActivityIndicator color={colors.tailwind.slate[300]} />
+            <Text className='text-center text-sm tracking-widest text-slate-300 '>Loading</Text>
+          </View> : (applications && applications.length > 0) ?
             <FlatList
-              data={applications.pages.flat() || []}
+              data={applications || []}
+              contentContainerStyle={{
+                display : 'flex',
+                gap : 8,
+                paddingBottom : 20
+              }}
               keyExtractor={(item) => item.id}
-              renderItem={({ index, item }) => <View style={{ marginBottom: 15 }}><ApplicationCard data={item} index={index} refetch={refetch} /></View>}
+              renderItem={({ index, item }) => <ApplicationCard data={item} index={index} refetch={refetch} />}
               onEndReached={() => {
-                if (hasNextPage) fetchNextPage();
+                if (hasNextPage && !isFetchingNextPage) fetchNextPage();
               }}
               onEndReachedThreshold={0.5}
+              ListFooterComponent={isFetchingNextPage ?
+                (<View style={{
+                  marginTop : 15
+                }}>
+                  <ActivityIndicator color={colors.tailwind.slate[300]} />
+                </View>) : null
+              }
             />
-            : <View className='h-[47rem] flex items-center justify-center gap-2'>
+            : <View style={{
+              height: 550
+            }} className=' flex items-center bg-red-100 justify-center gap-2'>
               <View className="w-20 h-20 bg-slate-100 rounded-3xl flex items-center justify-center  mx-auto border border-slate-200 shadow-sm">
                 <ClipboardList size={40} color={colors.tailwind.slate[300]} />
               </View>
@@ -126,7 +133,6 @@ const applications = () => {
                 Your job search history will appear here. Tap the + to start logging.
               </Text>
             </View>}
-
         </View>
       </SafeAreaView >
     </>

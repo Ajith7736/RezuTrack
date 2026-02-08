@@ -10,7 +10,7 @@
     "ios": "expo run:ios",
     "web": "expo start --web",
     "lint": "expo lint",
-    "supabase-update": "npx -y supabase@2.72.9 gen types typescript --project-id lommrxllbefhqzhadfmx > lib/database.types.ts",
+    "supabase-update": "npx -y supabase@2.75.0 gen types typescript --project-id lommrxllbefhqzhadfmx > lib/database.types.ts",
     "migrate": "npx prisma migrate dev && npm run supabase-update",
     "draft": "npx eas-cli@latest workflow:run create-draft.yml",
     "development-builds": "npx eas-cli@latest workflow:run create-development-builds.yml",

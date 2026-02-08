@@ -1,7 +1,7 @@
 import { toast } from "../Toast/ToastUtility";
 
 export const api = {
-    get: async (data: any, url: string) => {
+    get: async ( url: string) => {
 
         const res = await fetch(url, {
             method: 'GET'
@@ -10,7 +10,7 @@ export const api = {
         const resdata = await res.json();
 
         if (!res.ok) {
-            toast.error(data.message);
+            toast.error(resdata.message);
             return null;
         }
 
@@ -29,7 +29,7 @@ export const api = {
         const resdata = await res.json();
 
         if (!res.ok) {
-            toast.error(data.message);
+            toast.error(resdata.message);
             return null;
         }
 
@@ -48,7 +48,7 @@ export const api = {
         const resdata = await res.json();
 
         if (!res.ok) {
-            toast.error(data.message);
+            toast.error(resdata.message);
             return null;
         }
 
@@ -67,7 +67,7 @@ export const api = {
         const resdata = await res.json();
 
         if (!res.ok) {
-            toast.error(data.message);
+            toast.error(resdata.message);
             return null;
         }
 

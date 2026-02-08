@@ -3,6 +3,7 @@ import Loading from "@/components/ui/Loading";
 import { useSession } from "@/context/AuthContext";
 import { supabase } from "@/lib/supabase";
 import { Image } from "expo-image";
+import { router } from "expo-router";
 import { ChevronRight, Info, LogOut, Trash2, User } from 'lucide-react-native';
 import { useState } from "react";
 import { Pressable, ScrollView, Text, View } from 'react-native';
@@ -62,13 +63,12 @@ const Settings = () => {
           <View className="bg-white rounded-2xl overflow-hidden border border-slate-100 shadow-sm">
 
             <View className="h-[1px] bg-slate-100 w-full" />
-
-            <Pressable className="flex-row items-center justify-between p-4 py-5 active:bg-slate-50 transition-colors">
+            <Pressable onPress={() => router.push('/(settings)/about')} className="flex-row items-center justify-between p-4 py-5 active:bg-slate-50 transition-colors">
               <View className="flex-row items-center gap-4">
                 <View className="h-10 w-10 rounded-full bg-indigo-50 items-center justify-center">
                   <Info size={20} color={colors.tailwind.indigo[600]} />
                 </View>
-                <Text className="text-base font-semibold text-slate-700">About App</Text>
+                <Text className="text-base font-semibold text-slate-700" >About App</Text>
               </View>
               <ChevronRight size={20} color={colors.tailwind.slate[400]} />
             </Pressable>

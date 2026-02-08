@@ -1,23 +1,25 @@
 import prisma from "@/lib/prisma";
-import { success } from "zod";
-import applications from "../(tabs)/applications";
+
 
 export async function POST(request: Request) {
     try {
-        const { lastId, userId } = await request.json();
+        const { lastId, userId, Search } = await request.json();
 
         const data = await prisma.application.findMany({
             where: {
-                userId
+                userId,
+                companyName: Search ? { contains: Search, mode: 'insensitive' } : undefined
             },
             take: 10,
             ...(lastId && {
                 cursor: {
                     id: lastId
                 }, skip: 1
-            })
+            }),
+            orderBy: {
+                createdAt: 'desc'
+            }
         })
-
 
 
         return Response.json({ success: false, applications: data }, { status: 200 })

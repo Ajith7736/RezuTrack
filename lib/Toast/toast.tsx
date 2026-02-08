@@ -25,22 +25,22 @@ const ToastComponent = () => {
         textColor: string
     }> = {
         success: {
-            icon: <Feather name="check-circle" size={18} color={colors.tailwind.emerald[600]} />,
-            backgroundColor: '#ffffff',
-            borderColor: colors.tailwind.emerald[600],
-            textColor: colors.tailwind.emerald[600]
+            icon: <Feather name="check-circle" size={18} color={colors.tailwind.emerald[500]} />,
+            backgroundColor: colors.tailwind.emerald[100],
+            borderColor: colors.tailwind.emerald[200],
+            textColor: colors.tailwind.emerald[500]
         },
         error: {
-            icon: <AntDesign name="close-circle" size={18} color={colors.tailwind.red[600]} />,
-            backgroundColor: '#ffffff',
-            borderColor: colors.tailwind.red[600],
-            textColor: colors.tailwind.red[600]
+            icon: <AntDesign name="close-circle" size={18} color={colors.tailwind.red[500]} />,
+            backgroundColor: colors.tailwind.red[100],
+            borderColor: colors.tailwind.red[200],
+            textColor: colors.tailwind.red[500]
         },
         warning: {
-            icon: <Feather name="alert-triangle" size={18} color={colors.tailwind.amber[600]} />,
-            backgroundColor: '#ffffff',
-            borderColor: colors.tailwind.amber[600],
-            textColor: colors.tailwind.amber[600]
+            icon: <Feather name="alert-triangle" size={18} color={colors.tailwind.amber[500]} />,
+            backgroundColor: colors.tailwind.amber[100],
+            borderColor: colors.tailwind.amber[200],
+            textColor: colors.tailwind.amber[500]
         },
     }
 
@@ -65,7 +65,7 @@ const ToastComponent = () => {
                 {Variant[type].icon}
                 <Text style={{
                     color: Variant[type].textColor
-                }} className=' tracking-widest text-center'>{Toastmessage}</Text>
+                }} className='tracking-widest text-center'>{Toastmessage}</Text>
             </View>
         </Animated.View>
     )

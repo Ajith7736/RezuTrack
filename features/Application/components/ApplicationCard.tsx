@@ -30,10 +30,15 @@ const ApplicationCard = ({ data, refetch, index }: { data: Application, refetch:
             }
 
             queryClient.invalidateQueries({
-                queryKey: ['Applications']
+                queryKey: ['applications']
+            })
+
+            queryClient.invalidateQueries({
+                queryKey : ['ResumeSuccess']
             })
 
             refetch()
+            
         } catch (err) {
             console.error(err)
         }

@@ -8,7 +8,7 @@ import { toast } from '@/lib/Toast/ToastUtility'
 import { QueryClient } from '@tanstack/react-query'
 import { router } from 'expo-router'
 
-const ResumeCard = ({ data, refetch }: { data: Resume, refetch: Function }) => {
+const ResumeCard = ({ data, refetch }: { data: Pick<Resume, 'id' | 'updatedAt' | 'name'>, refetch: Function }) => {
     const queryClient = new QueryClient();
 
     const handledelete = async () => {
