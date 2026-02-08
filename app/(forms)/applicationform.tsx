@@ -9,7 +9,7 @@ import { supabase } from '@/lib/supabase'
 import { toast } from '@/lib/Toast/ToastUtility'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { router } from 'expo-router'
-import { ArrowRight } from 'lucide-react-native'
+import { ArrowRight, Watch } from 'lucide-react-native'
 import React, { useEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { KeyboardAvoidingView, ScrollView, Text, View } from 'react-native'
@@ -23,7 +23,7 @@ const ApplicationForm = () => {
     id: string
   }[] | null>(null)
 
-  const { control, handleSubmit, formState: { errors, isSubmitting }, watch, setValue } = useForm<ApplicationInputs>({
+  const { control, handleSubmit, formState: { isSubmitting }, setValue , watch} = useForm<ApplicationInputs>({
     resolver: zodResolver(ApplicationSchema),
     defaultValues: {
       companyName: "",
@@ -67,7 +67,7 @@ const ApplicationForm = () => {
     await delay(1);
     const { error } = await supabase.from('Application').upsert({
       companyName: data.companyName,
-      Date: data.date?.toLocaleDateString() || "",
+      Date : data.date?.toISOString() || "",
       jobDescription: data.jobDescription || "",
       Link: data.link || "",
       resumeId: data.resumeId,
@@ -94,7 +94,7 @@ const ApplicationForm = () => {
           }
           return prev + "."
         })
-      }, 100)
+      }, 50)
 
       return () => {
         clearInterval(interval)
@@ -105,7 +105,9 @@ const ApplicationForm = () => {
 
   return (
     <View style={{ padding: 30 }} className='flex-1 bg-slate-50'>
-      <KeyboardAvoidingView behavior='height' keyboardVerticalOffset={190}>
+      <KeyboardAvoidingView behavior='height' style={{
+        flex: 1
+      }} keyboardVerticalOffset={100}>
         <ScrollView>
           <View>
             <Text className="text-2xl font-extrabold tracking-widest text-slate-700">New Log</Text>
@@ -114,7 +116,7 @@ const ApplicationForm = () => {
             </Text>
           </View>
 
-          <View className='mt-10 flex gap-3'>
+          <View className='mt-10 flex  gap-3'>
             <Text className="text-[12px] text-slate-500 font-bold tracking-wider">
               JOB DETAILS *
             </Text>
@@ -182,7 +184,7 @@ const ApplicationForm = () => {
               control={control}
               name='jobDescription'
               render={({ field: { value, onChange }, formState: { errors } }) => {
-                return <RHFInput value={value} onChange={onChange} placeholder='Job Description' />
+                return <RHFInput textarea value={value} onChange={onChange} placeholder='Job Description' />
               }}
             />
 
@@ -207,6 +209,7 @@ const ApplicationForm = () => {
               <ArrowRight color={'white'} size={18} />
             </View>}
           </SubmitButton>
+
         </ScrollView>
       </KeyboardAvoidingView>
     </View >

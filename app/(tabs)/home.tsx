@@ -1,21 +1,64 @@
 import { colors } from "@/components/ui/colors";
 import { useSession } from "@/context/AuthContext";
-import { MaterialCommunityIcons, Octicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
-import { Link, router } from "expo-router";
-import { Button, Text, View } from "react-native";
+import { Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { BarChart } from "react-native-gifted-charts"
-import { Circle, File, FileText, Target, TimerIcon, TrendingUp } from "lucide-react-native";
+import { FileText, Target, TimerIcon, TrendingUp } from "lucide-react-native";
 import { ScrollView } from "react-native";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/lib/supabase";
+import { useState } from "react";
+import ActivityChart from "@/features/Home/components/ActivityChart";
+import { api } from "@/lib/Utils/FetchUtils";
+
 
 export default function Index() {
-
-
-
   const { session } = useSession();
+  const [showactivity, setshowactivity] = useState(false);
 
-  const Today = new Date().getDay()
+  const Today = new Date().getDay();
+
+  const { data } = useQuery({
+    queryKey: ['RecentApplications'],
+    queryFn: async () => {
+
+      const oneWeekAgo = new Date();
+      oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+
+      let counts: Map<number, number> = new Map([[0, 0], [1, 0], [2, 0], [3, 0], [4, 0], [5, 0], [6, 0]])
+      const { data: resdata, error } = await supabase.from('Application').select('Date').eq("userId", session?.user.id as string).gt('Date', oneWeekAgo.toISOString()).order('Date', { ascending: true })
+
+      if (error) {
+        return counts;
+      }
+
+      resdata?.forEach((res) => {
+
+        const Day = new Date(res.Date).getDay()
+
+        counts.set(Day, counts.get(Day)! + 1);
+
+      })
+
+      return counts;
+    },
+    enabled: !!session?.user.id,
+    refetchOnMount: true
+  })
+
+  const { data: successdata, error: successerror } = useQuery({
+    queryKey: ['ResumeSuccess'],
+    queryFn: async () => {
+      const data = await api.post({ userId: session?.user.id },'/api/getresumedata')
+
+      console.log(data.success)
+
+      return data;
+    }
+  })
+
+
 
   const cardcontent = [
     {
@@ -32,25 +75,16 @@ export default function Index() {
     }
   ]
 
-  const barData = [
-    { value: 5, label: 'M', frontColor: Today === 0 ? colors.tailwind.indigo[500] : colors.tailwind.stone[200] },
-    { value: 4, label: 'T', frontColor: Today === 1 ? colors.tailwind.indigo[500] : colors.tailwind.stone[200] },
-    { value: 1, label: 'W', frontColor: Today === 2 ? colors.tailwind.indigo[500] : colors.tailwind.stone[200] },
-    { value: 4, label: 'T', frontColor: Today === 3 ? colors.tailwind.indigo[500] : colors.tailwind.stone[200] },
-    { value: 2, label: 'F', frontColor: Today === 4 ? colors.tailwind.indigo[500] : colors.tailwind.stone[200] },
-    { value: 1, label: 'S', frontColor: Today === 5 ? colors.tailwind.indigo[500] : colors.tailwind.stone[200] },
-    { value: 6, label: 'S', frontColor: Today === 6 ? colors.tailwind.indigo[500] : colors.tailwind.stone[200] },
-  ];
+
   const resumeData = [
-    { value: 5, label: 'full stack', frontColor: colors.tailwind.indigo[500] },
-    { value: 4, label: 'Backend', frontColor: colors.tailwind.indigo[500] },
-    { value: 1, label: 'Software', frontColor: colors.tailwind.indigo[500] },
-    { value: 4, label: 'Frontend', frontColor: colors.tailwind.indigo[500] },
-    { value: 1, label: 'Devops', frontColor: colors.tailwind.indigo[500] },
+    { value: 5, label: 'full stack' },
+    { value: 4, label: 'Backend' },
+    { value: 1, label: 'Software' },
+    { value: 4, label: 'Frontend' },
+    { value: 1, label: 'Devops' },
   ];
 
 
-  // console.log(JSON.stringify(data, null, 2));
 
 
   return (
@@ -60,7 +94,7 @@ export default function Index() {
         <ScrollView>
 
           <View style={{
-            paddingBottom : 80
+            paddingBottom: 80
           }} className="flex gap-3 p-5">
             <View className="flex flex-row justify-between items-center">
               <View>
@@ -99,31 +133,7 @@ export default function Index() {
 
             </View>
 
-            <View className="bg-white p-5 border-slate-200 rounded-[25px] border flex gap-5">
-              <View className="flex flex-row justify-between items-center">
-                <View className="flex flex-row gap-2 items-center">
-                  <TimerIcon color={colors.tailwind.indigo[500]} />
-                  <Text className="text-xl font-extrabold tracking-widest">Profile Activity</Text>
-                </View>
-                <View>
-                  <Text className="text-xs bg-indigo-100 py-1 px-2 text-indigo-600">5 Days</Text>
-                </View>
-              </View>
-              <View>
-                <BarChart
-                  barWidth={20}
-                  noOfSections={3}
-                  initialSpacing={10}
-                  endSpacing={0}
-                  barBorderRadius={4}
-                  data={barData}
-                  yAxisThickness={0}
-                  xAxisThickness={0}
-                  width={280}
-                  isAnimated
-                />
-              </View>
-            </View>
+            <ActivityChart data={data} />
 
             <View className="bg-white p-5 border-slate-200 rounded-[25px] border flex gap-5">
               <View className="flex flex-row justify-between items-center">
@@ -140,21 +150,21 @@ export default function Index() {
                   initialSpacing={20}
                   spacing={40}
                   endSpacing={10}
+                  frontColor={colors.tailwind.indigo[500]}
                   xAxisLabelTextStyle={{
-                    fontSize : 10,
-                    letterSpacing : 1,
-                    fontWeight : '600'
+                    fontSize: 10,
+                    letterSpacing: 1,
+                    fontWeight: '600'
                   }}
                   yAxisTextStyle={{
-                    fontSize : 11,
-                    letterSpacing : 1,
-                    fontWeight : '600'
+                    fontSize: 11,
+                    letterSpacing: 1,
+                    fontWeight: '600'
                   }}
                   data={resumeData}
                   yAxisThickness={0}
                   xAxisThickness={0}
                   width={280}
-                  isAnimated
                 />
               </View>
             </View>

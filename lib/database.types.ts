@@ -50,6 +50,7 @@ export type Database = {
       Application: {
         Row: {
           companyName: string
+          createdAt: string
           Date: string
           id: string
           jobDescription: string
@@ -62,6 +63,7 @@ export type Database = {
         }
         Insert: {
           companyName: string
+          createdAt?: string
           Date: string
           id?: string
           jobDescription: string
@@ -74,6 +76,7 @@ export type Database = {
         }
         Update: {
           companyName?: string
+          createdAt?: string
           Date?: string
           id?: string
           jobDescription?: string
@@ -85,6 +88,13 @@ export type Database = {
           userId?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "Application_resumeId_fkey"
+            columns: ["resumeId"]
+            isOneToOne: false
+            referencedRelation: "Resume"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "Application_userId_fkey"
             columns: ["userId"]

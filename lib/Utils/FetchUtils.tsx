@@ -11,6 +11,7 @@ export const api = {
 
         if (!res.ok) {
             toast.error(data.message);
+            return null;
         }
 
         return resdata;
@@ -29,6 +30,7 @@ export const api = {
 
         if (!res.ok) {
             toast.error(data.message);
+            return null;
         }
 
         return resdata;
@@ -47,6 +49,7 @@ export const api = {
 
         if (!res.ok) {
             toast.error(data.message);
+            return null;
         }
 
         return resdata;
@@ -65,6 +68,7 @@ export const api = {
 
         if (!res.ok) {
             toast.error(data.message);
+            return null;
         }
 
         return resdata;

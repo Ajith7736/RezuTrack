@@ -24,7 +24,7 @@ export default function RHFInput({ placeholder, textarea = false, onChange, valu
                 borderColor: !error ? focused && focusstyle ? colors.tailwind.slate[400] : colors.tailwind.slate[200] : colors.tailwind.red[500],
                 boxShadow: shadow ? "0px 3px 10px rgba(0,0,0,0.06)" : '',
                 textAlignVertical: 'top',
-                height: "32%"
+                height: "20%"
             } : {
                 paddingHorizontal: 8,
                 paddingVertical: 10,

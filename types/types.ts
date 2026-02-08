@@ -34,7 +34,7 @@ export interface Application {
     roleTitle: string;
     resumeId: string;
     resumeUsed: string;
-    Date: string;
+    Date: Date;
     Link: string;
     jobDescription: string;
     Status: Status;

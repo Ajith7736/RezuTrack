@@ -1,19 +1,16 @@
 import { colors } from "@/components/ui/colors";
 import Loading from "@/components/ui/Loading";
-import TitleBackButton from "@/components/ui/TitleBackButton";
 import { useSession } from "@/context/AuthContext";
 import { supabase } from "@/lib/supabase";
-import { AntDesign, Entypo, MaterialIcons, SimpleLineIcons } from "@expo/vector-icons";
 import { Image } from "expo-image";
+import { ChevronRight, Info, LogOut, Trash2, User } from 'lucide-react-native';
 import { useState } from "react";
-import { Pressable, Text, View } from 'react-native';
-import { Circle } from 'lucide-react-native'
+import { Pressable, ScrollView, Text, View } from 'react-native';
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const Settings = () => {
-
-  const { session } = useSession()
-  const [loading, setLoading] = useState(false)
+  const { session } = useSession();
+  const [loading, setLoading] = useState(false);
 
   const handlesignout = async () => {
     setLoading(true);
@@ -21,117 +18,100 @@ const Settings = () => {
     if (error) {
       setLoading(false);
     }
-  }
+  };
 
   if (loading) {
-    return <Loading />
+    return <Loading />;
   }
 
-
   return (
-    <SafeAreaView className='flex-1 bg-slate-50 p-5 '>
-      <View>
-        <Text className="text-2xl font-extrabold tracking-widest text-slate-700">Settings</Text>
-      </View>
-      <View className="mt-5 flex gap-5">
-        <View style={{
-          backgroundColor: 'white',
-          padding: 15,
-          borderWidth: 1,
-          borderColor: colors.tailwind.slate[200],
-          borderRadius: 15,
-          display: 'flex',
-          gap: 3,
-          alignItems: "flex-start",
-        }}>
-          <Text className="text-xl font-bold tracking-widest text-slate-700">Profile</Text>
-          <View className="flex flex-row items-center gap-5 mt-2">
-            <View style={{
-              backgroundColor: colors.tailwind.gray[200]
-            }} className="bg-slate-100 h-14 w-14 rounded-full overflow-hidden">
-              <Image
-                source={session?.user.user_metadata.avatar_url ?? require('@/assets/images/person.png')}
-                style={{
-                  height: '100%',
-                  width: '100%'
-                }}
-                contentFit="cover"
-                contentPosition={'center'}
-              />
-            </View>
-            <View>
-              <Text className="font-bold text-slate-700 text-lg">{session?.user.user_metadata.name}</Text>
-              <Text className="text-slate-600 italic">{session?.user.email}</Text>
+    <SafeAreaView className='flex-1 bg-slate-50'>
+      <ScrollView contentContainerStyle={{ padding: 20 }}>
+        {/* Header */}
+        <View className="mb-8">
+          <Text className="text-3xl font-extrabold text-slate-900 tracking-tight">Settings</Text>
+        </View>
+
+        {/* Profile Card */}
+        <View className="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 flex-row items-center gap-5 mb-8">
+          <View className="h-20 w-20 rounded-full p-1 bg-indigo-50 border-2 border-indigo-100">
+            <Image
+              source={session?.user.user_metadata.avatar_url ?? require('@/assets/images/person.png')}
+              style={{ height: '100%', width: '100%', borderRadius: 999 }}
+              contentFit="cover"
+            />
+          </View>
+          <View className="flex-1">
+            <Text className="text-xl font-bold text-slate-800" numberOfLines={1}>
+              {session?.user.user_metadata.name || "User"}
+            </Text>
+            <Text className="text-sm text-slate-500 font-medium mt-1" numberOfLines={1}>
+              {session?.user.email}
+            </Text>
+            <View className="flex-row mt-3">
+              <View className="bg-indigo-100 px-3 py-1 rounded-full">
+                <Text className="text-xs font-semibold text-indigo-600">Free Tier</Text>
+              </View>
             </View>
           </View>
-
         </View>
 
-        <View style={{
-          backgroundColor: 'white',
-          borderWidth: 1,
-          borderColor: colors.tailwind.slate[200],
-          borderRadius: 15
-        }}>
-          <Pressable style={{
-            display: 'flex',
-            gap: 3,
-            padding: 20,
-            flexDirection: 'row',
-            alignItems: "center",
-            justifyContent: 'space-between',
-            borderBottomWidth: 1,
-            borderBottomColor: colors.tailwind.slate[200],
-          }}>
-            <View className="flex flex-row gap-8 items-center">
-              <AntDesign name="exclamation-circle" size={20} />
-              <Text className="tracking-widest text-slate-700">About App</Text>
-            </View>
+        {/* General Section */}
+        <View className="mb-6">
+          <Text className="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-3 ml-2">General</Text>
+          <View className="bg-white rounded-2xl overflow-hidden border border-slate-100 shadow-sm">
 
-            <Entypo name="chevron-right" size={20} color="black" />
-          </Pressable>
+            <View className="h-[1px] bg-slate-100 w-full" />
 
-          <Pressable style={{
-            display: 'flex',
-            gap: 3,
-            padding: 20,
-            flexDirection: 'row',
-            alignItems: "center",
-            justifyContent: 'space-between',
-            borderBottomWidth: 1,
-            borderBottomColor: colors.tailwind.stone[200],
-          }} onPress={handlesignout}>
-            <View className="flex flex-row gap-8 items-center">
-              <AntDesign name="logout" size={20} color="red" />
-              <Text className="tracking-widest" style={{ color: colors.tailwind.red[500] }}>Logout</Text>
-            </View>
-
-            <Entypo name="chevron-right" size={20} color="black" />
-          </Pressable>
-
-          <Pressable style={{
-            display: 'flex',
-            gap: 3,
-            padding: 20,
-            flexDirection: 'row',
-            alignItems: "center",
-            justifyContent: 'space-between',
-          }} >
-            <View className="flex flex-row gap-7 items-center">
-              <MaterialIcons name="delete-outline" size={24} color="red" />
-              <Text className="tracking-widest" style={{ color: colors.tailwind.red[500] }}>Delete My Account</Text>
-            </View>
-
-            <Entypo name="chevron-right" size={20} color="black" />
-          </Pressable>
-
-
+            <Pressable className="flex-row items-center justify-between p-4 py-5 active:bg-slate-50 transition-colors">
+              <View className="flex-row items-center gap-4">
+                <View className="h-10 w-10 rounded-full bg-indigo-50 items-center justify-center">
+                  <Info size={20} color={colors.tailwind.indigo[600]} />
+                </View>
+                <Text className="text-base font-semibold text-slate-700">About App</Text>
+              </View>
+              <ChevronRight size={20} color={colors.tailwind.slate[400]} />
+            </Pressable>
+          </View>
         </View>
 
-      </View>
-    </SafeAreaView >
-  )
-}
+        {/* Actions Section */}
+        <View className="mb-8">
+          <Text className="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-3 ml-2">Actions</Text>
+          <View className="bg-white rounded-2xl overflow-hidden border border-slate-100 shadow-sm">
+            <Pressable
+              onPress={handlesignout}
+              className="flex-row items-center justify-between p-4 py-5 active:bg-slate-50 transition-colors"
+            >
+              <View className="flex-row items-center gap-4">
+                <View className="h-10 w-10 rounded-full bg-orange-50 items-center justify-center">
+                  <LogOut size={20} color={colors.tailwind.orange[500]} />
+                </View>
+                <Text className="text-base font-semibold text-slate-700">Log Out</Text>
+              </View>
+              <ChevronRight size={20} color={colors.tailwind.slate[400]} />
+            </Pressable>
 
+            <View className="h-[1px] bg-slate-100 w-full" />
 
-export default Settings
+            <Pressable className="flex-row items-center justify-between p-4 py-5 active:bg-red-50 transition-colors">
+              <View className="flex-row items-center gap-4">
+                <View className="h-10 w-10 rounded-full bg-red-50 items-center justify-center">
+                  <Trash2 size={20} color={colors.tailwind.red[500]} />
+                </View>
+                <Text className="text-base font-semibold text-red-500">Delete Account</Text>
+              </View>
+              <ChevronRight size={20} color={colors.tailwind.red[200]} />
+            </Pressable>
+          </View>
+        </View>
+
+        <View className="items-center mt-5">
+          <Text className="text-slate-400 text-xs text-center">Version 1.0.0</Text>
+        </View>
+      </ScrollView>
+    </SafeAreaView>
+  );
+};
+
+export default Settings;

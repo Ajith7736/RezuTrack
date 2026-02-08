@@ -21,11 +21,13 @@ model User {
   Resumes     Resume[]
   Appications Application[]
   createdAt   DateTime      @default(now())
+
+  @@index([id])
 }
 
 model Resume {
   id               String          @id @default(dbgenerated("gen_random_uuid()"))
-  userId           String         
+  userId           String
   resumeContent    String
   name             String
   OldResumeChanges ResumeChanges[] @relation("OldResume")
@@ -33,11 +35,14 @@ model Resume {
   createdAt        DateTime        @default(now())
   updatedAt        DateTime        @updatedAt
   User             User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  applications     Application[]
+
+  @@index([userId])
 }
 
 model Application {
   id             String   @id @default(dbgenerated("gen_random_uuid()"))
-  userId         String   
+  userId         String
   companyName    String
   roleTitle      String
   resumeId       String
@@ -45,13 +50,19 @@ model Application {
   Date           DateTime
   Link           String
   jobDescription String
+  createdAt      DateTime @default(now())
   Status         Status   @default(Applied)
+  Resume         Resume   @relation(fields: [resumeId], references: [id])
   User           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([createdAt])
+  @@index([Status])
 }
 
 model ResumeChanges {
   id            String   @id @default(dbgenerated("gen_random_uuid()"))
-  old_resume_id String  
+  old_resume_id String
   new_resume_id String
   changed       String
   removed       String
@@ -60,13 +71,16 @@ model ResumeChanges {
   newResume     Resume   @relation("NewResume", fields: [new_resume_id], references: [id])
   dateChanged   DateTime @default(now())
   resumeId      String?
+
+
 }
 
 enum Status {
+  Offer
+  Interviewing
   Applied
   Pending
-  Interviewing
   No_Response
   Rejected
-  Offer
 }
+

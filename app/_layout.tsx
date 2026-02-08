@@ -22,13 +22,14 @@ function InitialLayout() {
         headerShown: false,
         animation: "fade",
       }}
+      
     >
       <Stack.Protected guard={!!session?.user}>
         <Stack.Screen name="(tabs)" />
         <Stack.Screen name='(forms)/applicationform' options={{
           presentation: 'formSheet',
           animation: 'slide_from_bottom',
-          sheetAllowedDetents: [0.8],
+          sheetAllowedDetents: [0.88],
           sheetCornerRadius: 35,
           sheetElevation: 50
         }} />
@@ -36,7 +37,7 @@ function InitialLayout() {
         <Stack.Screen name='(forms)/resumeform' options={{
           presentation: 'formSheet',
           animation: 'slide_from_bottom',
-          sheetAllowedDetents: [0.8],
+          sheetAllowedDetents: [0.7],
           sheetCornerRadius: 35,
           sheetElevation: 50,
         }} />

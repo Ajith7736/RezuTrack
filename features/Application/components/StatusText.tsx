@@ -96,7 +96,7 @@ const StatusText = ({ text, id, refetch }: { text: Status, id: string, refetch: 
                 width: 130,
                 height: 'auto',
                 position: 'absolute',
-                zIndex: 100,
+                zIndex: 200,
                 bottom: -227,
                 left: 0,
                 backgroundColor: currentStyle.bg,
