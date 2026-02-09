@@ -41,9 +41,6 @@ const RHFDatePicker = ({ onChange, value, error }: { error: boolean, onChange: (
                 onConfirm={handleconfirm}
                 onCancel={closedatepicker}
                 date={value || new Date()}
-                onChange={() => {
-                    console.log("changed")
-                }}
                 themeVariant='light'
                 isDarkModeEnabled={false}
             />

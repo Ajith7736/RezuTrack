@@ -18,11 +18,10 @@
     "postinstall": "patch-package"
   },
   "dependencies": {
+    "@ai-sdk/google": "^3.0.23",
     "@config-plugins/react-native-blob-util": "^12.0.0",
-    "@config-plugins/react-native-pdf": "^12.0.0",
     "@expo/metro-runtime": "~6.1.2",
     "@expo/vector-icons": "^15.0.2",
-    "@gorhom/bottom-sheet": "^5.2.8",
     "@hookform/resolvers": "^5.2.2",
     "@prisma/adapter-pg": "^7.3.0",
     "@prisma/client": "^7.3.0",
@@ -34,6 +33,7 @@
     "@supabase/supabase-js": "^2.91.0",
     "@tailwindcss/postcss": "^4.1.18",
     "@tanstack/react-query": "^5.90.20",
+    "ai": "^6.0.78",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "dotenv": "^17.2.3",
@@ -71,7 +71,6 @@
     "react-native-gesture-handler": "~2.28.0",
     "react-native-gifted-charts": "^1.4.73",
     "react-native-modal-datetime-picker": "^18.0.0",
-    "react-native-pdf": "^6.6.2",
     "react-native-reanimated": "~4.1.1",
     "react-native-safe-area-context": "~5.6.0",
     "react-native-screens": "~4.16.0",

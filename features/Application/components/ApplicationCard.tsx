@@ -2,7 +2,7 @@ import { colors } from '@/components/ui/colors'
 import { supabase } from '@/lib/supabase'
 import { toast } from '@/lib/Toast/ToastUtility'
 import { Application } from '@/types/types'
-import { QueryClient } from '@tanstack/react-query'
+import { QueryClient, useQueryClient } from '@tanstack/react-query'
 import { Building, Calendar, ExternalLink, Trash2 } from 'lucide-react-native'
 import React from 'react'
 import { Linking, Pressable, Text, View } from 'react-native'
@@ -10,7 +10,7 @@ import StatusText from './StatusText'
 
 const ApplicationCard = ({ data, refetch, index }: { data: Application, refetch: Function, index: number }) => {
 
-    const queryClient = new QueryClient();
+    const queryClient = useQueryClient();
 
     const handleLinkClick = () => {
         Linking.openURL(data.Link)
@@ -29,16 +29,18 @@ const ApplicationCard = ({ data, refetch, index }: { data: Application, refetch:
                 return;
             }
 
-            queryClient.invalidateQueries({
+            await queryClient.invalidateQueries({
                 queryKey: ['applications']
             })
 
-            queryClient.invalidateQueries({
-                queryKey : ['ResumeSuccess']
+            await queryClient.invalidateQueries({
+                queryKey: ['resumesuccess']
             })
 
-            refetch()
-            
+            await queryClient.invalidateQueries({
+                queryKey: ['RecentApplications']
+            })
+
         } catch (err) {
             console.error(err)
         }

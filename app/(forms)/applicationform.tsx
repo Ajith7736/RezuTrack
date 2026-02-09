@@ -8,15 +8,15 @@ import { ApplicationInputs, ApplicationSchema } from '@/lib/Schema/ApplicationFo
 import { supabase } from '@/lib/supabase'
 import { toast } from '@/lib/Toast/ToastUtility'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { QueryClient } from '@tanstack/react-query'
+import { QueryClient, useQueryClient } from '@tanstack/react-query'
 import { router } from 'expo-router'
-import { ArrowRight, Watch } from 'lucide-react-native'
+import { ArrowRight } from 'lucide-react-native'
 import React, { useEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { KeyboardAvoidingView, ScrollView, Text, View } from 'react-native'
 
 const ApplicationForm = () => {
-  const queryClient = new QueryClient();
+  const queryClient = useQueryClient();
   const { session } = useSession();
   const [dots, setdots] = useState("")
   const [resumedata, setresumedata] = useState<{
@@ -83,11 +83,15 @@ const ApplicationForm = () => {
       toast.error(error.message);
     }
 
-    queryClient.invalidateQueries({
+    await queryClient.invalidateQueries({
       queryKey: ['RecentApplications']
     })
 
-    router.push('/(tabs)/applications');
+    await queryClient.invalidateQueries({
+      queryKey: ['applications']
+    })
+
+    router.dismiss();
   };
 
   useEffect(() => {

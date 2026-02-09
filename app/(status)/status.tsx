@@ -1,29 +1,29 @@
-import { View, Text, Pressable } from 'react-native'
-import React, { ReactElement, useEffect, useState } from 'react'
-import { Status } from '@/lib/generated/prisma'
-import { FlatList } from 'react-native'
 import { colors } from '@/components/ui/colors'
-import {
-    Send,
-    Clock,
-    Users,
-    MailQuestion,
-    XCircle,
-    BadgeCheck,
-    Check
-} from 'lucide-react-native';
-import SubmitButton from '@/components/ui/SubmitButton'
-import { router, useLocalSearchParams } from 'expo-router'
-import { QueryClient, useQuery } from '@tanstack/react-query'
+import { useSession } from '@/context/AuthContext'
 import { toast } from '@/lib/Toast/ToastUtility'
-import { supabase } from '@/lib/supabase'
+import { api } from '@/lib/Utils/FetchUtils'
+import { Status } from '@/lib/generated/prisma'
+import { QueryClient, useQueryClient } from '@tanstack/react-query'
 import clsx from 'clsx'
+import { router, useLocalSearchParams } from 'expo-router'
+import {
+    BadgeCheck,
+    Check,
+    Clock,
+    MailQuestion,
+    Send,
+    Users,
+    XCircle
+} from 'lucide-react-native'
+import React, { ReactElement, useState } from 'react'
+import { FlatList, Pressable, Text, View } from 'react-native'
 
 
 const status = () => {
     const { status, id }: { status: Status, id: string } = useLocalSearchParams();
     const [selectedstatus, setselectedstatus] = useState<Status>(status)
-    const queryClient = new QueryClient();
+    const queryClient = useQueryClient();
+    const { session } = useSession()
 
     const dropdata: { name: Status, icon: ReactElement }[] = [
         { name: 'Applied', icon: <Send color={colors.tailwind.indigo[500]} /> },
@@ -68,29 +68,27 @@ const status = () => {
     }
 
 
-    const handleselect = async (status: Status) => {
+    const handleselect = async (Status: Status) => {
         try {
 
-            setselectedstatus(status);
+            setselectedstatus(Status);
 
 
-            const { error } = await supabase.from('Application').update({
-                Status: status
-            }).eq('id', id)
+            await api.put({ userId: session?.user.id, applicationId: id, Status }, '/api/updatestatus')
 
-            if (error) {
-                toast.error('Server Error');
-            }
 
-            queryClient.invalidateQueries({
+            await queryClient.invalidateQueries({
                 queryKey: ['applications']
             })
 
-            router.push('/(tabs)/applications')
+            await queryClient.invalidateQueries({
+                queryKey : ['resumesuccess']
+            })
+
         } catch (err) {
             console.error(err)
             toast.error('Server Error');
-            router.push('/(tabs)/applications')
+            router.dismiss()
         }
     }
 
@@ -102,8 +100,10 @@ const status = () => {
                 data={dropdata}
                 keyExtractor={(item) => item.name}
                 contentContainerStyle={{
+                    flex : 1,
                     display: 'flex',
                     alignItems: 'center',
+                    justifyContent : 'center',
                     gap: 20,
                     margin: 20
                 }}
@@ -127,7 +127,7 @@ const status = () => {
                                 <Check size={15} color={'white'} />
                             </View>}
                         </View>
-
+                        {/* <SubmitButton onPress={() => }><Text>Save</Text></SubmitButton> */}
                     </Pressable>
                 }}
             />

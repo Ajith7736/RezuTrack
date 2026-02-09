@@ -52,7 +52,7 @@ function InitialLayout() {
         <Stack.Screen name='(status)/status' options={{
           presentation: 'formSheet',
           animation: 'slide_from_bottom',
-          sheetAllowedDetents: [0.6],
+          sheetAllowedDetents: [0.62],
           sheetCornerRadius: 35,
           sheetElevation: 50,
         }} />

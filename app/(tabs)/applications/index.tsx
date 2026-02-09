@@ -93,9 +93,9 @@ const applications = () => {
             </View>
           </View>
 
-          {isLoading ? <View style={{
+          {isLoading || (isFetching && !isFetchingNextPage) ? <View style={{
             display: 'flex',
-            paddingTop : 50,
+            paddingTop: 50,
             gap: 8
           }}>
             <ActivityIndicator color={colors.tailwind.slate[300]} />
@@ -104,9 +104,9 @@ const applications = () => {
             <FlatList
               data={applications || []}
               contentContainerStyle={{
-                display : 'flex',
-                gap : 8,
-                paddingBottom : 20
+                display: 'flex',
+                gap: 8,
+                paddingBottom: 20
               }}
               keyExtractor={(item) => item.id}
               renderItem={({ index, item }) => <ApplicationCard data={item} index={index} refetch={refetch} />}
@@ -116,7 +116,7 @@ const applications = () => {
               onEndReachedThreshold={0.5}
               ListFooterComponent={isFetchingNextPage ?
                 (<View style={{
-                  marginTop : 15
+                  marginTop: 15
                 }}>
                   <ActivityIndicator color={colors.tailwind.slate[300]} />
                 </View>) : null
@@ -124,7 +124,7 @@ const applications = () => {
             />
             : <View style={{
               height: 550
-            }} className=' flex items-center bg-red-100 justify-center gap-2'>
+            }} className=' flex items-center justify-center gap-2'>
               <View className="w-20 h-20 bg-slate-100 rounded-3xl flex items-center justify-center  mx-auto border border-slate-200 shadow-sm">
                 <ClipboardList size={40} color={colors.tailwind.slate[300]} />
               </View>

@@ -1,7 +1,7 @@
 import { toast } from "../Toast/ToastUtility";
 
 export const api = {
-    get: async ( url: string) => {
+    get: async (url: string) => {
 
         const res = await fetch(url, {
             method: 'GET'
@@ -35,7 +35,7 @@ export const api = {
 
         return resdata;
     },
-    delete : async (data: any, url: string) => {
+    delete: async (data: any, url: string) => {
 
         const res = await fetch(url, {
             method: 'DELETE',
@@ -54,8 +54,7 @@ export const api = {
 
         return resdata;
     },
-    put : async (data: any, url: string) => {
-
+    put: async (data: any, url: string) => {
         const res = await fetch(url, {
             method: 'PUT',
             body: JSON.stringify(data),

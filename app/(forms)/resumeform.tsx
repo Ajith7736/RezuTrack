@@ -4,10 +4,9 @@ import SubmitButton from '@/components/ui/SubmitButton'
 import { useSession } from '@/context/AuthContext'
 import { delay } from '@/lib/customdelay'
 import { ResumeformInputs, Resumeformschema } from '@/lib/Schema/ResumeForm'
-import { toast } from '@/lib/Toast/ToastUtility'
 import { api } from '@/lib/Utils/FetchUtils'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { QueryClient } from '@tanstack/react-query'
+import { QueryClient, useQueryClient } from '@tanstack/react-query'
 import clsx from 'clsx'
 import { router } from 'expo-router'
 import { ArrowRight } from 'lucide-react-native'
@@ -17,7 +16,7 @@ import { Text, View } from 'react-native'
 
 
 const ResumeForm = () => {
-    const queryClient = new QueryClient();
+    const queryClient = useQueryClient();
     const { session } = useSession();
     const [dots, setdots] = useState("")
 
@@ -38,11 +37,11 @@ const ResumeForm = () => {
 
             await api.post({ data, userId: session?.user.id }, '/api/addresume');
 
-            queryClient.invalidateQueries({
+            await queryClient.invalidateQueries({
                 queryKey: ["Resumes"]
             })
 
-            router.push('/(tabs)/resumes')
+            router.dismiss()
 
         } catch (err) {
             console.error(err);

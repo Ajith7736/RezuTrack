@@ -1,31 +1,33 @@
 import { AuthProvider } from '@/context/AuthContext'
 import ToastProvider from '@/context/ToastContext'
 import ToastComponent from '@/lib/Toast/toast'
-import { BottomSheetModalProvider } from '@gorhom/bottom-sheet'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import React from 'react'
-import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 
 
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+    defaultOptions: {
+        queries: {
+            retry: 2
+        }
+    }
+});
 
 
 const Providers = ({ children }: { children: React.ReactNode }) => {
     return (
-            <SafeAreaProvider>
-                <QueryClientProvider client={queryClient}>
-                    <AuthProvider>
-                                <ToastProvider>
-                                    <BottomSheetModalProvider>
-                                        {children}
-                                        <ToastComponent />
-                                    </BottomSheetModalProvider>
-                                </ToastProvider>
-                    </AuthProvider>
-                </QueryClientProvider>
-            </SafeAreaProvider>
+        <SafeAreaProvider>
+            <QueryClientProvider client={queryClient}>
+                <AuthProvider>
+                    <ToastProvider>
+                        {children}
+                        <ToastComponent />
+                    </ToastProvider>
+                </AuthProvider>
+            </QueryClientProvider>
+        </SafeAreaProvider>
     )
 }
 
