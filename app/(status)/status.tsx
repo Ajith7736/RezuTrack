@@ -82,7 +82,11 @@ const status = () => {
             })
 
             await queryClient.invalidateQueries({
-                queryKey : ['resumesuccess']
+                queryKey: ['resumesuccess']
+            })
+
+            await queryClient.invalidateQueries({
+                queryKey: ['RecentApplications']
             })
 
         } catch (err) {
@@ -100,10 +104,10 @@ const status = () => {
                 data={dropdata}
                 keyExtractor={(item) => item.name}
                 contentContainerStyle={{
-                    flex : 1,
+                    flex: 1,
                     display: 'flex',
                     alignItems: 'center',
-                    justifyContent : 'center',
+                    justifyContent: 'center',
                     gap: 20,
                     margin: 20
                 }}

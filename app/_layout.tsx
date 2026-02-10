@@ -1,11 +1,9 @@
 import { useSession } from "@/context/AuthContext";
 import { SplashScreen, Stack } from "expo-router";
 import { StatusBar } from 'expo-status-bar';
-import { LogBox, } from 'react-native';
 import 'react-native-gesture-handler';
 import "../lib/reanimatedConfig"; // Must be first - configures Reanimated
 import "./globals.css";
-
 import Providers from "./Providers";
 
 
@@ -22,10 +20,15 @@ function InitialLayout() {
         headerShown: false,
         animation: "fade",
       }}
-      
+
     >
       <Stack.Protected guard={!!session?.user}>
-        <Stack.Screen name="(tabs)" />
+        <Stack.Screen name="(tabs)" options={{
+          animation: 'fade'
+        }} />
+
+        <Stack.Screen name='insightpage' />
+
         <Stack.Screen name='(forms)/applicationform' options={{
           presentation: 'formSheet',
           animation: 'slide_from_bottom',

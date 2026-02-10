@@ -104,6 +104,32 @@ export type Database = {
           },
         ]
       }
+      Insights: {
+        Row: {
+          data: Json
+          id: string
+          userId: string
+        }
+        Insert: {
+          data: Json
+          id?: string
+          userId: string
+        }
+        Update: {
+          data?: Json
+          id?: string
+          userId?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "Insights_userId_fkey"
+            columns: ["userId"]
+            isOneToOne: false
+            referencedRelation: "User"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       Resume: {
         Row: {
           createdAt: string

@@ -3,7 +3,7 @@ import ToastProvider from '@/context/ToastContext'
 import ToastComponent from '@/lib/Toast/toast'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import React from 'react'
-import { SafeAreaProvider } from 'react-native-safe-area-context'
+import { SafeAreaProvider, initialWindowMetrics } from 'react-native-safe-area-context'
 
 
 
@@ -18,7 +18,7 @@ const queryClient = new QueryClient({
 
 const Providers = ({ children }: { children: React.ReactNode }) => {
     return (
-        <SafeAreaProvider>
+        <SafeAreaProvider initialMetrics={initialWindowMetrics}>
             <QueryClientProvider client={queryClient}>
                 <AuthProvider>
                     <ToastProvider>

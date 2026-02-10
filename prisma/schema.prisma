@@ -21,6 +21,7 @@ model User {
   Resumes     Resume[]
   Appications Application[]
   createdAt   DateTime      @default(now())
+  insights    Insights[]
 
   @@index([id])
 }
@@ -73,6 +74,15 @@ model ResumeChanges {
   newResume     Resume   @relation("NewResume", fields: [new_resume_id], references: [id])
   dateChanged   DateTime @default(now())
   resumeId      String?
+}
+
+model Insights {
+  id     String @id @default(dbgenerated("gen_random_uuid()"))
+  userId String @unique
+  data   Json
+  User   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
 }
 
 enum Status {

@@ -3,11 +3,13 @@ import React, { useState } from 'react'
 import { colors } from '@/components/ui/colors';
 import { TimerIcon } from 'lucide-react-native';
 import { BarChart } from 'react-native-gifted-charts';
+import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 
 const ActivityChart = ({ data }: { data: Map<number, number> | undefined }) => {
     const Today = new Date().getDay();
-
+    const [Active, setActive] = useState<number | null>(null)
     type Barchartprops = { value: number | undefined, label: string, frontColor: string }[]
+
 
     const barData: Barchartprops = [
         { value: data?.get(0), label: 'S', frontColor: Today === 0 ? colors.tailwind.indigo[500] : colors.tailwind.stone[200] },
@@ -18,6 +20,24 @@ const ActivityChart = ({ data }: { data: Map<number, number> | undefined }) => {
         { value: data?.get(5), label: 'F', frontColor: Today === 5 ? colors.tailwind.indigo[500] : colors.tailwind.stone[200] },
         { value: data?.get(6), label: 'S', frontColor: Today === 6 ? colors.tailwind.indigo[500] : colors.tailwind.stone[200] },
     ];
+
+    const ChartData = barData.map((item, indx) => {
+        return {
+            ...item,
+            onPress: () => {
+                setActive(Active === indx ? null : indx)
+            },
+            topLabelComponent: () => {
+                return (Active === indx ? (<Animated.View entering={FadeIn} exiting={FadeOut} style={{ marginBottom: 4 }}>
+                    <Text className='text-slate-600 text-xs '>{item.value}</Text>
+                </Animated.View>) : null)
+            }
+        }
+    })
+
+
+
+
 
     return (
         <View className="bg-white p-5 border-slate-200 rounded-[25px] border flex gap-5">
@@ -34,10 +54,11 @@ const ActivityChart = ({ data }: { data: Map<number, number> | undefined }) => {
                 <BarChart
                     barWidth={20}
                     noOfSections={5}
+                    
                     initialSpacing={10}
                     endSpacing={0}
                     barBorderRadius={4}
-                    data={barData}
+                    data={ChartData}
                     yAxisThickness={0}
                     xAxisThickness={0}
                     width={280}
@@ -46,6 +67,7 @@ const ActivityChart = ({ data }: { data: Map<number, number> | undefined }) => {
                         fontSize: 9,
                         fontWeight: '600'
                     }}
+                    onBackgroundPress={() => setActive(null)}
                     focusBarOnPress
                     focusedBarConfig={{
                         color: 'none'
