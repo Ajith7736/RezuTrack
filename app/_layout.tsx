@@ -1,8 +1,6 @@
 import { useSession } from "@/context/AuthContext";
 import { SplashScreen, Stack } from "expo-router";
 import { StatusBar } from 'expo-status-bar';
-import 'react-native-gesture-handler';
-import "../lib/reanimatedConfig"; // Must be first - configures Reanimated
 import "./globals.css";
 import Providers from "./Providers";
 
