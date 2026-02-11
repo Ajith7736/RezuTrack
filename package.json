@@ -15,7 +15,8 @@
     "draft": "npx eas-cli@latest workflow:run create-draft.yml",
     "development-builds": "npx eas-cli@latest workflow:run create-development-builds.yml",
     "deploy": "npx eas-cli@latest workflow:run deploy-to-production.yml",
-    "postinstall": "patch-package"
+    "postinstall": "patch-package",
+    "vercel-build": "npx prisma generate && npx expo export -p web"
   },
   "dependencies": {
     "@ai-sdk/google": "^3.0.23",
@@ -63,14 +64,15 @@
     "nativewind": "^4.2.1",
     "pg": "^8.17.2",
     "prettier-plugin-tailwindcss": "^0.5.14",
-    "react": "19.1.0",
-    "react-dom": "19.1.0",
+    "react": "19.1.4",
+    "react-dom": "19.1.4",
     "react-hook-form": "^7.66.1",
     "react-native": "^0.81.5",
     "react-native-blob-util": "^0.23.2",
     "react-native-gesture-handler": "~2.28.0",
     "react-native-gifted-charts": "^1.4.73",
     "react-native-modal-datetime-picker": "^18.0.0",
+    "react-native-purchases": "^9.7.6",
     "react-native-reanimated": "~4.1.1",
     "react-native-safe-area-context": "~5.6.0",
     "react-native-screens": "~4.16.0",
