@@ -1,16 +1,13 @@
-
 import { supabase } from "@/lib/supabase";
 import { Session } from "@supabase/supabase-js";
-import { useRouter, useSegments } from "expo-router";
 import { createContext, ReactNode, useContext, useEffect, useState } from "react";
+import Purchases from "react-native-purchases";
 
 const AuthContext = createContext<{ session: Session | null, isLoading: boolean }>({ session: null, isLoading: true });
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const [isLoading, setisLoading] = useState(true)
     const [session, setsession] = useState<Session | null>(null);
-    const segment = useSegments();
-    const router = useRouter();
 
     useEffect(() => {
 
@@ -18,6 +15,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             data: { session }
         }) => {
             setsession(session)
+            if (session?.user.id) {
+                Purchases.logIn(session.user.id);
+            }
             setisLoading(false)
         })
 
@@ -25,6 +25,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             _event, session
         ) => {
             setsession(session);
+            if(_event === 'SIGNED_OUT'){
+                Purchases.logOut();
+            }
+            if (session?.user.id) {
+                Purchases.logIn(session.user.id);
+            }
             setisLoading(false)
         })
 

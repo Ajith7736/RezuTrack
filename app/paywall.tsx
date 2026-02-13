@@ -1,14 +1,75 @@
 import { colors } from '@/components/ui/colors'
+import { useSession } from '@/context/AuthContext'
+import { supabase } from '@/lib/supabase'
+import { toast } from '@/lib/Toast/ToastUtility'
 import { LinearGradient } from 'expo-linear-gradient'
 import { router } from 'expo-router'
-import { Check, Crown, Rocket, Star, X, Zap } from 'lucide-react-native'
-import React, { useState } from 'react'
+import { Check, Crown, Rocket, Star, X } from 'lucide-react-native'
+import React, { useEffect, useState } from 'react'
 import { Pressable, ScrollView, Text, TouchableOpacity, View } from 'react-native'
-import Animated, { FadeIn, FadeInDown, FadeInUp } from 'react-native-reanimated'
+import Purchases, { PurchasesOfferings } from 'react-native-purchases'
+import Animated, { FadeIn, FadeInDown } from 'react-native-reanimated'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
 const Paywall = () => {
     const [selectedPlan, setSelectedPlan] = useState<'free' | 'pro'>('pro')
+    const [offerings, setofferings] = useState<PurchasesOfferings>()
+    const { session } = useSession()
+
+    useEffect(() => {
+        const fetchofferings = async () => {
+            try {
+                const offerings = await Purchases.getOfferings();
+
+                setofferings(offerings)
+
+            } catch (err) {
+                console.error('Error while fetching offerings:', err);
+            }
+        }
+
+        fetchofferings();
+
+    }, [])
+
+
+    const handlepurchase = async () => {
+
+        const packageToPurchase = offerings?.current?.monthly;
+
+        if (!packageToPurchase) {
+            return
+        }
+
+        try {
+
+            const { customerInfo } = await Purchases.purchasePackage(packageToPurchase);
+
+            if (typeof customerInfo.entitlements.active['Pro'] !== "undefined") {
+                const { error } = await supabase.from('User').update({
+                    Subscription: 'Pro'
+                }).eq('id', session?.user?.id as string)
+
+                if (error) {
+                    console.error('Couldnt update  free to pro subscription for user : ', session?.user.id)
+                    toast.error('Db error')
+                    return
+                }
+
+                toast.success('Purchase Successfull')
+            }
+
+            router.dismiss();
+
+
+        } catch (e: any) {
+            if (!e.userCancelled) {
+                toast.error(e.message || "Something went wrong with the purchase")
+                console.error("Purchase Error : ", e.message);
+            }
+        }
+
+    }
 
     const features = [
         { id: 1, text: 'Unlimited Resume Version Submission', free: false, pro: true },
@@ -58,12 +119,12 @@ const Paywall = () => {
                                 <View className='flex-row items-center justify-between mb-4 mt-2'>
                                     <View>
                                         <View className='flex-row items-center gap-2 mb-1'>
-                                            <Text className='text-2xl font-bold text-white tracking-wide'>Pro Tier</Text>
+                                            <Text className='text-2xl font-bold text-white tracking-wide'>{offerings?.current?.monthly?.product.title}</Text>
                                         </View>
                                     </View>
-                                    <View className=' flex flex-row items-center gap-2'>
-                                        <Text className='text-3xl font-bold text-white'>$8</Text>
-                                        <Text className=' tracking-widest text-white'>/ month</Text>
+                                    <View className=' flex flex-row items-end gap-2'>
+                                        <Text className='text-3xl font-bold text-white'>{offerings?.current?.monthly?.product.pricePerMonthString}</Text>
+                                        <Text className='text-xs tracking-widest text-white'>/ MONTH</Text>
                                     </View>
                                 </View>
 
@@ -135,7 +196,14 @@ const Paywall = () => {
                 </ScrollView>
 
                 <View className='p-5'>
-                    <TouchableOpacity style={{
+                    <TouchableOpacity onPress={() => {
+                        if (selectedPlan === 'free') {
+                            router.dismiss()
+                        } else {
+                            handlepurchase();
+                            router.dismiss();
+                        }
+                    }} style={{
                         backgroundColor: selectedPlan === 'pro' ? colors.tailwind.indigo[500] : colors.tailwind.slate[900]
                     }} activeOpacity={0.8} className={`w-full  p-5 flex flex-row gap-2 items-center justify-center rounded-[28px]`}>
                         {selectedPlan === 'pro' && <Crown size={17} color={'white'} />}

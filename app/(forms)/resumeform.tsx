@@ -12,13 +12,14 @@ import { router } from 'expo-router'
 import { ArrowRight } from 'lucide-react-native'
 import React, { useEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
-import { Text, View } from 'react-native'
+import { Pressable, Text, View } from 'react-native'
 
 
 const ResumeForm = () => {
     const queryClient = useQueryClient();
     const { session } = useSession();
     const [dots, setdots] = useState("")
+    const [isExtracting, setisExtracting] = useState(false)
 
 
     const { control, handleSubmit, formState: { errors, isSubmitting }, watch, setValue } = useForm<ResumeformInputs>({
@@ -49,7 +50,7 @@ const ResumeForm = () => {
     };
 
     useEffect(() => {
-        if (isSubmitting) {
+        if (isSubmitting || isExtracting) {
             const interval = setInterval(() => {
                 setdots(prev => {
                     if (prev === "...") {
@@ -63,7 +64,7 @@ const ResumeForm = () => {
                 clearInterval(interval)
             }
         }
-    }, [isSubmitting, dots])
+    }, [isSubmitting, dots, isExtracting])
 
 
     return (
@@ -106,18 +107,22 @@ const ResumeForm = () => {
                     control={control}
                     name='resumeContent'
                     render={({ field: { onChange }, formState: { errors } }) => {
-                        return <RHFDocumentPicker onChange={onChange} errors={errors.resumeContent?.message} />
+                        return <RHFDocumentPicker setisExtracting={setisExtracting} onChange={onChange} errors={errors.resumeContent?.message} />
                     }}
                 />
             </View>
-            <SubmitButton onPress={handleSubmit(onSubmit)} className=' mt-10'>
-                {isSubmitting ? <View className='flex flex-row items-center gap-1 justify-center'>
-                    <Text className='text-white tracking-widest font-bold text-center'>Saving </Text>
+            <SubmitButton className={`${isExtracting || isSubmitting ? 'bg-indigo-400' : 'bg-indigo-500'} mt-10`}>
+                {isExtracting ? <View className='flex flex-row items-center gap-1 justify-center'>
+                    <Text className='text-white tracking-widest font-bold text-center'>Extracting Pdf</Text>
                     <Text className='text-white w-4'>{dots}</Text>
-                </View> : <View className='flex flex-row items-center justify-center'>
-                    <Text className='text-white tracking-widest font-bold text-center '>Save Resume </Text>
-                    <ArrowRight color={'white'} size={18} />
-                </View>}
+                </View> :
+                    isSubmitting ? <View className='flex flex-row items-center gap-1 justify-center'>
+                        <Text className='text-white tracking-widest font-bold text-center'>Saving </Text>
+                        <Text className='text-white w-4'>{dots}</Text>
+                    </View> : <Pressable onPress={handleSubmit(onSubmit)} className='flex flex-row items-center justify-center'>
+                        <Text className='text-white tracking-widest font-bold text-center '>Save Resume </Text>
+                        <ArrowRight color={'white'} size={18} />
+                    </Pressable>}
             </SubmitButton>
         </View>
     )

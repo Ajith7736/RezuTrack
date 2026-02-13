@@ -5,11 +5,11 @@ import { colors } from '@/components/ui/colors'
 import { Resume } from '@/types/types'
 import { supabase } from '@/lib/supabase'
 import { toast } from '@/lib/Toast/ToastUtility'
-import { QueryClient } from '@tanstack/react-query'
+import { QueryClient, useQueryClient } from '@tanstack/react-query'
 import { router } from 'expo-router'
 
 const ResumeCard = ({ data, refetch }: { data: Pick<Resume, 'id' | 'updatedAt' | 'name'>, refetch: Function }) => {
-    const queryClient = new QueryClient();
+    const queryClient = useQueryClient();
 
     const handledelete = async () => {
 
@@ -19,12 +19,22 @@ const ResumeCard = ({ data, refetch }: { data: Pick<Resume, 'id' | 'updatedAt' |
             toast.error('Couldnt delete')
         }
 
-        queryClient.invalidateQueries({
+        await queryClient.invalidateQueries({
             queryKey: ['Resumes']
         })
 
-        refetch();
 
+        await queryClient.invalidateQueries({
+            queryKey: ['applications']
+        })
+
+        await queryClient.invalidateQueries({
+            queryKey: ['resumesuccess']
+        })
+
+        await queryClient.invalidateQueries({
+            queryKey: ['RecentApplications']
+        })
 
     }
 

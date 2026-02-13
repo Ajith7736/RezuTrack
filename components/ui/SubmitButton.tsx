@@ -2,7 +2,7 @@ import clsx from 'clsx'
 import React from 'react'
 import { Pressable } from 'react-native'
 
-const SubmitButton = ({ children, onPress, className }: { children: React.ReactNode, onPress: () => void, className?: string }) => {
+const SubmitButton = ({ children, onPress, className }: { children: React.ReactNode, onPress?: () => void, className?: string }) => {
   return (
     <Pressable style={{
       borderRadius : 15

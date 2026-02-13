@@ -1,9 +1,11 @@
 import { useSession } from "@/context/AuthContext";
 import { Stack } from "expo-router";
 import { StatusBar } from 'expo-status-bar';
+import { useEffect } from "react";
+import { Platform } from "react-native";
+import Purchases, { LOG_LEVEL } from 'react-native-purchases';
 import "./globals.css";
 import Providers from "./Providers";
-import { Platform } from "react-native";
 
 
 
@@ -14,6 +16,18 @@ function InitialLayout() {
   if (Platform.OS == 'web') {
     return null
   }
+
+  useEffect(() => {
+    if (Platform.OS === 'web' || !Purchases) return;
+
+    Purchases.setLogLevel(LOG_LEVEL.VERBOSE);
+
+    if (Platform.OS === 'ios') {
+      Purchases.configure({ apiKey: '' });
+    } else if (Platform.OS === 'android') {
+      Purchases.configure({ apiKey: 'test_WGyIThBWgffFQSBorrUBKITKHPL' });
+    }
+  }, [])
 
   return (
     <Stack

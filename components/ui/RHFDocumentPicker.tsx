@@ -5,13 +5,15 @@ import { CloudUpload } from 'lucide-react-native'
 import React, { useState } from 'react'
 import { Platform, Pressable, Text } from 'react-native'
 import { colors } from './colors'
+import { Setter } from '@/types/types'
 
-const RHFDocumentPicker = ({ onChange, errors }: { onChange: (...event: any[]) => void, errors: string | undefined }) => {
+const RHFDocumentPicker = ({ onChange, errors, setisExtracting }: { setisExtracting: Setter<boolean>, onChange: (...event: any[]) => void, errors: string | undefined }) => {
 
     const [currentFile, setcurrentFile] = useState<string>("")
 
     const handledocument = async () => {
         try {
+            setisExtracting(true)
             const { canceled, assets } = await DocumentPicker.getDocumentAsync({
                 type: 'application/pdf',
                 copyToCacheDirectory: true
@@ -31,7 +33,7 @@ const RHFDocumentPicker = ({ onChange, errors }: { onChange: (...event: any[]) =
 
 
 
-            const res = await fetch(`${Platform.OS == 'web' ?  "" :  process.env.EXPO_PUBLIC_BASE_URL ?? '' }/api/pdfextract`, {
+            const res = await fetch(`${Platform.OS == 'web' ? "" : process.env.EXPO_PUBLIC_BASE_URL ?? ''}/api/pdfextract`, {
                 method: 'POST',
                 body: blob,
                 headers: {
@@ -51,6 +53,8 @@ const RHFDocumentPicker = ({ onChange, errors }: { onChange: (...event: any[]) =
 
         } catch (err) {
             console.error(err)
+        }finally{
+            setisExtracting(false)
         }
 
     }
