@@ -42,7 +42,10 @@ function InitialLayout() {
           animation: 'fade'
         }} />
 
-        <Stack.Screen name='insightpage' />
+        <Stack.Screen name='(tools)/insightpage' />
+
+        <Stack.Screen name='(tools)/job-match' />
+
 
         <Stack.Screen name='(forms)/applicationform' options={{
           presentation: 'formSheet',

@@ -23,6 +23,7 @@ model User {
   createdAt    DateTime      @default(now())
   insights     Insights[]
   Subscription Subscription  @default(Free)
+  score        Score?
 
   @@index([id])
 }
@@ -33,16 +34,14 @@ enum Subscription {
 }
 
 model Resume {
-  id               String          @id @default(dbgenerated("gen_random_uuid()"))
-  userId           String
-  resumeContent    String
-  name             String
-  OldResumeChanges ResumeChanges[] @relation("OldResume")
-  NewResumeChanges ResumeChanges[] @relation("NewResume")
-  createdAt        DateTime        @default(now())
-  updatedAt        DateTime        @updatedAt
-  User             User            @relation(fields: [userId], references: [id], onDelete: Cascade)
-  applications     Application[]
+  id            String        @id @default(dbgenerated("gen_random_uuid()"))
+  userId        String
+  resumeContent String
+  name          String
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  User          User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  applications  Application[]
 
   @@index([userId])
 }
@@ -69,23 +68,21 @@ model Application {
   @@index([id])
 }
 
-model ResumeChanges {
-  id            String   @id @default(dbgenerated("gen_random_uuid()"))
-  old_resume_id String
-  new_resume_id String
-  changed       String
-  removed       String
-  notChanged    String
-  oldResume     Resume   @relation("OldResume", fields: [old_resume_id], references: [id])
-  newResume     Resume   @relation("NewResume", fields: [new_resume_id], references: [id])
-  dateChanged   DateTime @default(now())
-  resumeId      String?
-}
-
 model Insights {
   id        String   @id @default(dbgenerated("gen_random_uuid()"))
   userId    String   @unique
   data      Json
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  User      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model Score {
+  id        String   @id @default(dbgenerated("gen_random_uuid()"))
+  userId    String   @unique
+  Scoredata Json
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   User      User     @relation(fields: [userId], references: [id], onDelete: Cascade)

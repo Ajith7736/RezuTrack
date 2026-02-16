@@ -1,18 +1,21 @@
-import { Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Pressable, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useState } from 'react'
 import { colors } from './colors'
 import { ChevronDown } from 'lucide-react-native'
-import { UseFormSetValue } from 'react-hook-form'
+import { FieldValues, Path, UseFormReturn, UseFormSetValue } from 'react-hook-form'
 import { ApplicationInputs } from '@/lib/Schema/ApplicationForm'
 
-const RHFDropDown = ({ onChange, value, setValue, dropdata, placeholder, error }: { onChange: Function, value: string, setValue?: UseFormSetValue<ApplicationInputs>, dropdata: { id?: string, name: string }[] | null, placeholder: string, error?: boolean }) => {
+
+
+
+const RHFDropDown = <T extends FieldValues>({ onChange, value, setValue, setValueField, dropdata, placeholder, error }: { onChange: Function, value: string, setValueField?: Path<T>, setValue?: UseFormSetValue<T>, dropdata: { id?: string, name: string }[] | null, placeholder: string, error?: boolean }) => {
     const [expanded, setexpanded] = useState(false);
 
 
     const handleoptionclick = (optionvalue: string, id?: string) => {
         onChange(optionvalue);
-        if (id && setValue) {
-            setValue('resumeId', id as string);
+        if (id && setValue && setValueField) {
+            setValue(setValueField, id as any);
         }
         setexpanded(false);
     }
@@ -47,9 +50,11 @@ const RHFDropDown = ({ onChange, value, setValue, dropdata, placeholder, error }
             {expanded && <View style={{
                 width: '100%',
                 height: 'auto',
+                maxHeight: 300,
+                overflow: 'hidden',
                 position: 'absolute',
                 zIndex: 100,
-                backgroundColor: colors.tailwind.slate[50],
+                backgroundColor: colors.tailwind.slate[100],
                 borderWidth: 1,
                 borderColor: colors.tailwind.slate[200],
                 borderRadius: 10
@@ -60,16 +65,21 @@ const RHFDropDown = ({ onChange, value, setValue, dropdata, placeholder, error }
                 }} onPress={handleselect}>
                     <Text className='text-slate-600 tracking-widest'>Select</Text>
                 </TouchableOpacity>
-                {dropdata?.map((data, indx) => {
-                    return <TouchableOpacity onPress={() => handleoptionclick(data.name, data.id)} key={data.id ?? indx} className='p-3 ' style={{
-                        borderBottomWidth: indx === dropdata.length - 1 ? 0 : 1,
-                        borderColor: colors.tailwind.slate[200]
-
-                    }}>
-                        <Text className='text-slate-600 tracking-widest'>{data.name}</Text>
-                    </TouchableOpacity>
-                })}
-            </View>}
+                <ScrollView
+                    persistentScrollbar
+                    showsVerticalScrollIndicator
+                >
+                    {dropdata?.map((data, indx) => {
+                        return <TouchableOpacity onPress={() => handleoptionclick(data.name, data.id)} key={data.id ?? indx} className='p-3 ' style={{
+                            borderBottomWidth: indx === dropdata.length - 1 ? 0 : 1,
+                            borderColor: colors.tailwind.slate[200]
+                        }}>
+                            <Text className='text-slate-600 tracking-widest'>{data.name}</Text>
+                        </TouchableOpacity>
+                    })}
+                </ScrollView>
+            </View>
+            }
         </View>
     )
 }

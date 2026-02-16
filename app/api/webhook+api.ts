@@ -11,11 +11,25 @@ export async function POST(req: Request) {
             case 'RENEWAL':
                 const userId = event.app_user_id;
 
-                await supabaseAdmin.auth.admin.updateUserById(userId,{
-                    app_metadata : {
-                        subscription : 'Pro'
+                const { error: authError } = await supabaseAdmin.auth.admin.updateUserById(userId, {
+                    app_metadata: {
+                        subscription: 'Pro'
                     }
                 })
+
+                const { error: dbError } = await supabaseAdmin.from('User').update({
+                    Subscription: "Pro"
+                }).eq('id', userId)
+
+                if (authError || dbError) {
+                    console.error('Failed to upgrade user : ', authError || dbError)
+
+                    throw new Error("Update failed");
+                }
+
+
+                console.log("Successfully upgraded user:", userId);
+
                 break;
         }
 

@@ -171,50 +171,34 @@ export type Database = {
           },
         ]
       }
-      ResumeChanges: {
+      Score: {
         Row: {
-          changed: string
-          dateChanged: string
+          createdAt: string
           id: string
-          new_resume_id: string
-          notChanged: string
-          old_resume_id: string
-          removed: string
-          resumeId: string | null
+          Scoredata: Json
+          updatedAt: string
+          userId: string
         }
         Insert: {
-          changed: string
-          dateChanged?: string
+          createdAt?: string
           id?: string
-          new_resume_id: string
-          notChanged: string
-          old_resume_id: string
-          removed: string
-          resumeId?: string | null
+          Scoredata: Json
+          updatedAt: string
+          userId: string
         }
         Update: {
-          changed?: string
-          dateChanged?: string
+          createdAt?: string
           id?: string
-          new_resume_id?: string
-          notChanged?: string
-          old_resume_id?: string
-          removed?: string
-          resumeId?: string | null
+          Scoredata?: Json
+          updatedAt?: string
+          userId?: string
         }
         Relationships: [
           {
-            foreignKeyName: "ResumeChanges_new_resume_id_fkey"
-            columns: ["new_resume_id"]
+            foreignKeyName: "Score_userId_fkey"
+            columns: ["userId"]
             isOneToOne: false
-            referencedRelation: "Resume"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "ResumeChanges_old_resume_id_fkey"
-            columns: ["old_resume_id"]
-            isOneToOne: false
-            referencedRelation: "Resume"
+            referencedRelation: "User"
             referencedColumns: ["id"]
           },
         ]

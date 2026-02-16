@@ -12,3 +12,23 @@ export async function UpdateStatus(userId: string, applicationId: string, Status
         }
     })
 }
+
+export async function GetApplicationById(applicationId: string) {
+    const data = await prisma.application.findUnique({
+        where : {
+            id : applicationId
+        },
+        select : {
+            companyName : true,
+            roleTitle : true,
+            jobDescription : true,
+            Resume : {
+                include : {
+                    
+                }
+            }
+        }
+    })
+
+    return data;
+}

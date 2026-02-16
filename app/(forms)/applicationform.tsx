@@ -150,7 +150,7 @@ const ApplicationForm = () => {
               control={control}
               name='resumeUsed'
               render={({ field: { value, onChange }, formState: { errors } }) => {
-                return <RHFDropDown placeholder='Select Resume' error={errors.resumeUsed?.message ? true : false} dropdata={resumedata} onChange={onChange} value={value} setValue={setValue} />
+                return <RHFDropDown setValueField='resumeId' placeholder='Select Resume' error={errors.resumeUsed?.message ? true : false} dropdata={resumedata} onChange={onChange} value={value} setValue={setValue} />
               }}
             />
             <View className='flex flex-row items-center w-full gap-3'>

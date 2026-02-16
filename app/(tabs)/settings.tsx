@@ -51,7 +51,7 @@ const Settings = () => {
             </Text>
             <View className="flex-row mt-3">
               <View className="bg-indigo-100 px-3 py-1 rounded-full">
-                <Text className="text-xs font-semibold text-indigo-600">Free Tier</Text>
+                <Text className="text-xs font-semibold text-indigo-600">{session?.user.app_metadata.subscription === 'Pro' ? 'Pro Member' : 'Free Tier'}</Text>
               </View>
             </View>
           </View>

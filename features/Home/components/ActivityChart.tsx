@@ -1,9 +1,10 @@
-import { View, Text } from 'react-native'
+import { View, Text} from 'react-native'
 import React, { useState } from 'react'
 import { colors } from '@/components/ui/colors';
 import { TimerIcon } from 'lucide-react-native';
 import { BarChart } from 'react-native-gifted-charts';
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
+
 
 const ActivityChart = ({ data }: { data: Map<number, number> | undefined }) => {
     const Today = new Date().getDay();
@@ -18,7 +19,7 @@ const ActivityChart = ({ data }: { data: Map<number, number> | undefined }) => {
         { value: data?.get(3), label: 'W', labelTextStyle: { color: Today === 3 ? colors.tailwind.indigo[500] : colors.tailwind.slate[400] }, frontColor: Today === 3 ? colors.tailwind.indigo[500] : colors.tailwind.stone[200] },
         { value: data?.get(4), label: 'T', labelTextStyle: { color: Today === 4 ? colors.tailwind.indigo[500] : colors.tailwind.slate[400] }, frontColor: Today === 4 ? colors.tailwind.indigo[500] : colors.tailwind.stone[200] },
         { value: data?.get(5), label: 'F', labelTextStyle: { color: Today === 5 ? colors.tailwind.indigo[500] : colors.tailwind.slate[400] }, frontColor: Today === 5 ? colors.tailwind.indigo[500] : colors.tailwind.stone[200] },
-        { value: data?.get(6), label: 'S', labelTextStyle: { color: Today === 0 ? colors.tailwind.indigo[500] : colors.tailwind.slate[400] }, frontColor: Today === 6 ? colors.tailwind.indigo[500] : colors.tailwind.stone[200] },
+        { value: data?.get(6), label: 'S', labelTextStyle: { color: Today === 6 ? colors.tailwind.indigo[500] : colors.tailwind.slate[400] }, frontColor: Today === 6 ? colors.tailwind.indigo[500] : colors.tailwind.stone[200] },
     ];
 
     const ChartData = barData.map((item, indx) => {
@@ -38,9 +39,8 @@ const ActivityChart = ({ data }: { data: Map<number, number> | undefined }) => {
 
 
 
-
     return (
-        <View className="bg-white p-5 border-slate-200 rounded-[25px] border flex gap-5">
+        <View className="bg-white border-slate-200 p-5 rounded-[25px] border flex gap-5">
             <View className="flex flex-row justify-between items-center">
                 <View className="flex flex-row gap-2 items-center">
                     <TimerIcon color={colors.tailwind.indigo[500]} />
@@ -50,8 +50,7 @@ const ActivityChart = ({ data }: { data: Map<number, number> | undefined }) => {
                     <Text className="text-xs bg-indigo-100 py-1 px-2 text-indigo-600">7 Days</Text>
                 </View>
             </View>
-            <View>
-                <BarChart
+            <BarChart
                     barWidth={20}
                     noOfSections={5}
                     initialSpacing={10}
@@ -72,7 +71,6 @@ const ActivityChart = ({ data }: { data: Map<number, number> | undefined }) => {
                         color: 'none'
                     }}
                 />
-            </View>
         </View>
     )
 }

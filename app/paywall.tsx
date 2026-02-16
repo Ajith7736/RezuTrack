@@ -6,7 +6,7 @@ import { LinearGradient } from 'expo-linear-gradient'
 import { router } from 'expo-router'
 import { Check, Crown, Rocket, Star, X } from 'lucide-react-native'
 import React, { useEffect, useState } from 'react'
-import { Pressable, ScrollView, Text, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, Pressable, ScrollView, Text, TouchableOpacity, View } from 'react-native'
 import Purchases, { PurchasesOfferings } from 'react-native-purchases'
 import Animated, { FadeIn, FadeInDown } from 'react-native-reanimated'
 import { SafeAreaView } from 'react-native-safe-area-context'
@@ -15,6 +15,7 @@ const Paywall = () => {
     const [selectedPlan, setSelectedPlan] = useState<'free' | 'pro'>('pro')
     const [offerings, setofferings] = useState<PurchasesOfferings>()
     const { session } = useSession()
+    const [isPurchasing, setisPurchasing] = useState(false)
 
     useEffect(() => {
         const fetchofferings = async () => {
@@ -34,7 +35,6 @@ const Paywall = () => {
 
 
     const handlepurchase = async () => {
-
         const packageToPurchase = offerings?.current?.monthly;
 
         if (!packageToPurchase) {
@@ -43,30 +43,28 @@ const Paywall = () => {
 
         try {
 
+            setisPurchasing(true)
+
             const { customerInfo } = await Purchases.purchasePackage(packageToPurchase);
 
             if (typeof customerInfo.entitlements.active['Pro'] !== "undefined") {
-                const { error } = await supabase.from('User').update({
-                    Subscription: 'Pro'
-                }).eq('id', session?.user?.id as string)
-
-                if (error) {
-                    console.error('Couldnt update  free to pro subscription for user : ', session?.user.id)
-                    toast.error('Db error')
-                    return
-                }
 
                 toast.success('Purchase Successfull')
+
+                await new Promise(resolve => setTimeout(resolve, 2000));
+
+                await supabase.auth.refreshSession();
+
+                router.dismiss();
             }
-
-            router.dismiss();
-
 
         } catch (e: any) {
             if (!e.userCancelled) {
                 toast.error(e.message || "Something went wrong with the purchase")
                 console.error("Purchase Error : ", e.message);
             }
+        } finally {
+            setisPurchasing(false);
         }
 
     }
@@ -196,12 +194,11 @@ const Paywall = () => {
                 </ScrollView>
 
                 <View className='p-5'>
-                    <TouchableOpacity onPress={() => {
+                    {!isPurchasing ? <TouchableOpacity onPress={() => {
                         if (selectedPlan === 'free') {
                             router.dismiss()
                         } else {
                             handlepurchase();
-                            router.dismiss();
                         }
                     }} style={{
                         backgroundColor: selectedPlan === 'pro' ? colors.tailwind.indigo[500] : colors.tailwind.slate[900]
@@ -210,7 +207,12 @@ const Paywall = () => {
                         <Text className='text-white tracking-widest'>
                             {selectedPlan === 'pro' ? 'Unlock Pro Access' : 'Continue with Free Plan'}
                         </Text>
-                    </TouchableOpacity>
+                    </TouchableOpacity> : <View className={`w-full bg-indigo-500  p-5 flex flex-row gap-2 items-center justify-center rounded-[28px]`}>
+                        <ActivityIndicator color={'white'} />
+                        <Text className='text-white tracking-widest'>
+                            Purchasing
+                        </Text>
+                    </View>}
                 </View>
 
             </View>

@@ -9,7 +9,6 @@ const ToastComponent = () => {
 
     const { isvisible, setisvisible, Toastmessage, type } = useToast();
 
-
     useEffect(() => {
         if (isvisible) {
             setTimeout(() => {
@@ -55,7 +54,7 @@ const ToastComponent = () => {
             alignItems: "center",
         }}>
             <View className='flex flex-row gap-3' style={{
-                padding: 10,
+                padding: 8,
                 borderWidth: 1,
                 borderRadius: 6,
                 boxShadow: "0 3px 10px rgba(0,0,0,0.04)",
@@ -63,9 +62,10 @@ const ToastComponent = () => {
                 backgroundColor: Variant[type].backgroundColor
             }}>
                 {Variant[type].icon}
-                <Text style={{
-                    color: Variant[type].textColor
-                }} className='tracking-widest text-center'>{Toastmessage}</Text>
+                <Text lineBreakMode='tail' numberOfLines={1} style={{
+                    color: Variant[type].textColor,
+                    width  : 250
+                }} className='tracking-widest text-center text-sm '>{Toastmessage}</Text>
             </View>
         </Animated.View>
     )
