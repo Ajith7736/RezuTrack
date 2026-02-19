@@ -1,24 +1,23 @@
-import { View, Text, Pressable, ActivityIndicator } from 'react-native'
-import React, { ReactElement, useEffect, useState } from 'react'
-import { SafeAreaView } from 'react-native-safe-area-context'
-import { AlertCircle, AlertTriangle, Brain, CheckCircle2, Info, RefreshCcw } from 'lucide-react-native'
 import { colors } from '@/components/ui/colors'
 import TitleBackButton from '@/components/ui/TitleBackButton'
-import Animated, {
-    useSharedValue,
-    useAnimatedStyle,
-    withTiming,
-    withRepeat,
-    Easing,
-} from 'react-native-reanimated';
 import { useSession } from '@/context/AuthContext'
-import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { insight } from '@/lib/Database/Schema/OutputSchema'
 import { supabase } from '@/lib/supabase'
-import { FlatList } from 'react-native'
-import { insight } from '@/lib/Schema/OutputSchema'
-import { api } from '@/lib/Utils/FetchUtils'
 import { toast } from '@/lib/Toast/ToastUtility'
+import { api } from '@/lib/Utils/FetchUtils'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { router } from 'expo-router'
+import { AlertCircle, AlertTriangle, Brain, CheckCircle2, Info, RefreshCcw } from 'lucide-react-native'
+import React, { ReactElement, useEffect, useState } from 'react'
+import { ActivityIndicator, FlatList, Pressable, Text, View } from 'react-native'
+import Animated, {
+    Easing,
+    useAnimatedStyle,
+    useSharedValue,
+    withRepeat,
+    withTiming,
+} from 'react-native-reanimated'
+import { SafeAreaView } from 'react-native-safe-area-context'
 
 const Insightpage = () => {
     const [isLoading, setisLoading] = useState(false)

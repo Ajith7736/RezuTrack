@@ -1,6 +1,5 @@
-import { PrismaClient } from "@/lib/generated/prisma";
+import { ResumeformInputs } from "@/lib/Database/Schema/ResumeForm";
 import prisma from "@/lib/prisma";
-import { ResumeformInputs } from "@/lib/Schema/ResumeForm";
 
 export async function POST(request: Request) {
     try {

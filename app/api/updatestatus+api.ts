@@ -1,4 +1,4 @@
-import { UpdateStatus } from "@/lib/Applications/Actions";
+import { UpdateStatus } from "@/lib/Database/Applications/Actions";
 
 
 export async function PUT(request: Request) {

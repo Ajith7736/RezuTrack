@@ -1,6 +1,6 @@
+import { getprompt } from "@/lib/Database/prompt/PromptText";
 import prisma from "@/lib/prisma";
-import { getprompt } from "@/lib/prompt/PromptText";
-import { Outputschema } from "@/lib/Schema/OutputSchema";
+import { Outputschema } from "@/lib/Database/Schema/OutputSchema";
 import { google } from '@ai-sdk/google';
 import { generateText, Output } from 'ai';
 

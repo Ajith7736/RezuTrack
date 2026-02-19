@@ -203,6 +203,35 @@ export type Database = {
           },
         ]
       }
+      Usage: {
+        Row: {
+          id: string
+          total_Applications: number | null
+          total_resume: number | null
+          userId: string
+        }
+        Insert: {
+          id?: string
+          total_Applications?: number | null
+          total_resume?: number | null
+          userId: string
+        }
+        Update: {
+          id?: string
+          total_Applications?: number | null
+          total_resume?: number | null
+          userId?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "Usage_userId_fkey"
+            columns: ["userId"]
+            isOneToOne: false
+            referencedRelation: "User"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       User: {
         Row: {
           createdAt: string

@@ -21,7 +21,12 @@ export async function POST(req: Request) {
                     Subscription: "Pro"
                 }).eq('id', userId)
 
-                if (authError || dbError) {
+                const { error: usageError } = await supabaseAdmin.from('Usage').update({
+                    total_Applications: null,
+                    total_resume: null
+                }).eq('userId', userId)
+
+                if (authError || dbError || usageError) {
                     console.error('Failed to upgrade user : ', authError || dbError)
 
                     throw new Error("Update failed");

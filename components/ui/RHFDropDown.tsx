@@ -1,9 +1,8 @@
-import { Pressable, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React, { useState } from 'react'
-import { colors } from './colors'
 import { ChevronDown } from 'lucide-react-native'
-import { FieldValues, Path, UseFormReturn, UseFormSetValue } from 'react-hook-form'
-import { ApplicationInputs } from '@/lib/Schema/ApplicationForm'
+import React, { useState } from 'react'
+import { FieldValues, Path, UseFormSetValue } from 'react-hook-form'
+import { Pressable, ScrollView, Text, TouchableOpacity, View } from 'react-native'
+import { colors } from './colors'
 
 
 

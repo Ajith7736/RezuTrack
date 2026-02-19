@@ -24,6 +24,7 @@ model User {
   insights     Insights[]
   Subscription Subscription  @default(Free)
   score        Score?
+  Usage        Usage?
 
   @@index([id])
 }
@@ -97,4 +98,12 @@ enum Status {
   Pending
   No_Response
   Rejected
+}
+
+model Usage {
+  id                 String @id @default(dbgenerated("gen_random_uuid()"))
+  userId             String @unique
+  total_Applications Int?   @default(20)
+  total_resume       Int?   @default(2) 
+  User               User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

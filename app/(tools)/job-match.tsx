@@ -3,9 +3,13 @@ import RHFDropDown from '@/components/ui/RHFDropDown'
 import TitleBackButton from '@/components/ui/TitleBackButton'
 import { useSession } from '@/context/AuthContext'
 import CompanyDropDown from '@/features/JobMatch/CompanyDropDown'
+import { MatchInputs, MatchSchema } from '@/lib/Database/Schema/MatchSchema'
+import { ScoreProps } from '@/lib/Database/Schema/ScoreSchema'
 import { supabase } from '@/lib/supabase'
+import { toast } from '@/lib/Toast/ToastUtility'
+import { api } from '@/lib/Utils/FetchUtils'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { router } from 'expo-router'
 import { Sparkles } from 'lucide-react-native'
 import React, { useState } from 'react'
@@ -17,18 +21,10 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import { z } from 'zod'
 
 
-const MatchSchema = z.object({
-    resumeId: z.string().min(1, "Resume is required"),
-    resumeName: z.string().min(1, "Resume is required"),
-    applicationId: z.string().min(1, "Application is required"),
-    companyName: z.string().min(1, "Application is required"),
-    jobDescription: z.string().min(1, "No Job Description found")
-})
-
-type MatchInputs = z.infer<typeof MatchSchema>
 
 const JobMatchPage = () => {
     const { session } = useSession()
+    const queryClient = useQueryClient();
     const [analyzing, setAnalyzing] = useState(false)
     const [result, setResult] = useState<{ score: number; missing: string[]; emphasize: string[] } | null>(null)
 
@@ -40,6 +36,19 @@ const JobMatchPage = () => {
             jobDescription: '',
             applicationId: '',
             companyName: ''
+        }
+    })
+
+    const { data: Scoredata, isFetching } = useQuery({
+        queryKey: ["Score"],
+        queryFn: async () => {
+            const { data, error } = await supabase.from('Score').select('*').eq("userId", session?.user.id as string).single()
+
+            if (error) {
+                throw new Error('Db Error')
+            }
+
+            return data.Scoredata as ScoreProps || {};
         }
     })
 
@@ -76,25 +85,29 @@ const JobMatchPage = () => {
             console.error('Error fetching resumes:', error)
             return []
         }
-        return data || []
+        return data;
     }
 
-
-
-
     const onSubmit = async (data: MatchInputs) => {
-        setAnalyzing(true)
-        setResult(null)
+        try {
+            setAnalyzing(true)
+            setResult(null)
+
+            const res = await api.post({ userId: session?.user.id, applicationId: data.applicationId }, '/api/getscore');
+
+            if (res.success) {
+                await queryClient.invalidateQueries({
+                    queryKey: ["Score"]
+                })
+            }
 
 
-        setTimeout(() => {
-            setResult({
-                score: 75,
-                missing: ['Typescript experience in production', 'GraphQL knowledge', 'Leading a team'],
-                emphasize: ['React Native expertise', 'UI/UX focus', 'Performance optimization']
-            })
-            setAnalyzing(false)
-        }, 2000)
+        } catch (err) {
+            console.error(err);
+            toast.error('Server Error')
+        } finally {
+            setAnalyzing(false);
+        }
     }
 
 
@@ -180,7 +193,7 @@ const JobMatchPage = () => {
                                 className={`mt-4 p-4 rounded-xl flex-row h-14 justify-center items-center gap-2`}
                                 style={{ backgroundColor: colors.tailwind.indigo[500] }}
                             >
-                                {analyzing ? (
+                                {analyzing || isFetching ? (
                                     <>
                                         <ActivityIndicator color="white" />
                                     </>
@@ -193,7 +206,7 @@ const JobMatchPage = () => {
                         </View>
                     </View>
 
-                    {result && !analyzing && (
+                    {Scoredata && (
                         <Animated.View entering={FadeIn} className='mt-10'>
                             <View className='bg-white rounded-3xl p-6 border border-slate-100 shadow-sm'>
                                 <Text className='text-center text-slate-800 tracking-widest text-xl font-bold mb-6'>Match Score Analysis</Text>
@@ -204,13 +217,13 @@ const JobMatchPage = () => {
                                         innerRadius={80}
                                         radius={100}
                                         data={[
-                                            { value: result.score, color: colors.tailwind.indigo[500], focused: true },
-                                            { value: 100 - result.score, color: colors.tailwind.slate[200] }
+                                            { value: Scoredata.score, color: colors.tailwind.indigo[500], focused: true },
+                                            { value: 100 - Scoredata.score, color: colors.tailwind.slate[200] }
                                         ]}
                                         centerLabelComponent={() => (
                                             <View className='items-center justify-center'>
                                                 <Text className='text-2xl font-bold tracking-widest text-indigo-500'>
-                                                    {result.score}%
+                                                    {Scoredata.score}%
                                                 </Text>
                                                 <Text className='text-slate-500 font-medium tracking-widest text-xs'>
                                                     Match Score
@@ -227,7 +240,7 @@ const JobMatchPage = () => {
                                             <Text className='font-semibold text-red-700 tracking-widest'>Missing Skills</Text>
                                         </View>
                                         <View className='gap-2 pl-2'>
-                                            {result.missing.map((item, idx) => (
+                                            {Scoredata.missing.map((item, idx) => (
                                                 <View key={idx} className='flex-row items-start gap-2'>
                                                     <View className='w-1.5 h-1.5 rounded-full bg-slate-900 mt-2' />
                                                     <Text className='text-slate-800 flex-1 tracking-wider'>{item}</Text>
@@ -241,7 +254,7 @@ const JobMatchPage = () => {
                                             <Text className='font-semibold text-green-700 tracking-widest'>Matching Strengths</Text>
                                         </View>
                                         <View className='gap-2 pl-2'>
-                                            {result.emphasize.map((item, idx) => (
+                                            {Scoredata.emphasize.map((item, idx) => (
                                                 <View key={idx} className='flex-row items-start gap-2'>
                                                     <View className='w-1.5 h-1.5 rounded-full bg-slate-900 mt-2' />
                                                     <Text className='text-slate-800 flex-1 tracking-wider'>{item}</Text>
