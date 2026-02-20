@@ -9,8 +9,10 @@ export async function POST(req: Request) {
 
         const signature = authHeader?.split(' ')[1]
 
+        const env = process.env.REVENUECAT_WEBHOOK_SECRET;
+
         if (signature !== process.env.REVENUECAT_WEBHOOK_SECRET) {
-            return Response.json({ error: "Unauthorized", signature , env : process.env.REVENUECAT_WEBHOOK_SECRET }, { headers: { "Content-Type": "application/json" }, status: 401 })
+            return Response.json({ error: "Unauthorized", signature, env }, { headers: { "Content-Type": "application/json" }, status: 401 })
         }
 
         const userId = event.app_user_id;
