@@ -76,9 +76,6 @@ const Settings = () => {
     );
   };
 
-  useEffect(() => {
-    console.log(session?.user.app_metadata.subscription);
-  }, [])
 
   const handlecancelSubscription = async () => {
     await Purchases.showManageSubscriptions();
@@ -87,7 +84,7 @@ const Settings = () => {
 
 
   return (
-    <SafeAreaView className='flex-1 bg-slate-50'>
+    <SafeAreaView className='h-screen bg-slate-50'>
       <ScrollView contentContainerStyle={{ padding: 20 }}>
         {/* Header */}
         <View className="mb-8">
