@@ -70,6 +70,10 @@ const ApplicationForm = () => {
 
     const res = await api.post({ userId: session?.user.id, data }, '/api/addapplication');
 
+    if (res.message === "Free Limit Exceeded") {
+      return router.replace('/paywall')
+    }
+
     await queryClient.invalidateQueries({
       queryKey: ['RecentApplications']
     })

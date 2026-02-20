@@ -17,8 +17,10 @@ export async function POST(request: Request) {
             }
         })
 
-        if (Usage?.current_Resumes! >= Usage?.total_resume!) {
-            return Response.json({ message: "Free Limit Exceeded", success: false }, { status: 200 })
+        if (Usage?.total_resume) {
+            if (Usage?.current_Resumes! >= Usage?.total_resume!) {
+                return Response.json({ message: "Free Limit Exceeded", success: false }, { status: 200 })
+            }
         }
 
 

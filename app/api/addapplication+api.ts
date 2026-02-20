@@ -20,16 +20,19 @@ export async function POST(req: Request) {
             }
         })
 
-        if (usage?.current_Applications! >= usage?.total_Applications!) {
-            return Response.json({ message: "Free Limit Exceeded", success: false }, { status: 200 })
+
+        if (usage?.total_Applications) {
+            if (usage?.current_Applications! >= usage?.total_Applications!) {
+                return Response.json({ message: "Free Limit Exceeded", success: false }, { status: 200 })
+            }
         }
 
-        console.log()
+
 
         const application = await prisma.application.create({
             data: {
                 companyName: data.companyName,
-                Date: data.date?.toISOString() || "",
+                Date: data.date || "",
                 jobDescription: data.jobDescription || "",
                 Link: data.link || "",
                 resumeId: data.resumeId,
