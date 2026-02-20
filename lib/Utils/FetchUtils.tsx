@@ -1,8 +1,9 @@
 import { Platform } from "react-native";
 import { toast } from "../Toast/ToastUtility";
+import { router } from "expo-router";
 
 
-const BASE_URL = Platform.OS === 'web' ? '' :  process.env.EXPO_PUBLIC_BASE_URL;
+const BASE_URL = Platform.OS === 'web' ? '' : process.env.EXPO_PUBLIC_BASE_URL;
 
 
 export const api = {

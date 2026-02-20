@@ -2,11 +2,12 @@ import { colors } from "@/components/ui/colors";
 import Loading from "@/components/ui/Loading";
 import { useSession } from "@/context/AuthContext";
 import { supabase } from "@/lib/supabase";
+import { toast } from "@/lib/Toast/ToastUtility";
 import { Image } from "expo-image";
 import { router } from "expo-router";
-import { ChevronRight, Info, LogOut, Trash2, User } from 'lucide-react-native';
+import { ChevronRight, Info, LogOut, Trash2 } from 'lucide-react-native';
 import { useState } from "react";
-import { Pressable, ScrollView, Text, View } from 'react-native';
+import { Alert, Pressable, ScrollView, Text, View } from 'react-native';
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const Settings = () => {
@@ -14,16 +15,71 @@ const Settings = () => {
   const [loading, setLoading] = useState(false);
 
   const handlesignout = async () => {
-    setLoading(true);
-    const { error } = await supabase.auth.signOut();
-    if (error) {
-      setLoading(false);
-    }
+    Alert.alert(
+      "Sign Out",
+      "Are you sure you want to Sign Out?",
+      [
+        { text: "Cancel", style: "cancel" },
+        {
+          text: "Sign Out",
+          style: "destructive",
+          onPress: async () => {
+            try {
+              setLoading(true);
+              await supabase.auth.signOut();
+            } catch (error: any) {
+              console.error("Sign Out error:", error);
+              toast.error("SignOut Error");
+            } finally {
+              setLoading(false);
+            }
+          }
+        }
+      ]
+    );
   };
+
+  const handleDeleteAccount = async () => {
+    Alert.alert(
+      "Delete Account",
+      "Are you sure you want to delete your account? This action is permanent and all your data will be lost.",
+      [
+        { text: "Cancel", style: "cancel" },
+        {
+          text: "Delete",
+          style: "destructive",
+          onPress: async () => {
+            try {
+              setLoading(true);
+
+              const { data, error: funcError } = await supabase.functions.invoke('delete-user');
+
+              if (funcError && !funcError.message?.includes('Unauthorized')) {
+                console.error("Delete function error:", funcError);
+                throw funcError;
+              }
+
+              console.log("Delete response:", data);
+              await supabase.auth.signOut();
+
+            } catch (error: any) {
+              console.error("Delete account error:", error);
+              toast.error(error.message || "Failed to delete account");
+            } finally {
+              setLoading(false);
+            }
+          }
+        }
+      ]
+    );
+  };
+
+
 
   if (loading) {
     return <Loading />;
   }
+
 
   return (
     <SafeAreaView className='flex-1 bg-slate-50'>
@@ -94,7 +150,10 @@ const Settings = () => {
 
             <View className="h-[1px] bg-slate-100 w-full" />
 
-            <Pressable className="flex-row items-center justify-between p-4 py-5 active:bg-red-50 transition-colors">
+            <Pressable
+              onPress={handleDeleteAccount}
+              className="flex-row items-center justify-between p-4 py-5 active:bg-red-50 transition-colors"
+            >
               <View className="flex-row items-center gap-4">
                 <View className="h-10 w-10 rounded-full bg-red-50 items-center justify-center">
                   <Trash2 size={20} color={colors.tailwind.red[500]} />

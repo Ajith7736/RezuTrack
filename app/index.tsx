@@ -4,10 +4,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useSession } from "@/context/AuthContext";
 import GoogleSignInButton from "@/components/GoogleSignInButton";
 import Loading from "@/components/ui/Loading";
-import { Link } from "expo-router";
-import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/lib/supabase";
-import { toast } from "@/lib/Toast/ToastUtility";
+
 
 
 

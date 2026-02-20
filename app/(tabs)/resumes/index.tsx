@@ -1,4 +1,4 @@
-import { Pressable, Text, View } from 'react-native'
+import { ActivityIndicator, Pressable, Text, View } from 'react-native'
 import React from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { FileText, Plus } from 'lucide-react-native'
@@ -32,10 +32,6 @@ const resumes = () => {
 
 
 
-  if (isLoading) {
-    return <Loading />
-  }
-
   return (
     <SafeAreaView className='flex-1 bg-slate-50 p-5'>
 
@@ -68,19 +64,28 @@ const resumes = () => {
         </Text>
       </View>
 
-      {data && data.length > 0 ? <FlatList
-        data={data}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => <ResumeCard data={item} refetch={refetch} />}
-      /> : <View className='h-[47rem] flex items-center justify-center gap-2'>
-        <View className="w-20 h-20 bg-slate-100 rounded-3xl flex items-center justify-center  mx-auto border border-slate-200 shadow-sm">
-          <FileText size={40} color={colors.tailwind.slate[300]} />
-        </View>
-        <Text className='text-[16px] text-center text-slate-800 font-bold tracking-widest'>No Resume Found</Text>
-        <Text className="text-[12px] text-slate-500 text-center w-96 tracking-wider">
-          Add a version to start tracking its performance
-        </Text>
-      </View>}
+      {isLoading ? <View style={{
+        display: 'flex',
+        justifyContent : 'center',
+        height : '80%',
+        gap: 8
+      }}>
+        <ActivityIndicator color={colors.tailwind.slate[300]} />
+        <Text className='text-center text-sm tracking-widest text-slate-300 '>Loading</Text>
+      </View>
+        : data && data.length > 0 ? <FlatList
+          data={data}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => <ResumeCard data={item} refetch={refetch} />}
+        /> : <View className='h-[47rem] flex items-center justify-center gap-2'>
+          <View className="w-20 h-20 bg-slate-100 rounded-3xl flex items-center justify-center  mx-auto border border-slate-200 shadow-sm">
+            <FileText size={40} color={colors.tailwind.slate[300]} />
+          </View>
+          <Text className='text-[16px] text-center text-slate-800 font-bold tracking-widest'>No Resume Found</Text>
+          <Text className="text-[12px] text-slate-500 text-center w-96 tracking-wider">
+            Add a version to start tracking its performance
+          </Text>
+        </View>}
     </SafeAreaView>
   )
 }

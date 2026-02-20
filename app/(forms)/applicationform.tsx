@@ -7,6 +7,7 @@ import { delay } from '@/lib/customdelay'
 import { ApplicationInputs, ApplicationSchema } from '@/lib/Database/Schema/ApplicationForm'
 import { supabase } from '@/lib/supabase'
 import { toast } from '@/lib/Toast/ToastUtility'
+import { api } from '@/lib/Utils/FetchUtils'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useQueryClient } from '@tanstack/react-query'
 import { router } from 'expo-router'
@@ -66,22 +67,8 @@ const ApplicationForm = () => {
 
   const onSubmit = async (data: ApplicationInputs) => {
     await delay(1);
-    const { error } = await supabase.from('Application').upsert({
-      companyName: data.companyName,
-      Date: data.date?.toISOString() || "",
-      jobDescription: data.jobDescription || "",
-      Link: data.link || "",
-      resumeId: data.resumeId,
-      resumeUsed: data.resumeUsed,
-      roleTitle: data.roleTitle,
-      Status: data.status,
-      userId: session?.user.id as string
-    })
 
-    if (error) {
-      console.error(error.message);
-      toast.error(error.message);
-    }
+    const res = await api.post({ userId: session?.user.id, data }, '/api/addapplication');
 
     await queryClient.invalidateQueries({
       queryKey: ['RecentApplications']

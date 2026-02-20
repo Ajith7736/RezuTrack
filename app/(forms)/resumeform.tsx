@@ -36,11 +36,16 @@ const ResumeForm = () => {
         try {
             await delay(1);
 
-            await api.post({ data, userId: session?.user.id }, '/api/addresume');
+            const res = await api.post({ data, userId: session?.user.id }, '/api/addresume');
+
+            if (res.message === "Free Limit Exceeded") {
+                return router.push('/paywall')
+            }
 
             await queryClient.invalidateQueries({
                 queryKey: ["Resumes"]
             })
+
 
             router.dismiss()
 

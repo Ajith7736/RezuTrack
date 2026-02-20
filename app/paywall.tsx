@@ -71,9 +71,8 @@ const Paywall = () => {
 
     const features = [
         { id: 1, text: 'Unlimited Resume Version Submission', free: false, pro: true },
-        { id: 2, text: 'Advanced AI Insights & Analysis', free: false, pro: true },
         { id: 3, text: 'Priority Support', free: false, pro: true },
-        { id: 4, text: 'Unlimited Application Submission', free: true, pro: true },
+        { id: 4, text: 'Unlimited Application Submission', free: false, pro: true },
     ]
 
     return (

@@ -36,8 +36,12 @@ const GoogleSignInButton = () => {
                         image: data.user.user_metadata.avatar_url
                     })
 
-                    if (dberror) {
-                        console.error(dberror.message);
+                    const { error: Usageerror } = await supabase.from('Usage').upsert({
+                        userId: data.user.id
+                    },{ onConflict : 'userId'})
+
+                    if (dberror || Usageerror) {
+                        console.error(dberror?.message || Usageerror?.message);
                         toast.error("Something went wrong!")
                     }
                 }
