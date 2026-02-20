@@ -1,15 +1,29 @@
+import { Database } from "@/lib/database.types";
 import { createClient } from "@supabase/supabase-js";
 
 export async function POST(req: Request) {
     try {
         const { event } = await req.json();
 
-        const supabaseAdmin = createClient(process.env.EXPO_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!)
+        const authHeader = req.headers.get("Authorization");
+
+        const signature = authHeader?.split(' ')[1]
+
+        if (signature !== process.env.REVENUECAT_WEBHOOK_SECRET) {
+            return Response.json({ error: "Unauthorized" }, { headers: { "Content-Type": "application/json" }, status: 401 })
+        }
+
+        const userId = event.app_user_id;
+
+
+        const supabaseAdmin = createClient<Database>(process.env.EXPO_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!)
 
         switch (event.type) {
             case 'INITIAL_PURCHASE':
             case 'RENEWAL':
-                const userId = event.app_user_id;
+            case 'PRODUCT_CHANGE':
+            case 'UNCANCELLATION':
+            case 'NON_RENEWING_PURCHASE':
 
                 const { error: authError } = await supabaseAdmin.auth.admin.updateUserById(userId, {
                     app_metadata: {
@@ -33,9 +47,34 @@ export async function POST(req: Request) {
                 }
 
 
-                console.log("Successfully upgraded user:", userId);
+                break;
+            case 'CANCELLATION':
+            case 'EXPIRATION':
+
+                const { error: cancel_authError } = await supabaseAdmin.auth.admin.updateUserById(userId, {
+                    app_metadata: {
+                        subscription: "Free"
+                    }
+                })
+
+                const { error: cancel_userError } = await supabaseAdmin.from('User').update({
+                    Subscription: "Free"
+                }).eq('id', userId);
+
+
+                const { error: cancel_usageError } = await supabaseAdmin.from('Usage').update({
+                    total_Applications: 20,
+                    total_resume: 2
+                }).eq('userId', userId)
+
+                if (cancel_authError || cancel_usageError || cancel_userError) {
+                    console.error("Failed to cancel the subscriptions : ", cancel_authError || cancel_usageError || cancel_userError)
+
+                    throw new Error('Cancellation failed')
+                }
 
                 break;
+
         }
 
 

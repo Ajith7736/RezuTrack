@@ -7,9 +7,8 @@ import { supabase } from "@/lib/supabase";
 import { api } from "@/lib/Utils/FetchUtils";
 import { useQuery } from "@tanstack/react-query";
 import { Image } from "expo-image";
-import { router } from "expo-router";
-import { ChevronRight, FileText, Sparkles, Target, TrendingUp, Zap } from "lucide-react-native";
-import { Pressable, ScrollView, Text, View } from "react-native";
+import { Target, TrendingUp } from "lucide-react-native";
+import {  ScrollView, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 
@@ -27,10 +26,7 @@ export default function Index() {
       const [totalapplication, resdata, response] = await Promise.all([gettotalApplication(), getoneweekData(), getRespondedApplications()])
 
       const responserate = totalapplication ? ((response ?? 0) / totalapplication) * 100 : 0
-
-
-      console.log(resdata)
-
+      
       resdata?.forEach((res) => {
 
         const Day = new Date(res.Date).getDay()
@@ -140,7 +136,7 @@ export default function Index() {
               </View>
             </View>
 
-            <Pressable onPress={() => router.push('/ai-tools')} style={{
+            {/* <Pressable onPress={() => router.push('/ai-tools')} style={{
               boxShadow: '0px 0px 15px rgba(79, 70, 229, 0.3)'
             }} className="w-full mt-5 p-5 flex gap-3 rounded-[20px] bg-indigo-500">
               <View className="flex flex-row justify-between items-center">
@@ -161,7 +157,7 @@ export default function Index() {
                 </View>
                 <ChevronRight color={'white'} />
               </View>
-            </Pressable>
+            </Pressable> */}
 
             <View className="flex flex-row justify-center mt-5 gap-5">
               {cardcontent.map((card, indx) => {
