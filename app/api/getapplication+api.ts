@@ -3,12 +3,13 @@ import prisma from "@/lib/prisma";
 
 export async function POST(request: Request) {
     try {
-        const { lastId, userId, Search } = await request.json();
+        const { lastId, userId, Search, Status } = await request.json();
 
         const data = await prisma.application.findMany({
             where: {
                 userId,
-                companyName: Search ? { contains: Search, mode: 'insensitive' } : undefined
+                companyName: Search ? { contains: Search, mode: 'insensitive' } : undefined,
+                Status: Status ? { equals: Status } : undefined
             },
             take: 10,
             ...(lastId && {

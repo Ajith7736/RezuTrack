@@ -1,28 +1,28 @@
 import { colors } from '@/components/ui/colors'
-import Loading from '@/components/ui/Loading'
 import { useSession } from '@/context/AuthContext'
 import ApplicationCard from '@/features/Application/components/ApplicationCard'
 import { Application } from '@/lib/generated/prisma'
 import { api } from '@/lib/Utils/FetchUtils'
-import { useInfiniteQuery, useQuery } from '@tanstack/react-query'
+import { useInfiniteQuery } from '@tanstack/react-query'
 import { Link } from 'expo-router'
 import { ClipboardList, Plus, Search } from 'lucide-react-native'
 import React, { useEffect, useState } from 'react'
 import { ActivityIndicator, FlatList, Pressable, Text, TextInput, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
-const applications = () => {
+const Applications = () => {
 
   const { session } = useSession();
   const [SearchText, setSearchText] = useState<string>("")
   const [DebounceText, setDebounceText] = useState<string>("")
+  const [Status, setStatus] = useState<string>("")
 
 
 
   const { data: applications, hasNextPage, isFetchingNextPage, fetchNextPage, isLoading, isFetching, refetch } = useInfiniteQuery({
-    queryKey: ['applications', DebounceText],
+    queryKey: ['applications', DebounceText, Status],
     queryFn: async ({ pageParam }) => {
-      const data = await api.post({ lastId: pageParam, userId: session?.user.id, Search: DebounceText }, '/api/getapplication')
+      const data = await api.post({ lastId: pageParam, userId: session?.user.id, Search: DebounceText, Status }, '/api/getapplication')
 
       if (!data) {
         throw new Error("Couldnt get data")
@@ -51,6 +51,16 @@ const applications = () => {
     }
   }, [SearchText])
 
+
+  const statuses = [
+    { label: 'All', value: '' },
+    { label: 'Offer', value: 'Offer' },
+    { label: 'Interviewing', value: 'Interviewing' },
+    { label: 'Applied', value: 'Applied' },
+    { label: 'Pending', value: 'Pending' },
+    { label: 'No Response', value: 'No_Response' },
+    { label: 'Rejected', value: 'Rejected' },
+  ];
 
 
   return (
@@ -93,6 +103,18 @@ const applications = () => {
             </View>
           </View>
 
+          <View className='flex flex-row flex-wrap gap-2'>
+            {statuses.map((status) => {
+              return <Pressable onPress={() => setStatus(status.value)} key={status.label} style={{
+                borderColor: Status === status.value ? colors.tailwind.indigo[200] : colors.tailwind.slate[100]
+              }} className='bg-white w-[110px] p-2 border rounded-full'>
+                <Text style={{
+                  color: Status === status.value ? 'black' : colors.tailwind.slate[300]
+                }} className='text-sm text-center  tracking-widest'>{status.label}</Text>
+              </Pressable>
+            })}
+          </View>
+
           {isLoading || (isFetching && !isFetchingNextPage) ? <View style={{
             display: 'flex',
             paddingTop: 50,
@@ -114,7 +136,7 @@ const applications = () => {
                 if (hasNextPage && !isFetchingNextPage) fetchNextPage();
               }}
               onEndReachedThreshold={0.5}
-              ListFooterComponent={isFetchingNextPage && hasNextPage && applications.length! < 10 ?
+              ListFooterComponent={isFetchingNextPage && hasNextPage && applications.length! >= 10 ?
                 (<View style={{
                   marginTop: 15
                 }}>
@@ -123,7 +145,7 @@ const applications = () => {
               }
             />
             : <View style={{
-              height: 550
+              height: 460
             }} className=' flex items-center justify-center gap-2'>
               <View className="w-20 h-20 bg-slate-100 rounded-3xl flex items-center justify-center  mx-auto border border-slate-200 shadow-sm">
                 <ClipboardList size={40} color={colors.tailwind.slate[300]} />
@@ -139,4 +161,4 @@ const applications = () => {
   )
 }
 
-export default applications
+export default Applications

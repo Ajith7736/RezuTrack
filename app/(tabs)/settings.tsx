@@ -13,7 +13,7 @@ import Purchases from "react-native-purchases";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const Settings = () => {
-  const { session } = useSession();
+  const { session, refreshSession } = useSession();
   const [loading, setLoading] = useState<'' | 'signout' | 'delete'>("");
 
   const handlesignout = async () => {
@@ -75,6 +75,13 @@ const Settings = () => {
       ]
     );
   };
+
+  useEffect(() => {
+    refreshSession()
+  }, [])
+
+
+
 
 
   const handlecancelSubscription = async () => {

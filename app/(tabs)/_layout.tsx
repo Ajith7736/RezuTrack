@@ -35,7 +35,7 @@ const TabLayout = () => {
 
 
     return (
-        <Tabs screenOptions={{
+        <Tabs initialRouteName='applications' screenOptions={{
             tabBarActiveTintColor: colors.tailwind.indigo[500],
             headerShown: false,
             tabBarShowLabel: false,

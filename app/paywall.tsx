@@ -14,7 +14,6 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 const Paywall = () => {
     const [selectedPlan, setSelectedPlan] = useState<'free' | 'pro'>('pro')
     const [offerings, setofferings] = useState<PurchasesOfferings>()
-    const { session } = useSession()
     const [isPurchasing, setisPurchasing] = useState(false)
 
     useEffect(() => {
@@ -126,7 +125,7 @@ const Paywall = () => {
                                 </View>
 
                                 {selectedPlan === 'pro' && (
-                                    <View className='mt-2 bg-white/20 p-3 rounded-xl border border-white/10'>
+                                    <View className='mt-2 bg-white/20 p-3 rounded-lg border border-white/10'>
                                         <View className='flex flex-row items-center justify-center gap-2'>
                                             <Rocket size={15} color={'white'} />
                                             <Text className='text-indigo-50 tracking-widest text-xs text-center font-bold '>MOST POPULAR CHOICE</Text>

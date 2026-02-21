@@ -23,9 +23,9 @@ function InitialLayout() {
     Purchases.setLogLevel(LOG_LEVEL.VERBOSE);
 
     if (Platform.OS === 'ios') {
-      Purchases.configure({ apiKey: '' });
+      Purchases.configure({ apiKey: process.env.EXPO_PUBLIC_REVENUECAT_APPLE_API_KEY || '' });
     } else if (Platform.OS === 'android') {
-      Purchases.configure({ apiKey: 'test_WGyIThBWgffFQSBorrUBKITKHPL' });
+      Purchases.configure({ apiKey: process.env.EXPO_PUBLIC_REVENUECAT_ANDROID_API_KEY || '' });
     }
   }, [])
 
