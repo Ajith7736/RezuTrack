@@ -7,16 +7,20 @@ import { supabase } from '@/lib/supabase'
 import { toast } from '@/lib/Toast/ToastUtility'
 import { QueryClient, useQueryClient } from '@tanstack/react-query'
 import { router } from 'expo-router'
+import { useSession } from '@/context/AuthContext'
+import { api } from '@/lib/Utils/FetchUtils'
 
 const ResumeCard = ({ data, refetch }: { data: Pick<Resume, 'id' | 'updatedAt' | 'name'>, refetch: Function }) => {
     const queryClient = useQueryClient();
 
+    const { session } = useSession()
+
     const handledelete = async () => {
 
-        const { error } = await supabase.from('Resume').delete().eq('id', data.id);
+        const res = await api.delete({ ResumeId: data.id, userId: session?.user.id }, '/api/deleteresume')
 
-        if (error) {
-            toast.error('Couldnt delete')
+        if (!res.success) {
+            return
         }
 
         await queryClient.invalidateQueries({

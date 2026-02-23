@@ -23,11 +23,11 @@ const ResumeChart = ({ resumedata, isLoading }: { isLoading: boolean, resumedata
     })
 
     return (
-        <View className="bg-white p-5 border-slate-200 rounded-[25px] border flex gap-5">
+        <View className="bg-white p-5 border-slate-100 shadow-sm rounded-[25px] border flex gap-5">
             <View className="flex flex-row justify-between items-center">
                 <View className="flex flex-row gap-2 items-center">
-                    <FileText color={colors.tailwind.emerald[500]} />
-                    <Text className="text-xl font-extrabold tracking-widest">Resume Success</Text>
+                    <FileText color={colors.tailwind.emerald[500]} size={18}/>
+                    <Text className="text-lg font-bold tracking-widest">Resume Success</Text>
                 </View>
             </View>
             <View>
@@ -43,7 +43,6 @@ const ResumeChart = ({ resumedata, isLoading }: { isLoading: boolean, resumedata
                 </View> : (resumedata && resumedata.length > 0) ? <BarChart
                     barWidth={20}
                     noOfSections={5}
-                    barBorderRadius={2}
                     initialSpacing={20}
                     spacing={40}
                     endSpacing={10}
@@ -54,15 +53,18 @@ const ResumeChart = ({ resumedata, isLoading }: { isLoading: boolean, resumedata
                         letterSpacing: 1,
                         fontWeight: '600'
                     }}
+                    xAxisColor={colors.tailwind.slate[100]}
+                    yAxisColor={colors.tailwind.slate[300]}
                     yAxisTextStyle={{
-                        fontSize: 11,
+                        fontSize: 10,
                         letterSpacing: 1,
-                        fontWeight: '600'
+                        fontWeight: '300'
                     }}
                     data={ChartData}
                     onBackgroundPress={() => setActive(null)}
-                    yAxisThickness={0}
-                    xAxisThickness={0}
+                    yAxisThickness={0.2}
+                    xAxisThickness={1}
+
                     width={280}
                 /> :
                     <View style={{

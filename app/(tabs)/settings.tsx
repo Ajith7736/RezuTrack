@@ -83,7 +83,6 @@ const Settings = () => {
 
 
 
-
   const handlecancelSubscription = async () => {
     await Purchases.showManageSubscriptions();
   }

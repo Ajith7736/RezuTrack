@@ -106,7 +106,7 @@ const Applications = () => {
           <View className='flex flex-row flex-wrap gap-2'>
             {statuses.map((status) => {
               return <Pressable onPress={() => setStatus(status.value)} key={status.label} style={{
-                borderColor: Status === status.value ? colors.tailwind.indigo[200] : colors.tailwind.slate[100]
+                borderColor: Status === status.value ? colors.tailwind.slate[500] : colors.tailwind.slate[100]
               }} className='bg-white w-[110px] p-2 border rounded-full'>
                 <Text style={{
                   color: Status === status.value ? 'black' : colors.tailwind.slate[300]

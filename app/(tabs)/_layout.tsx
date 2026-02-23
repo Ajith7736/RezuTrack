@@ -21,7 +21,7 @@ const TabIcon = ({ focused, label, size, iconname }: { focused: boolean, label: 
                 width: 75,
             }]}
         >
-            <Ionicons name={iconname} size={size} color={focused ? colors.tailwind.indigo[500] : colors.tailwind.slate[600]} />
+            <Ionicons name={iconname} size={20} color={focused ? colors.tailwind.indigo[500] : colors.tailwind.slate[600]} />
 
             <Text style={{
                 color: focused ? colors.tailwind.indigo[500] : colors.tailwind.slate[700],
@@ -33,9 +33,8 @@ const TabIcon = ({ focused, label, size, iconname }: { focused: boolean, label: 
 
 const TabLayout = () => {
 
-
     return (
-        <Tabs initialRouteName='applications' screenOptions={{
+        <Tabs screenOptions={{
             tabBarActiveTintColor: colors.tailwind.indigo[500],
             headerShown: false,
             tabBarShowLabel: false,
@@ -56,6 +55,11 @@ const TabLayout = () => {
                 options={{
                     title: "Applications",
                     tabBarIcon: ({ focused, size }) => <TabIcon iconname={focused ? 'document-text-sharp' : 'document-text-outline'} focused={focused} label='Applications' size={size} />
+                }} />
+            <Tabs.Screen name='stats'
+                options={{
+                    title: "Stats",
+                    tabBarIcon: ({ focused, size }) => <TabIcon iconname={focused ? 'stats-chart-sharp' : 'stats-chart-outline'} focused={focused} label='Stats' size={size} />
                 }} />
             <Tabs.Screen name='resumes'
                 options={{

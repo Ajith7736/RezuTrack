@@ -7,6 +7,8 @@ import { Building, Calendar, ExternalLink, Trash2 } from 'lucide-react-native'
 import React from 'react'
 import { Linking, Pressable, Text, View } from 'react-native'
 import StatusText from './StatusText'
+import { api } from '@/lib/Utils/FetchUtils'
+import { useSession } from '@/context/AuthContext'
 
 const ApplicationCard = ({ data, refetch, index }: { data: Application, refetch: Function, index: number }) => {
 
@@ -17,16 +19,14 @@ const ApplicationCard = ({ data, refetch, index }: { data: Application, refetch:
     }
 
     const date = new Date(data.Date).toDateString();
-
+    const { session } = useSession()
 
     const handledelete = async () => {
         try {
-            const { error } = await supabase.from('Application').delete().eq('id', data.id);
+            const res = await api.delete({ ApplicationId: data.id, userId: session?.user.id }, '/api/deleteapplication');
 
-            if (error) {
-                toast.error('Db error');
-                console.error(error.message);
-                return;
+            if (!res.success) {
+                return
             }
 
             await queryClient.invalidateQueries({

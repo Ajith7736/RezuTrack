@@ -40,11 +40,11 @@ const ActivityChart = ({ data }: { data: Map<number, number> | undefined }) => {
 
 
     return (
-        <View className="bg-white border-slate-200 p-5 rounded-[25px] border flex gap-5">
+        <View className="bg-white border-slate-200 pt-8 pb-8 mt-5 px-4 rounded-[25px] border flex gap-8">
             <View className="flex flex-row justify-between items-center">
                 <View className="flex flex-row gap-2 items-center">
-                    <TimerIcon color={colors.tailwind.indigo[500]} />
-                    <Text className="text-xl font-extrabold tracking-widest">Profile Activity</Text>
+                    <TimerIcon color={colors.tailwind.indigo[500]} size={20}/>
+                    <Text className="text-lg font-extrabold tracking-widest">Profile Activity</Text>
                 </View>
                 <View>
                     <Text className="text-xs bg-indigo-100 py-1 px-2 text-indigo-600">This week</Text>
@@ -54,7 +54,7 @@ const ActivityChart = ({ data }: { data: Map<number, number> | undefined }) => {
                 barWidth={13}
                 noOfSections={5}
                 initialSpacing={15}
-                spacing={28}
+                spacing={30}
                 endSpacing={0}
                 data={ChartData}
                 yAxisThickness={0.2}
@@ -64,7 +64,7 @@ const ActivityChart = ({ data }: { data: Map<number, number> | undefined }) => {
                 xAxisLabelTextStyle={{
                     fontSize: 10
                 }}
-                width={280}
+                width={300}
                 yAxisTextStyle={{
                     fontSize: 12
                 }}

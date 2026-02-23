@@ -2,13 +2,14 @@ import { colors } from "@/components/ui/colors";
 import Loading from "@/components/ui/Loading";
 import { useSession } from "@/context/AuthContext";
 import ActivityChart from "@/features/Home/components/ActivityChart";
-import ResumeChart from "@/features/Home/components/ResumeChart";
+import ResumeChart from "@/features/Stats/Components/ResumeChart";
 import { supabase } from "@/lib/supabase";
 import { api } from "@/lib/Utils/FetchUtils";
 import { useQuery } from "@tanstack/react-query";
 import { Image } from "expo-image";
-import { Target, TrendingUp } from "lucide-react-native";
-import {  ScrollView, Text, View } from "react-native";
+import { router } from "expo-router";
+import { ArrowRight, CheckCircle, Clock, Target, TrendingUp } from "lucide-react-native";
+import { Pressable, ScrollView, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 
@@ -23,10 +24,10 @@ export default function Index() {
 
       let counts: Map<number, number> = new Map([[0, 0], [1, 0], [2, 0], [3, 0], [4, 0], [5, 0], [6, 0]])
 
-      const [totalapplication, resdata, response] = await Promise.all([gettotalApplication(), getoneweekData(), getRespondedApplications()])
+      const [totalapplication, resdata, response, interview] = await Promise.all([gettotalApplication(), getoneweekData(), getRespondedApplications(), getInterviewApplication()])
 
       const responserate = totalapplication ? ((response ?? 0) / totalapplication) * 100 : 0
-      
+
       resdata?.forEach((res) => {
 
         const Day = new Date(res.Date).getDay()
@@ -35,7 +36,7 @@ export default function Index() {
 
       })
 
-      return { counts, totalapplication, responserate };
+      return { counts, totalapplication, responserate, responsecount: response, interview };
     },
     enabled: !!session?.user.id
   })
@@ -67,18 +68,11 @@ export default function Index() {
     return count;
   }
 
-  const { data: resumedata, isLoading } = useQuery({
-    queryKey: ['resumesuccess'],
-    queryFn: async () => {
-      const data = await api.post({ userId: session?.user.id }, '/api/getresumedata')
+  const getInterviewApplication = async () => {
+    const { count } = await supabase.from('Application').select('*', { count: 'exact', head: true }).eq('userId', session?.user.id as string).in('Status', ['Interviewing']);
 
-      if (!data) return []
-
-      return data.resumedata as { value: number, label: string }[];
-    },
-    enabled: !!session?.user.id
-  })
-
+    return count;
+  }
 
 
 
@@ -94,6 +88,18 @@ export default function Index() {
       label: 'Response Rate',
       value: `${data?.responserate.toFixed(2)}%`,
       background: colors.tailwind.emerald[100]
+    },
+    {
+      icon: <CheckCircle size={20} color={colors.tailwind.amber[500]} />,
+      label: 'Outcomes',
+      value: data?.responsecount,
+      background: colors.tailwind.amber[100]
+    },
+    {
+      icon: <Clock size={20} color={colors.tailwind.blue[500]} />,
+      label: 'Interview',
+      value: data?.interview,
+      background: colors.tailwind.blue[100]
     }
   ]
 
@@ -101,7 +107,7 @@ export default function Index() {
     return <Loading />
   }
 
-  
+
 
 
 
@@ -121,7 +127,7 @@ export default function Index() {
                   Daily summary of your progress
                 </Text>
               </View>
-              <View style={{
+              <Pressable onPress={() => router.push('/settings')} style={{
                 backgroundColor: colors.tailwind.gray[200]
               }} className="bg-stone-100 shadow-stone-400 h-11 w-11 rounded-full overflow-hidden">
                 <Image
@@ -133,7 +139,7 @@ export default function Index() {
                   contentFit="cover"
                   contentPosition={'center'}
                 />
-              </View>
+              </Pressable>
             </View>
 
             {/* <Pressable onPress={() => router.push('/ai-tools')} style={{
@@ -159,7 +165,7 @@ export default function Index() {
               </View>
             </Pressable> */}
 
-            <View className="flex flex-row justify-center mt-5 gap-5">
+            <View className="flex flex-row flex-wrap justify-center mt-5 gap-5">
               {cardcontent.map((card, indx) => {
                 return <View key={indx} className="bg-white w-[45%] flex gap-2 border border-slate-200 rounded-[25px] p-5">
                   <View style={{
@@ -176,7 +182,7 @@ export default function Index() {
 
             <ActivityChart data={data?.counts} />
 
-            <ResumeChart resumedata={resumedata} isLoading={isLoading} />
+            {/* <ResumeChart resumedata={resumedata} isLoading={isLoading} /> */}
 
           </View>
         </ScrollView>
