@@ -33,7 +33,6 @@ export async function POST(req: Request) {
             data: {
                 companyName: data.companyName,
                 Date: data.date || "",
-                jobDescription: data.jobDescription || "",
                 Link: data.link || "",
                 resumeId: data.resumeId,
                 resumeUsed: data.resumeUsed,

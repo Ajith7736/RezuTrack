@@ -36,7 +36,7 @@ export interface Application {
     resumeUsed: string;
     Date: Date;
     Link: string;
-    jobDescription: string;
+    jobDescription?: string;
     Status: Status;
 }
 

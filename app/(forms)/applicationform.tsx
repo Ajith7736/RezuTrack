@@ -30,7 +30,6 @@ const ApplicationForm = () => {
     defaultValues: {
       companyName: "",
       date: undefined,
-      jobDescription: '',
       link: '',
       resumeId: '',
       resumeUsed: '',
@@ -177,7 +176,7 @@ const ApplicationForm = () => {
             </View>
 
 
-            <Text className="text-[12px] mt-2 text-slate-500 font-bold tracking-wider">
+            {/* <Text className="text-[12px] mt-2 text-slate-500 font-bold tracking-wider">
               JOB DESC (optional)
             </Text>
             <Controller
@@ -186,7 +185,7 @@ const ApplicationForm = () => {
               render={({ field: { value, onChange }, formState: { errors } }) => {
                 return <RHFInput textarea value={value} onChange={onChange} placeholder='Job Description' />
               }}
-            />
+            /> */}
 
             <Text className="text-[12px] mt-2 text-slate-500 font-bold tracking-wider">
               LINK

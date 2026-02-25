@@ -56,7 +56,7 @@ model Application {
   resumeUsed     String
   Date           DateTime
   Link           String
-  jobDescription String
+  jobDescription String?
   createdAt      DateTime @default(now())
   Status         Status   @default(Applied)
   Resume         Resume   @relation(fields: [resumeId], references: [id], onDelete: Cascade)

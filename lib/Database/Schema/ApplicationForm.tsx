@@ -8,7 +8,6 @@ export const ApplicationSchema = z.object({
   date: z.date({
     error: 'Date is required'
   }).nullable(),
-  jobDescription: z.string().optional(),
   link: z.string().optional(),
   status: z.enum([ "Applied", "Pending", "Interviewing", "No_Response", "Rejected", "Offer"]),
 })
