@@ -3,7 +3,7 @@ import { useSession } from '@/context/AuthContext'
 import { toast } from '@/lib/Toast/ToastUtility'
 import { api } from '@/lib/Utils/FetchUtils'
 import { Status } from '@/lib/generated/prisma'
-import { QueryClient, useQueryClient } from '@tanstack/react-query'
+import { useQueryClient } from '@tanstack/react-query'
 import clsx from 'clsx'
 import { router, useLocalSearchParams } from 'expo-router'
 import {
@@ -16,22 +16,23 @@ import {
     XCircle
 } from 'lucide-react-native'
 import React, { ReactElement, useState } from 'react'
-import { FlatList, Pressable, Text, View } from 'react-native'
-
+import { ActivityIndicator, FlatList, Text, TouchableOpacity, View } from 'react-native'
+import { SafeAreaView } from 'react-native-safe-area-context'
 
 const status = () => {
     const { status, id }: { status: Status, id: string } = useLocalSearchParams();
     const [selectedstatus, setselectedstatus] = useState<Status>(status)
+    const [isLoading, setIsLoading] = useState<boolean>(false)
     const queryClient = useQueryClient();
     const { session } = useSession()
 
-    const dropdata: { name: Status, icon: ReactElement }[] = [
-        { name: 'Applied', icon: <Send color={colors.tailwind.indigo[500]} /> },
-        { name: 'Pending', icon: <Clock color={colors.tailwind.amber[500]} /> },
-        { name: 'Interviewing', icon: <Users color={colors.tailwind.purple[500]} /> },
-        { name: 'No_Response', icon: <MailQuestion color={colors.tailwind.slate[500]} /> },
-        { name: 'Rejected', icon: <XCircle color={colors.tailwind.red[500]} /> },
-        { name: 'Offer', icon: <BadgeCheck color={colors.tailwind.emerald[500]} /> },
+    const dropdata: { name: Status, icon: ReactElement, description: string }[] = [
+        { name: 'Applied', icon: <Send size={24} color={colors.tailwind.indigo[600]} />, description: 'Application submitted successfully' },
+        { name: 'Pending', icon: <Clock size={24} color={colors.tailwind.amber[600]} />, description: 'Awaiting response from employer' },
+        { name: 'Interviewing', icon: <Users size={24} color={colors.tailwind.purple[600]} />, description: 'Currently in the interview stages' },
+        { name: 'No_Response', icon: <MailQuestion size={24} color={colors.tailwind.slate[600]} />, description: 'Haven\'t heard back after a while' },
+        { name: 'Rejected', icon: <XCircle size={24} color={colors.tailwind.red[600]} />, description: 'Application was not successful' },
+        { name: 'Offer', icon: <BadgeCheck size={24} color={colors.tailwind.emerald[600]} />, description: 'Received a job offer!' },
     ];
 
     const variants = {
@@ -67,15 +68,14 @@ const status = () => {
         }
     }
 
+    const handleselect = async (newStatus: Status) => {
+        if (newStatus === selectedstatus) return;
 
-    const handleselect = async (Status: Status) => {
         try {
+            setIsLoading(true);
+            setselectedstatus(newStatus);
 
-            setselectedstatus(Status);
-
-
-            await api.put({ userId: session?.user.id, applicationId: id, Status }, '/api/updatestatus')
-
+            await api.put({ userId: session?.user.id, applicationId: id, Status: newStatus }, '/api/updatestatus')
 
             await queryClient.invalidateQueries({
                 queryKey: ['applications']
@@ -89,53 +89,104 @@ const status = () => {
                 queryKey: ['RecentApplications']
             })
 
+            toast.success('Status updated');
+            setTimeout(() => {
+                if (router.canGoBack()) {
+                    router.back();
+                } else {
+                    router.push('/');
+                }
+            }, 500);
+
         } catch (err) {
             console.error(err)
             toast.error('Server Error');
-            router.dismiss()
+            setselectedstatus(status);
+        } finally {
+            setIsLoading(false);
         }
     }
 
-
-
     return (
-        <View className='bg-slate-50 flex-1'>
+        <SafeAreaView className='bg-slate-50 flex-1'>
+            <View className="px-5 pt-5 pb-2">
+                <Text className="text-3xl font-extrabold text-slate-900 tracking-tight">Update Status</Text>
+                <Text className="text-sm text-slate-500 font-medium mt-2">Keep track of where you are in the hiring process.</Text>
+            </View>
+
             <FlatList
                 data={dropdata}
                 keyExtractor={(item) => item.name}
                 contentContainerStyle={{
-                    flex: 1,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    gap: 20,
-                    margin: 20
+                    padding: 20,
+                    gap: 16,
                 }}
                 renderItem={({ item }) => {
-                    return <Pressable onPress={() => handleselect(item.name as Status)} className='rounded-xl flex flex-row items-center w-[95%] justify-between' style={{
-                        padding: 10,
-                        backgroundColor: 'white',
-                        borderWidth: 1,
-                        borderColor: item.name === selectedstatus ? colors.tailwind.indigo[500] : colors.tailwind.slate[200]
-                    }}>
-                        <View className='flex flex-row gap-5 items-center w-[80%]'>
-                            <View style={{
-                                backgroundColor: variants[item.name as Status].bg
-                            }} className=' h-12 flex justify-center items-center w-12 rounded-lg'>{item.icon}</View>
-                            <Text style={{
-                                color: item.name === selectedstatus ? colors.tailwind.indigo[500] : colors.tailwind.slate[400]
-                            }} className={clsx('font-semibold text-sm w-full tracking-widest ')}>{item.name}</Text>
-                        </View>
-                        <View>
-                            {item.name === selectedstatus && <View className='bg-indigo-500 rounded-full flex justify-center items-center p-1'>
-                                <Check size={15} color={'white'} />
-                            </View>}
-                        </View>
-                        {/* <SubmitButton onPress={() => }><Text>Save</Text></SubmitButton> */}
-                    </Pressable>
+                    const isSelected = item.name === selectedstatus;
+                    const variant = variants[item.name as Status];
+
+                    return (
+                        <TouchableOpacity
+                            onPress={() => handleselect(item.name as Status)}
+                            activeOpacity={0.7}
+                            disabled={isLoading}
+                            className={clsx(
+                                'rounded-3xl p-4 flex-row items-center justify-between shadow-sm bg-white',
+                            )}
+                            style={{
+                                borderWidth: isSelected ? 2 : 1,
+                                borderColor: isSelected ? variant.color : colors.tailwind.slate[100],
+                                ...(isSelected && {
+                                    shadowColor: variant.color,
+                                    shadowOffset: { width: 0, height: 2 },
+                                    shadowOpacity: 0.1,
+                                    shadowRadius: 3,
+                                    elevation: 2
+                                })
+                            }}
+                        >
+                            <View className='flex-row items-center gap-4 flex-1'>
+                                <View
+                                    style={{ backgroundColor: variant.bg }}
+                                    className='h-14 w-14 rounded-2xl flex justify-center items-center'
+                                >
+                                    {item.icon}
+                                </View>
+                                <View className="flex-1">
+                                    <Text
+                                        style={{ color: isSelected ? variant.color : colors.tailwind.slate[800] }}
+                                        className={clsx('font-bold text-base')}
+                                    >
+                                        {item.name.replace('_', ' ')}
+                                    </Text>
+                                    <Text className="text-xs font-medium text-slate-400 mt-0.5">
+                                        {item.description}
+                                    </Text>
+                                </View>
+                            </View>
+
+                            <View className="ml-3">
+                                {isLoading && isSelected ? (
+                                    <ActivityIndicator color={variant.color} />
+                                ) : (
+                                    <View
+                                        className={clsx(
+                                            'h-7 w-7 rounded-full flex justify-center items-center border-2',
+                                        )}
+                                        style={{
+                                            backgroundColor: isSelected ? variant.color : 'transparent',
+                                            borderColor: isSelected ? variant.color : colors.tailwind.slate[200]
+                                        }}
+                                    >
+                                        {isSelected && <Check size={14} color={'white'} strokeWidth={3} />}
+                                    </View>
+                                )}
+                            </View>
+                        </TouchableOpacity>
+                    )
                 }}
             />
-        </View>
+        </SafeAreaView>
     )
 }
 

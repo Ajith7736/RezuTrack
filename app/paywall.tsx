@@ -83,14 +83,14 @@ const Paywall = () => {
                     contentContainerStyle={{ paddingBottom: 20, paddingHorizontal: 5 }}
                 >
                     <Animated.View entering={FadeIn} className='items-center mb-8 mt-2'>
-                        <View className='w-20 h-20 bg-indigo-100/50 rounded-3xl items-center justify-center mb-6 border border-indigo-100 shadow-sm'>
-                            <Crown size={40} color={colors.tailwind.indigo[600]} />
+                        <View className='w-16 h-16 bg-indigo-100/50 rounded-3xl items-center justify-center mb-6 border border-indigo-100 shadow-sm'>
+                            <Crown size={30} color={colors.tailwind.indigo[600]} />
                         </View>
-                        <Text className='text-3xl font-extrabold text-slate-900 text-center mb-3 leading-tight'>
+                        <Text className='text-2xl font-extrabold text-slate-900 text-center mb-3 leading-tight'>
                             Unlock Pro Access
                         </Text>
-                        <Text className='text-slate-600 text-center text-base px-2 leading-relaxed'>
-                            Supercharge your career with AI-powered tools and premium features.
+                        <Text className='text-slate-600 text-center text-sm px-2 leading-relaxed tracking-wider'>
+                            Get unlimited access to all premium features and take your career to the next level
                         </Text>
                     </Animated.View>
 

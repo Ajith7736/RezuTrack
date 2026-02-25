@@ -107,76 +107,80 @@ const ApplicationForm = () => {
       <KeyboardAvoidingView behavior='height' style={{
         flex: 1
       }} keyboardVerticalOffset={100}>
-        <ScrollView>
+        <ScrollView contentContainerStyle={{
+          flex : 1,
+          justifyContent : 'space-between'
+        }}>
           <View>
-            <Text className="text-2xl font-extrabold tracking-widest text-slate-700">New Log</Text>
-            <Text className="text-[12px] text-slate-500 font-bold tracking-wider">
-              Log your latest application
-            </Text>
-          </View>
-
-          <View className='mt-10 flex  gap-3'>
-            <Text className="text-[12px] text-slate-500 font-bold tracking-wider">
-              JOB DETAILS *
-            </Text>
-            <Controller
-              control={control}
-              name='companyName'
-              render={({ field: { value, onChange }, formState: { errors } }) => {
-                return <RHFInput value={value} onChange={onChange} error={errors.companyName?.message ? true : false} placeholder='Company Name' />
-              }}
-            />
-            <Controller
-              control={control}
-              name='roleTitle'
-              render={({ field: { value, onChange }, formState: { errors } }) => {
-                return <RHFInput value={value} onChange={onChange} error={errors.roleTitle?.message ? true : false} placeholder='Role Title' />
-              }}
-            />
-            <Text className="text-[12px] mt-5 text-slate-500 font-bold tracking-wider">
-              RESUME USED *
-            </Text>
-            <Controller
-              control={control}
-              name='resumeUsed'
-              render={({ field: { value, onChange }, formState: { errors } }) => {
-                return <RHFDropDown setValueField='resumeId' placeholder='Select Resume' error={errors.resumeUsed?.message ? true : false} dropdata={resumedata} onChange={onChange} value={value} setValue={setValue} />
-              }}
-            />
-            <View className='flex flex-row items-center w-full gap-3'>
-              <View className='flex gap-2' style={{
-                width: '45%'
-              }}>
-                <Text className="text-[12px] mt-5 text-slate-500 font-bold tracking-wider">
-                  DATE *
-                </Text>
-                <Controller
-                  control={control}
-                  name='date'
-                  render={({ field: { value, onChange }, formState: { errors } }) => {
-                    return <RHFDatePicker value={value} onChange={onChange} error={errors.date?.message ? true : false} />
-                  }}
-                />
-              </View>
-              <View className='flex gap-2' style={{
-                width: '50%'
-              }}>
-                <Text className="text-[12px] mt-5 text-slate-500 font-bold tracking-wider">
-                  STATUS *
-                </Text>
-                <Controller
-                  control={control}
-                  name='status'
-                  render={({ field: { value, onChange }, formState: { errors } }) => {
-                    return <RHFDropDown placeholder='Select Status' value={value} error={errors.status?.message ? true : false} onChange={onChange} dropdata={Status} />
-                  }}
-                />
-              </View>
-
+            <View>
+              <Text className="text-2xl font-extrabold tracking-widest text-slate-700">New Log</Text>
+              <Text className="text-[12px] text-slate-500 font-bold tracking-wider">
+                Log your latest application
+              </Text>
             </View>
 
+            <View className='mt-10 flex  gap-3'>
+              <Text className="text-[12px] text-slate-500 font-bold tracking-wider">
+                JOB DETAILS *
+              </Text>
+              <Controller
+                control={control}
+                name='companyName'
+                render={({ field: { value, onChange }, formState: { errors } }) => {
+                  return <RHFInput value={value} onChange={onChange} error={errors.companyName?.message ? true : false} placeholder='Company Name' />
+                }}
+              />
+              <Controller
+                control={control}
+                name='roleTitle'
+                render={({ field: { value, onChange }, formState: { errors } }) => {
+                  return <RHFInput value={value} onChange={onChange} error={errors.roleTitle?.message ? true : false} placeholder='Role Title' />
+                }}
+              />
+              <Text className="text-[12px] mt-5 text-slate-500 font-bold tracking-wider">
+                RESUME USED *
+              </Text>
+              <Controller
+                control={control}
+                name='resumeUsed'
+                render={({ field: { value, onChange }, formState: { errors } }) => {
+                  return <RHFDropDown setValueField='resumeId' placeholder='Select Resume' error={errors.resumeUsed?.message ? true : false} dropdata={resumedata} onChange={onChange} value={value} setValue={setValue} />
+                }}
+              />
+              <View className='flex flex-row items-center w-full gap-3'>
+                <View className='flex gap-2' style={{
+                  width: '45%'
+                }}>
+                  <Text className="text-[12px] mt-5 text-slate-500 font-bold tracking-wider">
+                    DATE *
+                  </Text>
+                  <Controller
+                    control={control}
+                    name='date'
+                    render={({ field: { value, onChange }, formState: { errors } }) => {
+                      return <RHFDatePicker value={value} onChange={onChange} error={errors.date?.message ? true : false} />
+                    }}
+                  />
+                </View>
+                <View className='flex gap-2' style={{
+                  width: '50%'
+                }}>
+                  <Text className="text-[12px] mt-5 text-slate-500 font-bold tracking-wider">
+                    STATUS *
+                  </Text>
+                  <Controller
+                    control={control}
+                    name='status'
+                    render={({ field: { value, onChange }, formState: { errors } }) => {
+                      return <RHFDropDown placeholder='Select Status' value={value} error={errors.status?.message ? true : false} onChange={onChange} dropdata={Status} />
+                    }}
+                  />
+                </View>
 
-            {/* <Text className="text-[12px] mt-2 text-slate-500 font-bold tracking-wider">
+              </View>
+
+
+              {/* <Text className="text-[12px] mt-2 text-slate-500 font-bold tracking-wider">
               JOB DESC (optional)
             </Text>
             <Controller
@@ -187,17 +191,19 @@ const ApplicationForm = () => {
               }}
             /> */}
 
-            <Text className="text-[12px] mt-2 text-slate-500 font-bold tracking-wider">
-              LINK
-            </Text>
-            <Controller
-              control={control}
-              name='link'
-              render={({ field: { value, onChange }, formState: { errors } }) => {
-                return <RHFInput value={value} onChange={onChange} placeholder='Paste link here' />
-              }}
-            />
+              <Text className="text-[12px] mt-2 text-slate-500 font-bold tracking-wider">
+                LINK
+              </Text>
+              <Controller
+                control={control}
+                name='link'
+                render={({ field: { value, onChange }, formState: { errors } }) => {
+                  return <RHFInput value={value} onChange={onChange} placeholder='Paste link here' />
+                }}
+              />
+            </View>
           </View>
+
           <SubmitButton onPress={handleSubmit(onSubmit)} className=' mt-10'>
             {isSubmitting ? <View className='flex flex-row items-center gap-1 justify-center'>
               <Text className='text-white tracking-widest font-bold text-center'>Saving </Text>
@@ -208,7 +214,6 @@ const ApplicationForm = () => {
               <ArrowRight color={'white'} size={18} />
             </View>}
           </SubmitButton>
-
         </ScrollView>
       </KeyboardAvoidingView>
     </View >
