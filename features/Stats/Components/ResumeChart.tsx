@@ -27,7 +27,7 @@ const ResumeChart = ({ resumedata, isLoading }: { isLoading: boolean, resumedata
             <View className="flex flex-row justify-between items-center">
                 <View className="flex flex-row gap-2 items-center">
                     <FileText color={colors.tailwind.emerald[500]} size={18}/>
-                    <Text className="text-lg font-bold tracking-widest">Resume Success</Text>
+                    <Text className="text-lg font-bold tracking-widest">Top Resumes</Text>
                 </View>
             </View>
             <View>

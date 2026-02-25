@@ -7,26 +7,28 @@ export async function POST(request: Request) {
         const { userId } = await request.json();
 
 
+
         const resumes = await prisma.resume.findMany({
             where: {
                 userId,
                 applications: {
                     some: {
-                        Status: 'Offer'
+                        Status: { in: ["Offer", "Interviewing"] }
                     }
                 }
             },
             select: {
                 applications: {
                     where: {
-                        Status: 'Offer',
+                        Status: { in: ["Offer", "Interviewing"] },
                     },
                     select: {
                         resumeUsed: true
                     }
                 }
             }
-        })
+        });
+
 
 
 

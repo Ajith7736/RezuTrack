@@ -81,6 +81,10 @@ const ApplicationForm = () => {
       queryKey: ['applications']
     })
 
+    await queryClient.invalidateQueries({
+      queryKey: ['resumesuccess']
+    })
+
     router.dismiss();
   };
 
@@ -107,10 +111,7 @@ const ApplicationForm = () => {
       <KeyboardAvoidingView behavior='height' style={{
         flex: 1
       }} keyboardVerticalOffset={100}>
-        <ScrollView contentContainerStyle={{
-          flex : 1,
-          justifyContent : 'space-between'
-        }}>
+        <ScrollView>
           <View>
             <View>
               <Text className="text-2xl font-extrabold tracking-widest text-slate-700">New Log</Text>
@@ -204,7 +205,7 @@ const ApplicationForm = () => {
             </View>
           </View>
 
-          <SubmitButton onPress={handleSubmit(onSubmit)} className=' mt-10'>
+          <SubmitButton onPress={handleSubmit(onSubmit)} className=' mt-32'>
             {isSubmitting ? <View className='flex flex-row items-center gap-1 justify-center'>
               <Text className='text-white tracking-widest font-bold text-center'>Saving </Text>
               <Text className='text-white w-4'>{dots}</Text>

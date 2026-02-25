@@ -50,7 +50,7 @@ function InitialLayout() {
         <Stack.Screen name='(forms)/applicationform' options={{
           presentation: 'formSheet',
           animation: 'slide_from_bottom',
-          sheetAllowedDetents: [0.8],
+          sheetAllowedDetents: [0.78],
           sheetCornerRadius: 35,
           sheetElevation: 50
         }} />
