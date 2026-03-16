@@ -43,7 +43,7 @@ export async function POST(request: Request) {
         return Response.json({ success: true, resumedata: data })
 
     } catch (err) {
-        console.error(err);
+        console.error("[API.GetResumeData]", err);
         return Response.json({ success: false, message: "Server Error" }, { status: 500 })
     }
 }

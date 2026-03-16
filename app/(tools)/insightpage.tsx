@@ -35,7 +35,7 @@ const Insightpage = () => {
             const { data: res, error } = await supabase.from('Insights').select('data').eq('userId', session?.user.id as string).maybeSingle();
 
             if (error) {
-                console.error(error.message)
+                console.error("[InsightPage.Fetch]", error.message)
                 throw new Error('Server Error')
             }
 

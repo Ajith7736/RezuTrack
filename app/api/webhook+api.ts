@@ -43,7 +43,7 @@ export async function POST(req: Request) {
                 }).eq('userId', userId)
 
                 if (authError || dbError || usageError) {
-                    console.error('Failed to upgrade user : ', authError || dbError)
+                    console.error('[API.Webhook.UpgradeFailed]', authError || dbError)
 
                     throw new Error("Update failed");
                 }
@@ -70,7 +70,7 @@ export async function POST(req: Request) {
                 }).eq('userId', userId)
 
                 if (cancel_authError || cancel_usageError || cancel_userError) {
-                    console.error("Failed to cancel the subscriptions : ", cancel_authError || cancel_usageError || cancel_userError)
+                    console.error("[API.Webhook.CancellationFailed]", cancel_authError || cancel_usageError || cancel_userError)
 
                     throw new Error('Cancellation failed')
                 }
@@ -82,7 +82,7 @@ export async function POST(req: Request) {
 
         return Response.json({ success: true, message: "Success" }, { status: 200, headers: { "Content-Type": "application/json" } })
     } catch (err) {
-        console.error(err);
+        console.error("[API.Webhook.Error]", err);
         return Response.json({ success: false, message: `Server Error` }, { status: 500, headers: { "Content-Type": "application/json" } })
     }
 }

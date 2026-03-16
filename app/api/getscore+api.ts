@@ -40,7 +40,7 @@ export async function POST(req: Request) {
         return Response.json({ success: true, message: "Successfull", output })
 
     } catch (err) {
-        console.error(err);
+        console.error("[API.GetScore]", err);
         return Response.json({ success: false, message: "Server Error" }, {
             headers: {
                 "Content-Type": "application/json"

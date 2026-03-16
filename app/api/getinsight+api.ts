@@ -71,7 +71,7 @@ export async function POST(request: Request) {
 
 
     } catch (err) {
-        console.error(err);
+        console.error("[API.GetInsight]", err);
         return Response.json({ success: false, message: 'Server Error' }, { status: 500 })
     }
 }  

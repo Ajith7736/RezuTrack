@@ -84,16 +84,33 @@ const status = () => {
                 pages: Application[][];
                 pageParams: (string | null)[];
             }) => {
-                return {
+                const data = {
                     ...oldData,
                     pages: oldData.pages.map((page) => {
-                        return page.map((single) => single.id === id ? { ...single, status: newStatus } : single)
+                        return page.map((single) => {
+                            if (single.id === id) {
+                                console.log('changed');
+                                const data = { ...single, Status: newStatus }
+                                return data;
+                            } else {
+                                return single;
+                            }
+                        })
                     })
                 }
+
+                return data;
             })
 
-            api.put({ userId: session?.user.id, applicationId: id, Status: newStatus }, '/api/updatestatus')
+            const res = await api.put({ userId: session?.user.id, applicationId: id, Status: newStatus }, '/api/updatestatus')
 
+
+            if (!res.success) {
+                throw new Error('Update Failed')
+            }
+
+
+        } catch (err) {
 
             queryClient.invalidateQueries({
                 queryKey: ['applications']
@@ -108,15 +125,16 @@ const status = () => {
             })
 
 
-            router.back()
+            console.error("[Status_Update.Error]",err);
 
-
-        } catch (err) {
-            console.error(err)
             toast.error('Server Error');
+            
             setselectedstatus(status);
         } finally {
+
+            router.back();
             setIsLoading(false);
+            
         }
     }
 

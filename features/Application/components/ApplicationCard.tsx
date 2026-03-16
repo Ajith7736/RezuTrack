@@ -23,11 +23,30 @@ const ApplicationCard = ({ data, refetch, index }: { data: Application, refetch:
 
     const handledelete = async () => {
         try {
+
+            queryClient.setQueriesData({ queryKey: ['applications'] }, (oldData: {
+                pages: Application[][];
+                pageParams: (string | null)[];
+            }) => {
+
+                if (!oldData) return oldData;
+
+                return {
+                    ...oldData,
+                    pages: oldData.pages.map((page) => {
+                        return page.filter((single) => single.id !== data.id)
+                    })
+                }
+
+            })
+
             const res = await api.delete({ ApplicationId: data.id, userId: session?.user.id }, '/api/deleteapplication');
 
             if (!res.success) {
-                return
+                throw new Error('Failed')
             }
+
+        } catch (err) {
 
             await queryClient.invalidateQueries({
                 queryKey: ['applications']
@@ -41,8 +60,7 @@ const ApplicationCard = ({ data, refetch, index }: { data: Application, refetch:
                 queryKey: ['RecentApplications']
             })
 
-        } catch (err) {
-            console.error(err)
+            console.error("[ApplicationCard.Delete]", err)
         }
     }
 

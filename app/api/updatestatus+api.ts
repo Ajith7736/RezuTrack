@@ -10,7 +10,7 @@ export async function PUT(request: Request) {
         return Response.json({ success: true, message: 'Success' }, { status: 200 })
 
     } catch (err) {
-        console.error(err);
+        console.error("[API.UpdateStatus]", err);
         return Response.json({ success: false, message: 'Server Error' }, { status: 500 })
     }
 }

@@ -29,7 +29,7 @@ export async function DELETE(req: Request) {
         return Response.json({ success: true, message: "Successfully deleted" }, { status: 200, headers: { "Content-Type": "application/json" } })
 
     } catch (err) {
-        console.error(err);
+        console.error("[API.DeleteResume]", err);
         return Response.json({ success: false, message: "Server Error" }, { status: 500, headers: { "Content-Type": "application/json" } })
     }
 }

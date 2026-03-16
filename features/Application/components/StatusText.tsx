@@ -10,8 +10,7 @@ import React, { useState } from 'react'
 import { Pressable, Text, TouchableOpacity, View } from 'react-native'
 
 const StatusText = ({ text, id, refetch }: { text: Status, id: string, refetch: Function }) => {
-    const [expanded, setexpanded] = useState(false)
-    const queryClient = new QueryClient();
+
     const variants = {
         "Applied": {
             color: colors.tailwind.indigo[500],

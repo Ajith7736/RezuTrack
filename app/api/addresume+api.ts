@@ -53,7 +53,7 @@ export async function POST(request: Request) {
         return Response.json({ success: true, message: 'Successfully created' });
 
     } catch (err) {
-        console.error(err);
+        console.error("[API.AddResume]", err);
         return Response.json({ success: false, message: "Server Error" }, { status: 500 })
     }
 

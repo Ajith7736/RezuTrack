@@ -60,7 +60,7 @@ export async function POST(req: Request) {
         return Response.json({ success: true, message: "Success" }, { headers: { "Content-Type": "application/json" }, status: 200 })
 
     } catch (err) {
-        console.error(err);
+        console.error("[API.AddApplication]", err);
         return Response.json({ success: false, message: "Server Error" }, { headers: { "Content-Type": "application/json" }, status: 500 })
     }
 }

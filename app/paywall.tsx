@@ -24,7 +24,7 @@ const Paywall = () => {
                 setofferings(offerings)
 
             } catch (err) {
-                console.error('Error while fetching offerings:', err);
+                console.error('[Paywall.FetchOfferings]', err);
             }
         }
 
@@ -60,7 +60,7 @@ const Paywall = () => {
         } catch (e: any) {
             if (!e.userCancelled) {
                 toast.error(e.message || "Something went wrong with the purchase")
-                console.error("Purchase Error : ", e.message);
+                console.error("[Paywall.PurchaseError]", e.message);
             }
         } finally {
             setisPurchasing(false);

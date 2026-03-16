@@ -21,7 +21,7 @@ const resumes = () => {
       const { data, error } = await supabase.from('Resume').select("id,name,updatedAt").eq("userId", session?.user.id as string);
 
       if (error) {
-        console.error(error.message);
+        console.error("[Resumes.Fetch]", error.message);
         throw new Error(error.message);
       }
 

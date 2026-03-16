@@ -50,7 +50,7 @@ const ResumeForm = () => {
             router.dismiss()
 
         } catch (err) {
-            console.error(err);
+            console.error("[ResumeForm.Submit]", err);
         }
     };
 

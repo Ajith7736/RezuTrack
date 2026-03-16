@@ -30,7 +30,7 @@ const Settings = () => {
               setLoading('signout');
               await supabase.auth.signOut();
             } catch (error: any) {
-              console.error("Sign Out error:", error);
+              console.error("[Settings.SignOut]", error);
               toast.error("SignOut Error");
             } finally {
               setLoading('');
@@ -74,7 +74,7 @@ const Settings = () => {
               const { data, error: funcError } = await supabase.functions.invoke('delete-user');
 
               if (funcError && !funcError.message?.includes('Unauthorized')) {
-                console.error("Delete function error:", funcError);
+                console.error("[Settings.DeleteFunction]", funcError);
                 throw funcError;
               }
 
@@ -82,7 +82,7 @@ const Settings = () => {
               await supabase.auth.signOut();
 
             } catch (error: any) {
-              console.error("Delete account error:", error);
+              console.error("[Settings.DeleteAccount]", error);
               toast.error(error.message || "Failed to delete account");
             } finally {
               setLoading('');

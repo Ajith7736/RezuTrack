@@ -67,11 +67,14 @@ const JobMatchPage = () => {
         const { data, error } = await supabase.from('Application').select('companyName,id,jobDescription').eq('userId', session?.user.id as string)
 
         if (error) {
-            console.error('Error fetching Applications:', error)
+            console.error('[JobMatch.FetchApplications]', error)
             return []
         }
 
-        return data;
+        return data?.map(app => ({
+            ...app,
+            jobDescription: app.jobDescription ?? ""
+        })) || [];
     }
 
     const getResumes = async () => {
@@ -82,7 +85,7 @@ const JobMatchPage = () => {
             .eq('userId', session?.user.id as string)
 
         if (error) {
-            console.error('Error fetching resumes:', error)
+            console.error('[JobMatch.FetchResumes]', error)
             return []
         }
         return data;
@@ -103,7 +106,7 @@ const JobMatchPage = () => {
 
 
         } catch (err) {
-            console.error(err);
+            console.error("[JobMatch.Analysis]", err);
             toast.error('Server Error')
         } finally {
             setAnalyzing(false);

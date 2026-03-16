@@ -47,7 +47,7 @@ const ApplicationForm = () => {
     const { data, error } = await supabase.from('Resume').select('id,name').eq('userId', session?.user.id as string)
 
     if (error) {
-      console.error(error);
+      console.error("[ApplicationForm.Submit]", error);
       return
     }
 
