@@ -15,33 +15,33 @@ const StatusText = ({ text, id, refetch }: { text: Status, id: string, refetch: 
     const variants = {
         "Applied": {
             color: colors.tailwind.indigo[500],
-            bg: colors.tailwind.indigo[100],
-            border: colors.tailwind.indigo[500]
+            bg: colors.tailwind.indigo[50],
+            border: colors.tailwind.indigo[200]
         },
         "Pending": {
             color: colors.tailwind.amber[500],
-            bg: colors.tailwind.amber[100],
-            border: colors.tailwind.amber[500]
+            bg: colors.tailwind.amber[50],
+            border: colors.tailwind.amber[200]
         },
         "Interviewing": {
             color: colors.tailwind.purple[500],
-            bg: colors.tailwind.purple[100],
-            border: colors.tailwind.purple[500]
+            bg: colors.tailwind.purple[50],
+            border: colors.tailwind.purple[200]
         },
         "No_Response": {
             color: colors.tailwind.slate[500],
-            bg: colors.tailwind.slate[100],
-            border: colors.tailwind.slate[500]
+            bg: colors.tailwind.slate[50],
+            border: colors.tailwind.slate[200]
         },
         "Rejected": {
             color: colors.tailwind.red[500],
-            bg: colors.tailwind.red[100],
-            border: colors.tailwind.red[500]
+            bg: colors.tailwind.red[50],
+            border: colors.tailwind.red[200]
         },
         "Offer": {
             color: colors.tailwind.emerald[500],
-            bg: colors.tailwind.emerald[100],
-            border: colors.tailwind.emerald[500]
+            bg: colors.tailwind.emerald[50],
+            border: colors.tailwind.emerald[200]
         }
     }
 

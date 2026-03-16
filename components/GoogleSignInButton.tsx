@@ -23,6 +23,7 @@ const GoogleSignInButton = () => {
             await GoogleSignin.hasPlayServices();
             const res = await GoogleSignin.signIn();
             if (isSuccessResponse(res)) {
+                
                 const { data, error } = await supabase.auth.signInWithIdToken({
                     provider: 'google',
                     token: res.data.idToken as string

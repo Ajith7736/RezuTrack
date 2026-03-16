@@ -5,10 +5,11 @@ import { api } from '@/lib/Utils/FetchUtils'
 import { Application } from '@/types/types'
 import { useInfiniteQuery } from '@tanstack/react-query'
 import { Link } from 'expo-router'
-import { ClipboardList, Plus, Search } from 'lucide-react-native'
+import { ClipboardList, Filter, Plus, Search } from 'lucide-react-native'
 import React, { useEffect, useState } from 'react'
 import { ActivityIndicator, FlatList, Pressable, Text, TextInput, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import Animated, { FadeIn, FadeInDown, FadeOut } from 'react-native-reanimated'
 
 const Applications = () => {
 
@@ -16,7 +17,7 @@ const Applications = () => {
   const [SearchText, setSearchText] = useState<string>("")
   const [DebounceText, setDebounceText] = useState<string>("")
   const [Status, setStatus] = useState<string>("")
-
+  const [showfilter, setshowfilter] = useState(false)
 
 
   const { data: applications, hasNextPage, isFetchingNextPage, fetchNextPage, isLoading, isFetching, refetch } = useInfiniteQuery({
@@ -98,22 +99,25 @@ const Applications = () => {
             <View className='w-[5%]'>
               <Search size={18} color={colors.tailwind.slate[300]} />
             </View>
-            <View className='w-[95%]'>
+            <View className='w-[88%]'>
               <TextInput value={SearchText} onChange={(e) => setSearchText(e.nativeEvent.text)} placeholder='Search Company...' placeholderTextColor={colors.tailwind.slate[300]} className=' text-slate-700 w-[20rem] tracking-widest' />
+            </View>
+            <View>
+              <Filter onPress={() => setshowfilter(!showfilter)} size={15} color={colors.tailwind.slate[500]} />
             </View>
           </View>
 
-          <View className='flex flex-row flex-wrap gap-2'>
+          {showfilter && <Animated.View entering={FadeIn} exiting={FadeOut}  className='flex flex-row flex-wrap gap-2'>
             {statuses.map((status) => {
               return <Pressable onPress={() => setStatus(status.value)} key={status.label} style={{
-                borderColor: Status === status.value ? colors.tailwind.slate[500] : colors.tailwind.slate[100]
+                borderColor: Status === status.value ? colors.tailwind.slate[300] : colors.tailwind.slate[100]
               }} className='bg-white w-[110px] p-2 border rounded-full'>
                 <Text style={{
-                  color: Status === status.value ? 'black' : colors.tailwind.slate[300]
+                  color: Status === status.value ? colors.tailwind.slate[500] : colors.tailwind.slate[300]
                 }} className='text-sm text-center  tracking-widest'>{status.label}</Text>
               </Pressable>
             })}
-          </View>
+          </Animated.View>}
 
           {isLoading || (isFetching && !isFetchingNextPage) ? <View style={{
             display: 'flex',
@@ -128,7 +132,7 @@ const Applications = () => {
               contentContainerStyle={{
                 display: 'flex',
                 gap: 8,
-                paddingBottom: 20
+                paddingBottom: showfilter ? 150 : 20
               }}
               keyExtractor={(item) => item.id}
               renderItem={({ index, item }) => <ApplicationCard data={item} index={index} refetch={refetch} />}

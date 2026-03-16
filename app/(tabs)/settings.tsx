@@ -5,9 +5,9 @@ import { supabase } from "@/lib/supabase";
 import { toast } from "@/lib/Toast/ToastUtility";
 import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
-import { router } from "expo-router";
-import { ChevronRight, Crown, Info, LogOut, Trash2, Zap } from 'lucide-react-native';
-import { useEffect, useState } from "react";
+import { Route, router } from "expo-router";
+import { ChevronRight, Crown, Info, KeyIcon, LogOut, Trash2, Zap } from 'lucide-react-native';
+import { ReactElement, useEffect, useState } from "react";
 import { ActivityIndicator, Alert, Pressable, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import Purchases from "react-native-purchases";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -40,6 +40,23 @@ const Settings = () => {
       ]
     );
   };
+
+  const General: {
+    icon: ReactElement,
+    text: string,
+    link: Route
+  }[] = [
+      {
+        icon: <Info size={20} color={colors.tailwind.indigo[600]} />,
+        text: "About App",
+        link: "/(settings)/about"
+      },
+      {
+        icon: <KeyIcon size={20} color={colors.tailwind.indigo[600]} />,
+        text: "Privacy Policy",
+        link: "/(settings)/privacy"
+      }
+    ]
 
   const handleDeleteAccount = async () => {
     Alert.alert(
@@ -219,15 +236,17 @@ const Settings = () => {
           <View className="bg-white rounded-2xl overflow-hidden border border-slate-100 shadow-sm">
 
             <View className="h-[1px] bg-slate-100 w-full" />
-            <Pressable onPress={() => router.push('/(settings)/about')} className="flex-row items-center justify-between p-4 py-5 active:bg-slate-50 transition-colors">
-              <View className="flex-row items-center gap-4">
-                <View className="h-10 w-10 rounded-full bg-indigo-50 items-center justify-center">
-                  <Info size={20} color={colors.tailwind.indigo[600]} />
+            {General.map((item, indx) => {
+              return <Pressable key={indx} onPress={() => router.push(item.link)} className="flex-row items-center justify-between p-4 py-5 active:bg-slate-50 transition-colors">
+                <View className="flex-row items-center gap-4">
+                  <View className="h-10 w-10 rounded-full bg-indigo-50 items-center justify-center">
+                    {item.icon}
+                  </View>
+                  <Text className="text-base font-semibold text-slate-700" >{item.text}</Text>
                 </View>
-                <Text className="text-base font-semibold text-slate-700" >About App</Text>
-              </View>
-              <ChevronRight size={20} color={colors.tailwind.slate[400]} />
-            </Pressable>
+                <ChevronRight size={20} color={colors.tailwind.slate[400]} />
+              </Pressable>
+            })}
           </View>
         </View>
 

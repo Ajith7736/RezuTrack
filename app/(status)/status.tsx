@@ -2,7 +2,7 @@ import { colors } from '@/components/ui/colors'
 import { useSession } from '@/context/AuthContext'
 import { toast } from '@/lib/Toast/ToastUtility'
 import { api } from '@/lib/Utils/FetchUtils'
-import { Status } from '@/lib/generated/prisma'
+import { Application, Status } from '@/lib/generated/prisma'
 import { useQueryClient } from '@tanstack/react-query'
 import clsx from 'clsx'
 import { router, useLocalSearchParams } from 'expo-router'
@@ -15,7 +15,7 @@ import {
     Users,
     XCircle
 } from 'lucide-react-native'
-import React, { ReactElement, useState } from 'react'
+import React, { ReactElement, useEffect, useState } from 'react'
 import { ActivityIndicator, FlatList, Text, TouchableOpacity, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
@@ -68,6 +68,11 @@ const status = () => {
         }
     }
 
+    useEffect(() => {
+        if (id) console.log(id)
+    }, [id])
+
+
     const handleselect = async (newStatus: Status) => {
         if (newStatus === selectedstatus) return;
 
@@ -75,28 +80,36 @@ const status = () => {
             setIsLoading(true);
             setselectedstatus(newStatus);
 
-            await api.put({ userId: session?.user.id, applicationId: id, Status: newStatus }, '/api/updatestatus')
+            queryClient.setQueriesData({ queryKey: ['applications'] }, (oldData: {
+                pages: Application[][];
+                pageParams: (string | null)[];
+            }) => {
+                return {
+                    ...oldData,
+                    pages: oldData.pages.map((page) => {
+                        return page.map((single) => single.id === id ? { ...single, status: newStatus } : single)
+                    })
+                }
+            })
 
-            await queryClient.invalidateQueries({
+            api.put({ userId: session?.user.id, applicationId: id, Status: newStatus }, '/api/updatestatus')
+
+
+            queryClient.invalidateQueries({
                 queryKey: ['applications']
             })
 
-            await queryClient.invalidateQueries({
+            queryClient.invalidateQueries({
                 queryKey: ['resumesuccess']
             })
 
-            await queryClient.invalidateQueries({
+            queryClient.invalidateQueries({
                 queryKey: ['RecentApplications']
             })
 
-            toast.success('Status updated');
-            setTimeout(() => {
-                if (router.canGoBack()) {
-                    router.back();
-                } else {
-                    router.push('/');
-                }
-            }, 500);
+
+            router.back()
+
 
         } catch (err) {
             console.error(err)
@@ -166,21 +179,17 @@ const status = () => {
                             </View>
 
                             <View className="ml-3">
-                                {isLoading && isSelected ? (
-                                    <ActivityIndicator color={variant.color} />
-                                ) : (
-                                    <View
-                                        className={clsx(
-                                            'h-7 w-7 rounded-full flex justify-center items-center border-2',
-                                        )}
-                                        style={{
-                                            backgroundColor: isSelected ? variant.color : 'transparent',
-                                            borderColor: isSelected ? variant.color : colors.tailwind.slate[200]
-                                        }}
-                                    >
-                                        {isSelected && <Check size={14} color={'white'} strokeWidth={3} />}
-                                    </View>
-                                )}
+                                <View
+                                    className={clsx(
+                                        'h-7 w-7 rounded-full flex justify-center items-center border-2',
+                                    )}
+                                    style={{
+                                        backgroundColor: isSelected ? variant.color : 'transparent',
+                                        borderColor: isSelected ? variant.color : colors.tailwind.slate[200]
+                                    }}
+                                >
+                                    {isSelected && <Check size={14} color={'white'} strokeWidth={3} />}
+                                </View>
                             </View>
                         </TouchableOpacity>
                     )

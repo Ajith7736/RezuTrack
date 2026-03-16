@@ -86,6 +86,14 @@ function InitialLayout() {
           sheetElevation: 50,
         }} />
 
+        <Stack.Screen name='(settings)/privacy' options={{
+          presentation: 'formSheet',
+          animation: 'slide_from_bottom',
+          sheetAllowedDetents: [0.7],
+          sheetCornerRadius: 35,
+          sheetElevation: 50,
+        }} />
+
 
       </Stack.Protected>
 
