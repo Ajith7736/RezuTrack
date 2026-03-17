@@ -2,7 +2,7 @@ import { View, Text, Pressable } from 'react-native'
 import React from 'react'
 import { Calendar1, FileText, Trash2 } from 'lucide-react-native'
 import { colors } from '@/components/ui/colors'
-import { Resume } from '@/types/types'
+import { Resume, ResumeCardProps } from '@/types/types'
 import { supabase } from '@/lib/supabase'
 import { toast } from '@/lib/Toast/ToastUtility'
 import { QueryClient, useQueryClient } from '@tanstack/react-query'
@@ -17,29 +17,45 @@ const ResumeCard = ({ data, refetch }: { data: Pick<Resume, 'id' | 'updatedAt' |
 
     const handledelete = async () => {
 
-        const res = await api.delete({ ResumeId: data.id, userId: session?.user.id }, '/api/deleteresume')
+        try {
+            await queryClient.setQueriesData({
+                queryKey: ['Resumes']
+            }, (olddata: ResumeCardProps[] | null | undefined) => {
+                if (!olddata) return olddata;
 
-        if (!res.success) {
-            return
+                return olddata.filter((resume) => data.id !== resume.id)
+            })
+
+            const res = await api.delete({ ResumeId: data.id, userId: session?.user.id }, '/api/deleteresume')
+
+            if (!res.success) {
+                throw new Error('Failed to delete')
+            }
+
+
+            queryClient.invalidateQueries({
+                queryKey: ['applications']
+            })
+
+            queryClient.invalidateQueries({
+                queryKey: ['resumesuccess']
+            })
+
+            queryClient.invalidateQueries({
+                queryKey: ['RecentApplications']
+            })
+
+        } catch (err) {
+
+            toast.error('Server Error');
+
+            console.error('[Resume_Delete_Error]', err);
+            
+            await queryClient.invalidateQueries({
+                queryKey: ['Resumes']
+            })
+
         }
-
-        await queryClient.invalidateQueries({
-            queryKey: ['Resumes']
-        })
-
-
-        await queryClient.invalidateQueries({
-            queryKey: ['applications']
-        })
-
-        await queryClient.invalidateQueries({
-            queryKey: ['resumesuccess']
-        })
-
-        await queryClient.invalidateQueries({
-            queryKey: ['RecentApplications']
-        })
-
     }
 
     return (

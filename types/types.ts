@@ -26,6 +26,11 @@ export interface Resume {
     createdAt: string;
     updatedAt: string;
 }
+export interface ResumeCardProps {
+    id: string;
+    name: string;
+    updatedAt: string;
+}
 
 export interface Application {
     id: string;

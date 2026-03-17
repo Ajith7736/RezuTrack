@@ -6,7 +6,7 @@ import { delay } from '@/lib/customdelay'
 import { ResumeformInputs, Resumeformschema } from '@/lib/Database/Schema/ResumeForm'
 import { api } from '@/lib/Utils/FetchUtils'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useQueryClient } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import clsx from 'clsx'
 import { router } from 'expo-router'
 import { ArrowRight } from 'lucide-react-native'
@@ -28,6 +28,18 @@ const ResumeForm = () => {
             name: '',
             notes: '',
             resumeContent: ''
+        }
+    })
+
+    const mutation = useMutation({
+        mutationFn: (data: ResumeformInputs) => api.post({ data, userId: session?.user.id }, '/api/addresume'),
+        onMutate: async (newResume) => {
+            await queryClient.invalidateQueries({
+                queryKey: ["Resumes"]
+            })
+        },
+        onSuccess: () => {
+            
         }
     })
 

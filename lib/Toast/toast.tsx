@@ -18,28 +18,16 @@ const ToastComponent = () => {
     }, [isvisible])
 
     const Variant: Record<string, {
-        icon: ReactElement,
-        backgroundColor: string
-        borderColor: string
-        textColor: string
+        icon: ReactElement
     }> = {
         success: {
-            icon: <Feather name="check-circle" size={18} color={colors.tailwind.emerald[500]} />,
-            backgroundColor: colors.tailwind.emerald[100],
-            borderColor: colors.tailwind.emerald[200],
-            textColor: colors.tailwind.emerald[500]
+            icon: <Feather name="check-circle" size={18} color={colors.tailwind.stone[500]} />,
         },
         error: {
-            icon: <AntDesign name="close-circle" size={18} color={colors.tailwind.red[500]} />,
-            backgroundColor: colors.tailwind.red[100],
-            borderColor: colors.tailwind.red[200],
-            textColor: colors.tailwind.red[500]
+            icon: <AntDesign name="close-circle" size={18} color={colors.tailwind.stone[500]} />,
         },
         warning: {
-            icon: <Feather name="alert-triangle" size={18} color={colors.tailwind.amber[500]} />,
-            backgroundColor: colors.tailwind.amber[100],
-            borderColor: colors.tailwind.amber[200],
-            textColor: colors.tailwind.amber[500]
+            icon: <Feather name="alert-triangle" size={18} color={colors.tailwind.stone[500]} />,
         },
     }
 
@@ -53,19 +41,19 @@ const ToastComponent = () => {
             justifyContent: 'center',
             alignItems: "center",
         }}>
-            <View className='flex flex-row gap-3' style={{
+            <View className='flex flex-row gap-8' style={{
                 padding: 8,
                 borderWidth: 1,
                 borderRadius: 6,
-                boxShadow: "0 3px 10px rgba(0,0,0,0.04)",
-                borderColor: Variant[type].borderColor,
-                backgroundColor: Variant[type].backgroundColor
+                boxShadow: "0 3px 6px rgba(0,0,0,0.02)",
+                borderColor: colors.tailwind.stone[100],
+                backgroundColor: 'white'
             }}>
                 {Variant[type].icon}
                 <Text lineBreakMode='tail' numberOfLines={1} style={{
-                    color: Variant[type].textColor,
-                    width  : 250
-                }} className='tracking-widest text-center text-sm '>{Toastmessage}</Text>
+                    color: colors.tailwind.stone[500],
+                    width  : 160
+                }} className='tracking-widest text-sm '>{Toastmessage}</Text>
             </View>
         </Animated.View>
     )

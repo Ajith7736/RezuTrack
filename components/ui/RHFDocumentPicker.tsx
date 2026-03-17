@@ -7,7 +7,7 @@ import { Platform, Pressable, Text } from 'react-native'
 import { colors } from './colors'
 import { Setter } from '@/types/types'
 
-const RHFDocumentPicker = ({ onChange, errors, setisExtracting }: { setisExtracting: Setter<boolean>, onChange: (...event: any[]) => void, errors: string | undefined }) => {
+const  RHFDocumentPicker = ({ onChange, errors, setisExtracting }: { setisExtracting: Setter<boolean>, onChange: (...event: any[]) => void, errors: string | undefined }) => {
 
     const [currentFile, setcurrentFile] = useState<string>("")
 
