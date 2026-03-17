@@ -11,7 +11,7 @@ export async function POST(req: Request) {
 
         const env = process.env.REVENUECAT_WEBHOOK_SECRET;
 
-        if (signature !== process.env.REVENUECAT_WEBHOOK_SECRET) {
+        if (signature !== env) {
             return Response.json({ error: "Unauthorized", signature, env }, { headers: { "Content-Type": "application/json" }, status: 401 })
         }
 
