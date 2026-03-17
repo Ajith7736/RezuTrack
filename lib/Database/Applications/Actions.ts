@@ -1,4 +1,3 @@
-import 'server-only'
 import { Status } from "../../generated/prisma";
 import prisma from "../../prisma";
 
