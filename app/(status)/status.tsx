@@ -117,16 +117,13 @@ const status = () => {
                 queryKey: ['applications']
             })
 
-
             console.error("[Status_Update.Error]", err);
 
             toast.error('Server Error');
 
             setselectedstatus(status);
         } finally {
-
-            router.back();
-
+            
             setIsLoading(false);
 
         }

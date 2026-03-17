@@ -54,7 +54,7 @@ export async function POST(request: Request) {
         if (!resdata.success) {
 
             if (resdata.message === "Free Limit Exceeded") {
-                return Response.json(resdata, { status: 400 })
+                return Response.json(resdata, { status: 200 })
             }
 
             return Response.json({ success: false, message: 'Couldnt create Resume' }, { status: 400 })

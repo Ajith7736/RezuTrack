@@ -1,15 +1,11 @@
 import { colors } from '@/components/ui/colors'
-import { delay } from '@/lib/customdelay'
-import { supabase } from '@/lib/supabase'
-import { toast } from '@/lib/Toast/ToastUtility'
 import { Status } from '@/types/types'
-import { QueryClient } from '@tanstack/react-query'
 import { router } from 'expo-router'
-import { ChevronDown, ChevronUp } from 'lucide-react-native'
-import React, { useState } from 'react'
-import { Pressable, Text, TouchableOpacity, View } from 'react-native'
+import { ChevronDown } from 'lucide-react-native'
+import React from 'react'
+import { Pressable, Text } from 'react-native'
 
-const StatusText = ({ text, id, refetch }: { text: Status, id: string, refetch: Function }) => {
+const StatusText = ({ text, id }: { text: Status, id: string }) => {
 
     const variants = {
         "Applied": {
@@ -51,7 +47,7 @@ const StatusText = ({ text, id, refetch }: { text: Status, id: string, refetch: 
         <Pressable onPress={() => router.push({
             pathname: '/(status)/status', params: {
                 status: text,
-                id : id
+                id: id
             }
         })} className='flex relative flex-row items-center justify-between' style={{
             backgroundColor: currentStyle.bg,

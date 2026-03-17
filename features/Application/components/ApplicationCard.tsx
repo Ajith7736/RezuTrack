@@ -93,7 +93,7 @@ const ApplicationCard = ({ data, refetch, index }: { data: Application, refetch:
 
             <View className='flex flex-row justify-between items-center'>
                 <View>
-                    <StatusText text={data.Status} id={data.id} refetch={refetch} />
+                    <StatusText text={data.Status} id={data.id} />
                 </View>
                 <View className='flex flex-row items-center gap-2'>
                     <View className='flex flex-row gap-2 items-center'>

@@ -61,7 +61,7 @@ export async function POST(req: Request) {
         if (!resdata.success) {
 
             if (resdata.message === "Free Limit Exceeded") {
-                return Response.json(resdata, { status: 400 })
+                return Response.json(resdata, { status: 200 })
             }
 
             return Response.json({ success: false, message: "Couldn't create application" }, { headers: { "Content-Type": "application/json" }, status: 400 })
