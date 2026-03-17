@@ -65,7 +65,6 @@ const ApplicationForm = () => {
 
 
   const onSubmit = async (data: ApplicationInputs) => {
-    await delay(1);
 
     const res = await api.post({ userId: session?.user.id, data }, '/api/addapplication');
 
@@ -77,15 +76,15 @@ const ApplicationForm = () => {
       queryKey: ['RecentApplications']
     })
 
-    await queryClient.invalidateQueries({
+    queryClient.invalidateQueries({
       queryKey: ['applications']
     })
 
-    await queryClient.invalidateQueries({
+    queryClient.invalidateQueries({
       queryKey: ['resumesuccess']
     })
 
-    router.dismiss();
+    router.back();
   };
 
   useEffect(() => {

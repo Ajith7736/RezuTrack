@@ -68,11 +68,6 @@ const status = () => {
         }
     }
 
-    useEffect(() => {
-        if (id) console.log(id)
-    }, [id])
-
-
     const handleselect = async (newStatus: Status) => {
         if (newStatus === selectedstatus) return;
 
@@ -89,7 +84,6 @@ const status = () => {
                     pages: oldData.pages.map((page) => {
                         return page.map((single) => {
                             if (single.id === id) {
-                                console.log('changed');
                                 const data = { ...single, Status: newStatus }
                                 return data;
                             } else {
@@ -109,13 +103,6 @@ const status = () => {
                 throw new Error('Update Failed')
             }
 
-
-        } catch (err) {
-
-            queryClient.invalidateQueries({
-                queryKey: ['applications']
-            })
-
             queryClient.invalidateQueries({
                 queryKey: ['resumesuccess']
             })
@@ -124,17 +111,24 @@ const status = () => {
                 queryKey: ['RecentApplications']
             })
 
+        } catch (err) {
 
-            console.error("[Status_Update.Error]",err);
+            queryClient.invalidateQueries({
+                queryKey: ['applications']
+            })
+
+
+            console.error("[Status_Update.Error]", err);
 
             toast.error('Server Error');
-            
+
             setselectedstatus(status);
         } finally {
 
             router.back();
+
             setIsLoading(false);
-            
+
         }
     }
 
