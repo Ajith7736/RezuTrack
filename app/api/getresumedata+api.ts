@@ -6,8 +6,6 @@ export async function POST(request: Request) {
     try {
         const { userId } = await request.json();
 
-
-
         const resumes = await prisma.resume.findMany({
             where: {
                 userId,

@@ -10,50 +10,60 @@ export async function POST(req: Request) {
             return Response.json({ success: false, message: "Didn't recieve data" }, { headers: { "Content-Type": "application/json" }, status: 400 })
         }
 
-        const usage = await prisma.usage.findUnique({
-            where: {
-                userId
-            },
-            select: {
-                current_Applications: true,
-                total_Applications: true
-            }
-        })
+        const resdata = await prisma.$transaction(async (tx) => {
+
+            const usage = await tx.usage.findUnique({
+                where: {
+                    userId
+                },
+                select: {
+                    current_Applications: true,
+                    total_Applications: true
+                }
+            })
 
 
-        if (usage?.total_Applications) {
-            if (usage?.current_Applications! >= usage?.total_Applications!) {
-                return Response.json({ message: "Free Limit Exceeded", success: false }, { status: 200 })
-            }
-        }
-
-
-
-        const application = await prisma.application.create({
-            data: {
-                companyName: data.companyName,
-                Date: data.date || "",
-                Link: data.link || "",
-                resumeId: data.resumeId,
-                resumeUsed: data.resumeUsed,
-                roleTitle: data.roleTitle,
-                Status: data.status,
-                userId
-            }
-        })
-
-        await prisma.usage.update({
-            where: {
-                userId
-            },
-            data: {
-                current_Applications: {
-                    increment: 1
+            if (usage?.total_Applications) {
+                if (usage?.current_Applications! >= usage?.total_Applications!) {
+                    return { message: "Free Limit Exceeded", success: false }
                 }
             }
+
+            await tx.application.create({
+                data: {
+                    companyName: data.companyName,
+                    Date: data.date || "",
+                    Link: data.link || "",
+                    resumeId: data.resumeId,
+                    resumeUsed: data.resumeUsed,
+                    roleTitle: data.roleTitle,
+                    Status: data.status,
+                    userId
+                }
+            })
+
+            await tx.usage.update({
+                where: {
+                    userId
+                },
+                data: {
+                    current_Applications: {
+                        increment: 1
+                    }
+                }
+            })
+
+            return { success: true }
         })
 
-        if (!application) {
+
+
+        if (!resdata.success) {
+
+            if (resdata.message === "Free Limit Exceeded") {
+                return Response.json(resdata, { status: 400 })
+            }
+
             return Response.json({ success: false, message: "Couldn't create application" }, { headers: { "Content-Type": "application/json" }, status: 400 })
         }
 
