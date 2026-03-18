@@ -44,3 +44,6 @@ app-example
 /android
 
 /lib/generated/prisma
+
+# AI Agent config
+.agents/
