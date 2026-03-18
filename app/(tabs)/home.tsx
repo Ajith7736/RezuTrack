@@ -2,13 +2,11 @@ import { colors } from "@/components/ui/colors";
 import Loading from "@/components/ui/Loading";
 import { useSession } from "@/context/AuthContext";
 import ActivityChart from "@/features/Home/components/ActivityChart";
-import ResumeChart from "@/features/Stats/Components/ResumeChart";
 import { supabase } from "@/lib/supabase";
-import { api } from "@/lib/Utils/FetchUtils";
 import { useQuery } from "@tanstack/react-query";
 import { Image } from "expo-image";
 import { router } from "expo-router";
-import { ArrowRight, CheckCircle, Clock, Target, TrendingUp } from "lucide-react-native";
+import {  CheckCircle, Clock, Target, TrendingUp } from "lucide-react-native";
 import { Pressable, ScrollView, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
