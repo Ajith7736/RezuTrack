@@ -129,7 +129,7 @@ export default function Index() {
                 backgroundColor: colors.tailwind.gray[200]
               }} className="bg-stone-100 shadow-stone-400 h-11 w-11 rounded-full overflow-hidden">
                 <Image
-                  source={session?.user.user_metadata.avatar_url ?? require('@/assets/images/person.png')}
+                  source={session?.user.user_metadata.avatar_url ?? require('@/assets/images/person.webp')}
                   style={{
                     height: '100%',
                     width: '100%'

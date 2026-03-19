@@ -14,6 +14,7 @@
       "bundleIdentifier": "com.rezutrack.app"
     },
     "android": {
+      "jsEngine": "hermes",
       "backgroundColor": "#ffffff",
       "adaptiveIcon": {
         "backgroundColor": "#ffffff",
@@ -28,7 +29,9 @@
         "android.permission.DOWNLOAD_WITHOUT_NOTIFICATION",
         "android.permission.ACCESS_NETWORK_STATE",
         "android.permission.RECORD_AUDIO"
-      ]
+      ],
+      "enableProguardInReleaseBuilds": true,
+      "enableShrinkResourcesInReleaseBuilds": true
     },
     "web": {
       "output": "server",

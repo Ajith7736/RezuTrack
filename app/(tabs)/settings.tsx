@@ -118,7 +118,7 @@ const Settings = () => {
         <View className="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 flex-row items-center gap-5 mb-8">
           <View className="h-20 w-20 rounded-full p-1 bg-indigo-50 border-2 border-indigo-100">
             <Image
-              source={session?.user.user_metadata.avatar_url ?? require('@/assets/images/person.png')}
+              source={session?.user.user_metadata.avatar_url ?? require('@/assets/images/person.webp')}
               style={{ height: '100%', width: '100%', borderRadius: 999 }}
               contentFit="cover"
             />

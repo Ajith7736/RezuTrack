@@ -74,7 +74,7 @@ const GoogleSignInButton = () => {
         <Pressable className="bg-indigo-600 w-64 h-12 rounded-md flex flex-row items-center justify-center gap-4">
             {isLoading ? <ActivityIndicator size={'small'} color={'white'} /> : <><Text className="text-white tracking-widest font-semibold" onPress={SignIn}>Sign in with Google</Text>
                 <Image
-                    source={require('@/assets/images/google.png')}
+                    source={require('@/assets/images/google.webp')}
                     style={{
                         height: 20,
                         width: 20
