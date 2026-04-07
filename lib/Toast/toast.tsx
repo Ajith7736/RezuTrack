@@ -41,8 +41,9 @@ const ToastComponent = () => {
             justifyContent: 'center',
             alignItems: "center",
         }}>
-            <View className='flex flex-row gap-8' style={{
+            <View className='flex flex-row gap-8 items-center' style={{
                 padding: 8,
+                paddingHorizontal : 25,
                 borderWidth: 1,
                 borderRadius: 6,
                 boxShadow: "0 3px 6px rgba(0,0,0,0.02)",
@@ -52,7 +53,7 @@ const ToastComponent = () => {
                 {Variant[type].icon}
                 <Text lineBreakMode='tail' numberOfLines={1} style={{
                     color: colors.tailwind.stone[500],
-                    width  : 160
+                    maxWidth : 200
                 }} className='tracking-widest text-sm '>{Toastmessage}</Text>
             </View>
         </Animated.View>

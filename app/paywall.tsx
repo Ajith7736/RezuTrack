@@ -58,7 +58,7 @@ const Paywall = () => {
 
         } catch (e: any) {
             if (!e.userCancelled) {
-                toast.error(e.message || "Something went wrong with the purchase")
+                toast.error("Server Error")
                 console.error("[Paywall.PurchaseError]", e.message);
             }
         } finally {
@@ -114,7 +114,7 @@ const Paywall = () => {
                                 <View className='flex-row items-center justify-between mb-4 mt-2'>
                                     <View>
                                         <View className='flex-row items-center gap-2 mb-1'>
-                                            <Text className='text-2xl font-bold text-white tracking-wide'>{offerings?.current?.monthly?.product.title}</Text>
+                                            <Text className='text-2xl font-bold text-white tracking-wide'>Pro Tier</Text>
                                         </View>
                                     </View>
                                     <View className=' flex flex-row items-end gap-2'>
