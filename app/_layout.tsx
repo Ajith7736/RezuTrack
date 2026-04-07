@@ -1,5 +1,5 @@
 import { useSession } from "@/context/AuthContext";
-import "@/lib/reanimatedConfig"; 
+import "@/lib/reanimatedConfig";
 import { Stack } from "expo-router";
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from "react";

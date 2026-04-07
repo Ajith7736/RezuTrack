@@ -1,10 +1,8 @@
 import { colors } from "@/components/ui/colors";
-import Loading from "@/components/ui/Loading";
 import { useSession } from "@/context/AuthContext";
 import { supabase } from "@/lib/supabase";
 import { toast } from "@/lib/Toast/ToastUtility";
 import { Image } from "expo-image";
-import { LinearGradient } from "expo-linear-gradient";
 import { Route, router } from "expo-router";
 import { ChevronRight, Crown, Info, KeyIcon, LogOut, Trash2, Zap } from 'lucide-react-native';
 import { ReactElement, useEffect, useState } from "react";
@@ -237,7 +235,7 @@ const Settings = () => {
 
             <View className="h-[1px] bg-slate-100 w-full" />
             {General.map((item, indx) => {
-              return <Pressable key={indx} onPress={() => router.push(item.link)} className="flex-row items-center justify-between p-4 py-5 active:bg-slate-50 transition-colors">
+              return <Pressable key={indx} onPress={() => router.push(item.link)} className="flex-row items-center border-b border-slate-100 justify-between p-4 py-5">
                 <View className="flex-row items-center gap-4">
                   <View className="h-10 w-10 rounded-full bg-indigo-50 items-center justify-center">
                     {item.icon}
@@ -253,10 +251,10 @@ const Settings = () => {
         {/* Actions Section */}
         <View className="mb-8">
           <Text className="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-3 ml-2">Actions</Text>
-          <View className="bg-white rounded-2xl overflow-hidden border border-slate-100 shadow-sm">
+          <View className="bg-white rounded-2xl overflow-hidden border-b border-slate-100 shadow-sm">
             <Pressable
               onPress={handlesignout}
-              className="flex-row items-center justify-between p-4 py-5 active:bg-slate-50 transition-colors"
+              className="flex-row items-center justify-between p-4 py-5"
             >
               <View className="flex-row items-center gap-4">
                 <View className="h-10 w-10 rounded-full bg-orange-50 items-center justify-center">

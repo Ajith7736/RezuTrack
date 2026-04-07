@@ -1,5 +1,4 @@
 import { colors } from '@/components/ui/colors'
-import { useSession } from '@/context/AuthContext'
 import { supabase } from '@/lib/supabase'
 import { toast } from '@/lib/Toast/ToastUtility'
 import { LinearGradient } from 'expo-linear-gradient'
